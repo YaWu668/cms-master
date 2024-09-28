@@ -1,0 +1,54 @@
+22:25:22.062 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
+22:25:22.168 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 6.2.5.Final
+22:25:22.722 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+22:25:22.723 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+22:25:31.311 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource@1534655921 {name='bootstrapProperties-cms-system-dev.yml,cms-project', properties={}}, BootstrapPropertySource@1220524164 {name='bootstrapProperties-cms-system.yml,cms-project', properties={}}, BootstrapPropertySource@291847739 {name='bootstrapProperties-cms-system,cms-project', properties={}}, BootstrapPropertySource@118881143 {name='bootstrapProperties-application-dev.yml,cms-project', properties={}}]
+22:25:31.322 [main] INFO  c.c.s.CmsSystemApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "dev"
+22:25:33.081 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [multipleStoresDetected,262] - Multiple Spring Data modules found, entering strict repository configuration mode
+22:25:33.085 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,132] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+22:25:33.122 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,201] - Finished Spring Data repository scanning in 16 ms. Found 0 Redis repository interfaces.
+22:25:33.465 [main] INFO  o.s.c.c.s.GenericScope - [setSerializationId,283] - BeanFactory id=be3f3d72-f416-336a-814b-b2a307ff1bed
+22:25:34.019 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'com.cms.common.redis.config.RedisConfig' of type [com.cms.common.redis.config.RedisConfig$$EnhancerBySpringCGLIB$$cecff2b0] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+22:25:34.587 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [initialize,108] - Tomcat initialized with port(s): 10240 (http)
+22:25:34.597 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Initializing ProtocolHandler ["http-nio-10240"]
+22:25:34.599 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
+22:25:34.599 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.83]
+22:25:34.860 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
+22:25:34.861 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - [prepareWebApplicationContext,292] - Root WebApplicationContext: initialization completed in 3502 ms
+22:25:35.148 [main] INFO  o.a.c.c.StandardService - [log,173] - Stopping service [Tomcat]
+22:32:57.324 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
+22:32:57.409 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 6.2.5.Final
+22:32:57.818 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+22:32:57.818 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+22:33:05.802 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource@1747721875 {name='bootstrapProperties-cms-system-dev.yml,cms-project', properties={}}, BootstrapPropertySource@654740048 {name='bootstrapProperties-cms-system.yml,cms-project', properties={}}, BootstrapPropertySource@1759915172 {name='bootstrapProperties-cms-system,cms-project', properties={}}, BootstrapPropertySource@1395173825 {name='bootstrapProperties-application-dev.yml,cms-project', properties={}}]
+22:33:05.822 [main] INFO  c.c.s.CmsSystemApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "dev"
+22:33:08.593 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [multipleStoresDetected,262] - Multiple Spring Data modules found, entering strict repository configuration mode
+22:33:08.596 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,132] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+22:33:08.637 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,201] - Finished Spring Data repository scanning in 17 ms. Found 0 Redis repository interfaces.
+22:33:09.034 [main] INFO  o.s.c.c.s.GenericScope - [setSerializationId,283] - BeanFactory id=be3f3d72-f416-336a-814b-b2a307ff1bed
+22:33:09.522 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'com.cms.common.redis.config.RedisConfig' of type [com.cms.common.redis.config.RedisConfig$$EnhancerBySpringCGLIB$$d27f62c3] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+22:33:10.077 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [initialize,108] - Tomcat initialized with port(s): 10240 (http)
+22:33:10.089 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Initializing ProtocolHandler ["http-nio-10240"]
+22:33:10.091 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
+22:33:10.091 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.83]
+22:33:10.306 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
+22:33:10.307 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - [prepareWebApplicationContext,292] - Root WebApplicationContext: initialization completed in 4426 ms
+22:33:10.505 [main] INFO  o.a.c.c.StandardService - [log,173] - Stopping service [Tomcat]
+22:44:04.359 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
+22:44:04.469 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 6.2.5.Final
+22:44:04.962 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+22:44:04.962 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+22:44:13.308 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource@518167684 {name='bootstrapProperties-cms-system-dev.yml,cms-project', properties={}}, BootstrapPropertySource@2088969892 {name='bootstrapProperties-cms-system.yml,cms-project', properties={}}, BootstrapPropertySource@1997704619 {name='bootstrapProperties-cms-system,cms-project', properties={}}, BootstrapPropertySource@1665308978 {name='bootstrapProperties-application-dev.yml,cms-project', properties={}}]
+22:44:13.321 [main] INFO  c.c.s.CmsSystemApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "dev"
+22:44:15.031 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [multipleStoresDetected,262] - Multiple Spring Data modules found, entering strict repository configuration mode
+22:44:15.034 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,132] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+22:44:15.071 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,201] - Finished Spring Data repository scanning in 16 ms. Found 0 Redis repository interfaces.
+22:44:15.390 [main] INFO  o.s.c.c.s.GenericScope - [setSerializationId,283] - BeanFactory id=be3f3d72-f416-336a-814b-b2a307ff1bed
+22:44:15.792 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'com.cms.common.redis.config.RedisConfig' of type [com.cms.common.redis.config.RedisConfig$$EnhancerBySpringCGLIB$$8b2c7a6e] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+22:44:16.270 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [initialize,108] - Tomcat initialized with port(s): 10240 (http)
+22:44:16.282 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Initializing ProtocolHandler ["http-nio-10240"]
+22:44:16.284 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
+22:44:16.284 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.83]
+22:44:16.475 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
+22:44:16.476 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - [prepareWebApplicationContext,292] - Root WebApplicationContext: initialization completed in 3124 ms
+22:44:16.621 [main] INFO  o.a.c.c.StandardService - [log,173] - Stopping service [Tomcat]

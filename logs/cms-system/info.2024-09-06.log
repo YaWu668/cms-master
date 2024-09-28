@@ -1,0 +1,824 @@
+15:55:57.013 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
+15:55:57.062 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 6.2.5.Final
+15:55:57.331 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+15:55:57.331 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+15:56:01.268 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource@1720067573 {name='bootstrapProperties-cms-system-dev.yml,cms-project', properties={server.port=10240, spring.redis.host=192.168.211.200, spring.redis.port=6379, spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver, spring.datasource.url=jdbc:mysql://192.168.211.200:3306/cms-plus?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8, spring.datasource.username=root, spring.datasource.password=root, swagger.title=系统模块接口文档, swagger.name=邓志军, swagger.description=系统模块接口文档, swagger.Contact.name=邓志军}}, BootstrapPropertySource@430050226 {name='bootstrapProperties-cms-system.yml,cms-project', properties={}}, BootstrapPropertySource@1975171943 {name='bootstrapProperties-cms-system,cms-project', properties={}}, BootstrapPropertySource@1051927339 {name='bootstrapProperties-application-dev.yml,cms-project', properties={spring.autoconfigure.exclude=com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure, spring.mvc.pathmatch.matching-strategy=ant_path_matcher, spring.jackson.default-property-inclusion=non_null, mybatis-plus.mapper-locations=classpath*:mapper/**/*.xml, mybatis-plus.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl, mybatis-plus.global-config.db-config.logic-delete-field=del_flag, mybatis-plus.global-config.db-config.logic-delete-value=1, mybatis-plus.global-config.db-config.logic-not-delete-value=0}}]
+15:56:01.276 [main] INFO  c.c.s.CmsSystemApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "dev"
+15:56:02.312 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [multipleStoresDetected,262] - Multiple Spring Data modules found, entering strict repository configuration mode
+15:56:02.314 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,132] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+15:56:02.338 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,201] - Finished Spring Data repository scanning in 9 ms. Found 0 Redis repository interfaces.
+15:56:02.546 [main] INFO  o.s.c.c.s.GenericScope - [setSerializationId,283] - BeanFactory id=be3f3d72-f416-336a-814b-b2a307ff1bed
+15:56:02.775 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'com.cms.common.redis.config.RedisConfig' of type [com.cms.common.redis.config.RedisConfig$$EnhancerBySpringCGLIB$$a3c2cd86] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+15:56:03.032 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [initialize,108] - Tomcat initialized with port(s): 10240 (http)
+15:56:03.038 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Initializing ProtocolHandler ["http-nio-10240"]
+15:56:03.039 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
+15:56:03.039 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.83]
+15:56:03.149 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
+15:56:03.149 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - [prepareWebApplicationContext,292] - Root WebApplicationContext: initialization completed in 1853 ms
+15:56:05.165 [main] INFO  c.z.h.HikariDataSource - [getConnection,110] - HikariPool-1 - Starting...
+15:56:05.755 [main] INFO  c.z.h.HikariDataSource - [getConnection,123] - HikariPool-1 - Start completed.
+15:56:07.435 [main] INFO  c.a.c.s.SentinelWebMvcConfigurer - [addInterceptors,52] - [Sentinel Starter] register SentinelWebInterceptor with urlPatterns: [/**].
+15:56:09.221 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
+15:56:10.193 [main] INFO  o.s.b.a.e.w.EndpointLinksResolver - [<init>,58] - Exposing 1 endpoint(s) beneath base path '/actuator'
+15:56:10.935 [main] INFO  o.s.c.o.FeignClientFactoryBean - [getTarget,418] - For 'cms-system' URL not provided. Will try picking an instance via load-balancing.
+15:56:13.508 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
+15:56:13.680 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Starting ProtocolHandler ["http-nio-10240"]
+15:56:13.691 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [start,220] - Tomcat started on port(s): 10240 (http) with context path ''
+15:56:13.703 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+15:56:13.703 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+15:56:13.878 [main] INFO  c.a.c.n.r.NacosServiceRegistry - [register,76] - nacos registry, cms-project cms-system 192.168.2.1:10240 register finished
+15:56:15.462 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
+15:56:16.273 [main] INFO  c.c.s.CmsSystemApplication - [logStarted,61] - Started CmsSystemApplication in 21.166 seconds (JVM running for 22.169)
+15:56:16.291 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-system, group=cms-project
+15:56:16.291 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-system.yml, group=cms-project
+15:56:16.292 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-system-dev.yml, group=cms-project
+15:56:16.811 [RMI TCP Connection(5)-192.168.2.1] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+15:56:16.812 [RMI TCP Connection(5)-192.168.2.1] INFO  o.s.w.s.DispatcherServlet - [initServletBean,525] - Initializing Servlet 'dispatcherServlet'
+15:56:16.814 [RMI TCP Connection(5)-192.168.2.1] INFO  o.s.w.s.DispatcherServlet - [initServletBean,547] - Completed initialization in 2 ms
+17:32:19.752 [SpringApplicationShutdownHook] INFO  c.a.c.n.r.NacosServiceRegistry - [deregister,95] - De-registering from Nacos Server now...
+17:32:19.763 [SpringApplicationShutdownHook] INFO  c.a.c.n.r.NacosServiceRegistry - [deregister,115] - De-registration finished.
+17:32:20.000 [SpringApplicationShutdownHook] INFO  c.z.h.HikariDataSource - [close,350] - HikariPool-1 - Shutdown initiated...
+17:32:20.004 [SpringApplicationShutdownHook] INFO  c.z.h.HikariDataSource - [close,352] - HikariPool-1 - Shutdown completed.
+17:32:26.721 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
+17:32:26.761 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 6.2.5.Final
+17:32:26.990 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+17:32:26.991 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+17:32:30.189 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource@67985650 {name='bootstrapProperties-cms-system-dev.yml,cms-project', properties={server.port=10240, spring.redis.host=192.168.211.200, spring.redis.port=6379, spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver, spring.datasource.url=jdbc:mysql://192.168.211.200:3306/cms-plus?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8, spring.datasource.username=root, spring.datasource.password=root, swagger.title=系统模块接口文档, swagger.name=邓志军, swagger.description=系统模块接口文档, swagger.Contact.name=邓志军}}, BootstrapPropertySource@864210792 {name='bootstrapProperties-cms-system.yml,cms-project', properties={}}, BootstrapPropertySource@796168203 {name='bootstrapProperties-cms-system,cms-project', properties={}}, BootstrapPropertySource@1837602497 {name='bootstrapProperties-application-dev.yml,cms-project', properties={spring.autoconfigure.exclude=com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure, spring.mvc.pathmatch.matching-strategy=ant_path_matcher, spring.jackson.default-property-inclusion=non_null, mybatis-plus.mapper-locations=classpath*:mapper/**/*.xml, mybatis-plus.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl, mybatis-plus.global-config.db-config.logic-delete-field=del_flag, mybatis-plus.global-config.db-config.logic-delete-value=1, mybatis-plus.global-config.db-config.logic-not-delete-value=0}}]
+17:32:30.197 [main] INFO  c.c.s.CmsSystemApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "dev"
+17:32:31.089 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [multipleStoresDetected,262] - Multiple Spring Data modules found, entering strict repository configuration mode
+17:32:31.092 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,132] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+17:32:31.113 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,201] - Finished Spring Data repository scanning in 8 ms. Found 0 Redis repository interfaces.
+17:32:31.310 [main] INFO  o.s.c.c.s.GenericScope - [setSerializationId,283] - BeanFactory id=be3f3d72-f416-336a-814b-b2a307ff1bed
+17:32:31.534 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'com.cms.common.redis.config.RedisConfig' of type [com.cms.common.redis.config.RedisConfig$$EnhancerBySpringCGLIB$$2c70155f] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+17:32:31.804 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [initialize,108] - Tomcat initialized with port(s): 10240 (http)
+17:32:31.812 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Initializing ProtocolHandler ["http-nio-10240"]
+17:32:31.813 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
+17:32:31.813 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.83]
+17:32:31.932 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
+17:32:31.932 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - [prepareWebApplicationContext,292] - Root WebApplicationContext: initialization completed in 1715 ms
+17:32:33.711 [main] INFO  c.z.h.HikariDataSource - [getConnection,110] - HikariPool-1 - Starting...
+17:32:34.164 [main] INFO  c.z.h.HikariDataSource - [getConnection,123] - HikariPool-1 - Start completed.
+17:32:35.349 [main] INFO  c.a.c.s.SentinelWebMvcConfigurer - [addInterceptors,52] - [Sentinel Starter] register SentinelWebInterceptor with urlPatterns: [/**].
+17:32:36.857 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
+17:32:37.323 [main] INFO  o.s.b.a.e.w.EndpointLinksResolver - [<init>,58] - Exposing 1 endpoint(s) beneath base path '/actuator'
+17:32:37.741 [main] INFO  o.s.c.o.FeignClientFactoryBean - [getTarget,418] - For 'cms-system' URL not provided. Will try picking an instance via load-balancing.
+17:32:39.451 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
+17:32:39.573 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Starting ProtocolHandler ["http-nio-10240"]
+17:32:39.582 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [start,220] - Tomcat started on port(s): 10240 (http) with context path ''
+17:32:39.593 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+17:32:39.593 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+17:32:39.747 [main] INFO  c.a.c.n.r.NacosServiceRegistry - [register,76] - nacos registry, cms-project cms-system 192.168.2.1:10240 register finished
+17:32:41.133 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
+17:32:41.565 [main] INFO  c.c.s.CmsSystemApplication - [logStarted,61] - Started CmsSystemApplication in 16.606 seconds (JVM running for 17.608)
+17:32:41.578 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-system, group=cms-project
+17:32:41.578 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-system.yml, group=cms-project
+17:32:41.578 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-system-dev.yml, group=cms-project
+17:32:42.297 [RMI TCP Connection(5)-192.168.2.1] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+17:32:42.297 [RMI TCP Connection(5)-192.168.2.1] INFO  o.s.w.s.DispatcherServlet - [initServletBean,525] - Initializing Servlet 'dispatcherServlet'
+17:32:42.300 [RMI TCP Connection(5)-192.168.2.1] INFO  o.s.w.s.DispatcherServlet - [initServletBean,547] - Completed initialization in 3 ms
+19:07:57.052 [lettuce-nioEventLoop-4-2] INFO  i.l.c.p.CommandHandler - [log,217] - null Unexpected exception during request: java.io.IOException: 远程主机强迫关闭了一个现有的连接。
+java.io.IOException: 远程主机强迫关闭了一个现有的连接。
+	at sun.nio.ch.SocketDispatcher.read0(Native Method)
+	at sun.nio.ch.SocketDispatcher.read(SocketDispatcher.java:43)
+	at sun.nio.ch.IOUtil.readIntoNativeBuffer(IOUtil.java:223)
+	at sun.nio.ch.IOUtil.read(IOUtil.java:192)
+	at sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:380)
+	at io.netty.buffer.PooledByteBuf.setBytes(PooledByteBuf.java:254)
+	at io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1132)
+	at io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:357)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:151)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.lang.Thread.run(Thread.java:748)
+19:07:57.052 [lettuce-nioEventLoop-4-1] INFO  i.l.c.p.CommandHandler - [log,217] - null Unexpected exception during request: java.io.IOException: 远程主机强迫关闭了一个现有的连接。
+java.io.IOException: 远程主机强迫关闭了一个现有的连接。
+	at sun.nio.ch.SocketDispatcher.read0(Native Method)
+	at sun.nio.ch.SocketDispatcher.read(SocketDispatcher.java:43)
+	at sun.nio.ch.IOUtil.readIntoNativeBuffer(IOUtil.java:223)
+	at sun.nio.ch.IOUtil.read(IOUtil.java:192)
+	at sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:380)
+	at io.netty.buffer.PooledByteBuf.setBytes(PooledByteBuf.java:254)
+	at io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1132)
+	at io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:357)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:151)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.lang.Thread.run(Thread.java:748)
+19:07:57.121 [lettuce-eventExecutorLoop-1-11] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was /192.168.211.200:6379
+19:07:57.121 [lettuce-eventExecutorLoop-1-10] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was /192.168.211.200:6379
+19:08:06.215 [lettuce-eventExecutorLoop-1-14] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:08:06.215 [lettuce-eventExecutorLoop-1-15] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:08:14.418 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:08:14.418 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:08:40.816 [lettuce-eventExecutorLoop-1-18] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:08:40.816 [lettuce-eventExecutorLoop-1-19] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:09:20.915 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:09:20.915 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:10:01.014 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:10:01.014 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:10:41.115 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:10:41.115 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:11:21.215 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:11:21.215 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:12:01.315 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:12:01.315 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:12:41.415 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:12:41.415 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:13:21.518 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:13:21.518 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:14:01.618 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:14:01.618 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:14:41.715 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:14:41.715 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:15:21.814 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:15:21.814 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:16:01.915 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:16:01.915 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:16:42.016 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:16:42.016 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:17:22.114 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:17:22.114 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:18:02.215 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:18:02.215 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:18:42.315 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:18:42.315 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:19:22.415 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:19:22.415 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:20:02.517 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:20:02.517 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:20:42.616 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:20:42.616 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:21:22.715 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:21:22.715 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:22:02.814 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:22:02.814 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:22:42.914 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:22:42.914 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:23:23.016 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:23:23.016 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:24:03.115 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:24:03.115 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:24:43.215 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:24:43.215 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:25:23.315 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:25:23.315 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:26:03.414 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:26:03.414 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:26:43.515 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:26:43.515 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:27:23.615 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:27:23.615 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:28:03.715 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:28:03.715 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:28:43.816 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:28:43.816 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:29:23.916 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:29:23.916 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:30:04.016 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:30:04.016 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:30:44.115 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:30:44.115 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:31:24.216 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:31:24.216 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:32:04.315 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:32:04.315 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:32:44.416 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:32:44.416 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:33:24.515 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:33:24.515 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:34:04.615 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:34:04.615 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:34:44.715 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:34:44.715 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:35:24.815 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:35:24.815 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:36:04.915 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:36:04.915 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:36:45.018 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:36:45.018 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:37:25.115 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:37:25.115 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:38:05.217 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:38:05.217 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:38:45.316 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:38:45.316 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:39:25.415 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:39:25.415 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:40:05.515 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:40:05.515 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:40:45.617 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:40:45.617 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:41:25.715 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:41:25.715 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:42:05.816 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:42:05.816 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:42:45.914 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:42:45.914 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:43:46.169 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:43:46.169 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:44:26.271 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:44:26.271 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:45:06.368 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:45:06.368 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:45:46.470 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:45:46.470 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:46:26.570 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:46:26.570 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:47:06.673 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:47:06.673 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:47:46.769 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:47:46.769 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:48:26.870 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:48:26.870 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:49:06.968 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:49:06.968 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:49:47.070 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:49:47.070 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:50:27.169 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:50:27.169 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:51:07.270 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:51:07.270 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:51:47.369 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:51:47.369 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:52:27.470 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:52:27.470 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:53:07.570 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:53:07.570 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:53:47.672 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:53:47.672 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:54:27.770 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:54:27.770 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:55:07.870 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:55:07.870 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:55:47.970 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:55:47.970 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:56:28.070 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:56:28.070 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:57:08.170 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:57:08.170 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:57:48.268 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:57:48.268 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:58:28.371 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:58:28.371 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:59:08.470 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:59:08.470 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:59:48.571 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+19:59:48.571 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:00:28.669 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:00:28.669 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:01:08.770 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:01:08.770 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:01:48.870 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:01:48.870 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:02:28.969 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:02:28.969 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:03:09.069 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:03:09.069 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:03:49.170 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:03:49.170 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:04:29.270 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:04:29.270 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:05:09.371 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:05:09.371 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:05:49.469 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:05:49.469 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:06:29.568 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:06:29.568 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:07:09.668 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:07:09.668 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:07:49.769 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:07:49.769 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:08:29.870 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:08:29.870 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:09:09.970 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:09:09.970 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:09:50.070 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:09:50.070 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:10:30.170 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:10:30.170 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:11:10.271 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:11:10.271 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:11:50.370 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:11:50.370 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:12:30.471 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:12:30.471 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:13:10.572 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:13:10.572 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:13:50.669 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:13:50.669 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:14:30.768 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:14:30.768 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:15:10.870 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:15:10.870 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:15:50.968 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:15:50.968 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:16:31.068 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:16:31.068 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:17:11.168 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:17:11.168 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:17:51.270 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:17:51.270 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:18:31.370 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:18:31.370 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:19:11.469 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:19:11.469 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:19:51.569 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:19:51.569 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:20:31.668 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:20:31.668 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:21:11.769 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:21:11.769 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:21:51.870 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:21:51.870 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:22:31.971 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:22:31.971 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:23:12.070 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:23:12.070 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:23:52.170 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:23:52.170 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:24:32.269 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:24:32.269 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:25:12.373 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:25:12.373 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:25:52.470 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:25:52.470 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:26:32.569 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:26:32.569 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:27:12.671 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:27:12.671 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:27:52.772 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:27:52.772 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:28:32.869 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:28:32.869 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:29:12.969 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:29:12.969 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:29:53.068 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:29:53.068 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:30:33.169 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:30:33.169 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:31:13.270 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:31:13.270 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:31:53.369 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:31:53.369 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:32:33.470 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:32:33.470 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:33:13.568 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:33:13.568 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:33:53.671 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:33:53.671 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:34:33.772 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:34:33.772 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:35:13.868 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:35:13.868 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:35:53.970 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:35:53.970 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:36:34.069 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:36:34.069 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:37:14.170 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:37:14.170 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:37:54.271 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:37:54.271 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:38:34.371 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:38:34.371 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:39:14.469 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:39:14.469 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:39:54.571 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:39:54.571 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:40:34.670 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:40:34.670 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:41:14.771 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:41:14.771 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:41:54.870 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:41:54.870 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:42:34.968 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:42:34.968 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:43:15.069 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:43:15.069 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:43:55.169 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:43:55.169 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:44:35.269 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:44:35.269 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:45:15.370 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:45:15.370 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:45:55.469 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:45:55.469 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:46:35.569 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:46:35.569 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:47:15.670 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:47:15.670 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:47:55.770 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:47:55.770 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:48:35.868 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:48:35.868 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:49:15.970 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:49:15.970 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:49:56.071 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:49:56.071 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:50:36.170 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:50:36.170 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:51:16.269 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:51:16.269 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:51:56.370 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:51:56.370 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:52:36.469 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:52:36.469 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:53:16.569 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:53:16.569 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:53:56.669 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:53:56.669 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:54:36.769 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:54:36.769 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:55:16.868 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:55:16.868 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:55:56.971 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:55:56.971 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:56:37.071 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:56:37.071 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:57:17.169 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:57:17.169 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:57:57.270 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:57:57.270 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:58:37.370 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:58:37.370 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:59:17.471 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:59:17.471 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:59:57.569 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+20:59:57.569 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:00:37.669 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:00:37.669 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:01:17.768 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:01:17.768 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:01:57.869 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:01:57.869 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:02:37.969 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:02:37.969 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:03:18.069 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:03:18.069 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:03:58.169 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:03:58.169 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:04:38.270 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:04:38.270 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:05:18.369 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:05:18.369 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:05:58.470 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:05:58.470 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:06:38.569 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:06:38.569 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:07:18.670 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:07:18.670 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:07:58.771 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:07:58.771 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:08:38.870 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:08:38.870 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:09:18.970 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:09:18.970 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:09:59.071 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:09:59.071 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:10:39.169 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:10:39.169 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:11:19.270 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:11:19.270 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:11:59.371 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:11:59.371 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:12:39.471 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:12:39.471 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:13:19.572 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:13:19.572 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:13:59.671 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:13:59.671 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:14:39.769 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:14:39.769 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:15:19.870 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:15:19.870 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:15:59.970 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:15:59.970 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:16:40.069 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:16:40.069 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:17:20.169 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:17:20.169 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:18:00.269 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:18:00.269 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:18:40.369 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:18:40.369 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:19:20.469 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:19:20.469 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:20:00.569 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:20:00.569 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:20:40.669 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:20:40.669 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:21:20.769 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:21:20.769 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:22:00.868 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:22:00.868 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:22:40.969 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:22:40.969 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:23:21.071 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:23:21.071 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:24:01.172 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:24:01.172 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:24:41.268 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:24:41.268 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:25:21.371 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:25:21.371 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:26:01.469 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:26:01.469 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:26:41.568 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:26:41.568 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:27:21.672 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:27:21.672 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:28:01.769 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:28:01.769 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:28:41.869 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:28:41.869 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:29:21.969 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:29:21.969 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:30:02.073 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:30:02.073 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:30:42.169 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:30:42.169 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:31:22.269 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:31:22.269 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:32:02.370 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:32:02.370 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:32:42.470 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:32:42.470 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:33:22.569 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:33:22.569 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:34:02.670 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:34:02.670 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:34:42.771 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:34:42.771 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:35:22.870 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:35:22.870 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:36:02.970 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:36:02.970 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:36:43.069 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:36:43.069 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:37:23.172 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:37:23.172 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:38:03.269 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:38:03.269 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:38:43.369 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:38:43.369 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:39:23.470 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:39:23.470 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:40:03.570 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:40:03.570 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:40:43.671 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:40:43.671 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:41:23.770 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:41:23.770 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:42:03.869 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:42:03.869 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:42:43.969 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:42:43.969 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:43:24.071 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:43:24.071 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:44:04.169 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:44:04.169 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:44:44.270 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:44:44.270 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:45:24.369 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:45:24.369 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:46:04.469 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:46:04.469 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:46:44.569 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:46:44.569 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:47:24.673 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:47:24.673 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:48:04.769 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:48:04.769 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:48:44.868 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:48:44.868 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:49:24.971 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:49:24.971 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:50:05.071 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:50:05.071 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:50:45.169 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:50:45.169 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:51:25.272 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:51:25.272 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:52:05.369 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:52:05.369 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:52:45.469 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:52:45.469 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:53:25.571 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:53:25.571 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:54:05.672 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:54:05.672 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:54:45.769 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:54:45.770 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:55:25.870 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:55:25.870 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:56:05.972 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:56:05.972 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:56:46.069 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:56:46.069 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:57:26.169 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:57:26.169 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:58:06.270 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:58:06.270 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:58:46.369 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:58:46.369 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:59:26.470 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+21:59:26.470 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:00:06.569 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:00:06.569 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:00:46.670 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:00:46.670 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:01:26.769 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:01:26.769 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:02:06.871 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:02:06.871 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:02:46.969 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:02:46.969 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:03:27.072 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:03:27.072 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:04:07.169 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:04:07.169 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:04:47.268 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:04:47.268 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:05:27.370 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:05:27.370 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:06:07.472 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:06:07.472 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:06:47.570 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:06:47.570 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:07:27.670 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:07:27.670 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:08:07.768 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:08:07.768 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:08:47.876 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:08:47.876 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:09:27.970 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:09:27.970 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:10:08.070 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:10:08.070 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:10:48.170 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:10:48.170 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:11:28.272 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:11:28.273 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:12:08.369 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:12:08.369 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:12:48.468 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:12:48.469 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:13:28.569 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:13:28.570 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:14:08.670 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:14:08.670 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:14:48.770 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:14:48.770 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:15:28.869 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:15:28.869 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:16:08.969 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:16:08.969 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:16:49.069 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:16:49.069 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:17:29.169 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:17:29.169 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:18:09.269 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:18:09.270 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:18:49.370 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:18:49.370 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:19:29.469 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:19:29.469 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:20:09.569 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:20:09.569 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:20:49.669 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:20:49.669 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:21:29.769 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:21:29.769 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:22:09.871 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:22:09.871 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:22:49.969 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:22:49.969 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:23:30.069 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:23:30.069 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:24:10.169 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:24:10.170 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:24:50.269 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:24:50.269 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:25:30.370 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:25:30.370 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:26:10.471 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:26:10.471 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:26:50.568 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:26:50.568 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:27:30.669 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:27:30.669 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:28:10.770 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:28:10.770 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:28:50.870 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:28:50.870 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:29:30.969 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:29:30.969 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:30:11.072 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:30:11.072 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:30:51.170 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:30:51.170 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:31:31.268 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:31:31.268 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:32:11.371 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:32:11.371 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:32:51.470 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:32:51.470 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:33:31.570 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:33:31.570 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:34:11.669 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:34:11.669 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:34:51.770 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:34:51.771 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:35:31.869 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:35:31.869 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:36:11.970 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:36:11.970 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:36:52.070 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:36:52.070 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:37:32.169 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:37:32.169 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:38:12.269 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:38:12.272 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:38:52.371 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:38:52.371 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:39:32.472 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:39:32.472 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:40:12.569 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:40:12.569 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:40:52.670 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:40:52.670 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:41:32.771 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:41:32.771 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:42:12.868 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:42:12.868 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:42:52.969 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:42:52.969 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:43:33.068 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:43:33.070 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:44:13.172 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:44:13.172 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:44:53.270 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:44:53.272 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:45:33.368 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:45:33.368 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:46:13.468 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:46:13.468 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:46:53.569 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:46:53.569 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:47:33.670 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:47:33.670 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:48:13.770 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:48:13.770 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:48:53.870 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:48:53.870 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:49:33.968 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:49:33.968 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:50:14.069 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:50:14.069 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:50:54.172 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:50:54.172 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:51:34.269 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:51:34.269 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:52:14.370 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:52:14.370 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:52:54.469 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:52:54.469 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:53:34.569 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:53:34.569 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:54:14.672 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:54:14.672 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:54:54.770 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:54:54.770 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:55:34.870 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:55:34.870 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:56:14.970 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:56:14.970 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:56:55.069 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:56:55.074 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:57:35.171 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:57:35.171 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:58:15.270 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:58:15.270 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:58:55.370 [lettuce-eventExecutorLoop-1-20] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:58:55.370 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:59:35.469 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+22:59:35.469 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+23:00:15.569 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+23:00:15.569 [lettuce-eventExecutorLoop-1-8] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+23:00:55.669 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+23:00:55.669 [lettuce-eventExecutorLoop-1-13] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+23:01:35.770 [lettuce-eventExecutorLoop-1-16] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+23:01:35.770 [lettuce-eventExecutorLoop-1-17] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 192.168.211.200:6379
+23:01:48.221 [SpringApplicationShutdownHook] INFO  c.a.c.n.r.NacosServiceRegistry - [deregister,95] - De-registering from Nacos Server now...
+23:01:48.532 [SpringApplicationShutdownHook] INFO  c.a.c.n.r.NacosServiceRegistry - [deregister,115] - De-registration finished.
+23:01:48.590 [SpringApplicationShutdownHook] INFO  c.z.h.HikariDataSource - [close,350] - HikariPool-1 - Shutdown initiated...
+23:02:13.691 [SpringApplicationShutdownHook] INFO  c.z.h.HikariDataSource - [close,352] - HikariPool-1 - Shutdown completed.

@@ -1,0 +1,32 @@
+### 查询字典类型列表
+GET {{ gateway_host }}/system/dict/type/list
+Authorization: Bearer {{access_token}}
+
+### 添加字典类型
+POST {{ gateway_host }}/system/dict/type
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "dictId": 1233,
+  "dictName": "测试",
+  "dictType": "test",
+  "status": "0",
+  "remark": "这是一个测试"
+}
+
+### 修改字典类型
+PUT {{ gateway_host }}/system/dict/type
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "dictType": "test",
+  "status": "0",
+  "remark": "这是一个测试"
+}
+
+###
+GET {{gateway_host}}/system/user/info/admin
+Content-Type: application/json
+Authorization: Bearer {{access_token}}

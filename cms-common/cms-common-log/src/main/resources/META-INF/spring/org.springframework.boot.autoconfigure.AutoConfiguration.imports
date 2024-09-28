@@ -1,0 +1,2 @@
+com.cms.common.log.service.AsyncLogService
+com.cms.common.log.aspect.LogAspect

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.system.mapper.SysOperLogMapper">
+
+    <!-- 字段映射 -->
+    <resultMap type="com.cms.system.api.domain.pojo.SysOperLog" id="SysUserResult">
+        <id property="operId" column="oper_id"></id>
+        <result property="title" column="title"></result>
+        <result property="businessType" column="business_type"></result>
+        <result property="method" column="method"></result>
+        <result property="requestMethod" column="request_method"></result>
+        <result property="operatorType" column="operator_type"></result>
+        <result property="operName" column="oper_name"></result>
+        <result property="operUrl" column="oper_url"></result>
+        <result property="operIp" column="oper_ip"></result>
+        <result property="operParam" column="oper_param"></result>
+        <result property="jsonResult" column="json_result"></result>
+        <result property="status" column="status"></result>
+        <result property="errorMsg" column="error_msg"></result>
+        <result property="operTime" column="oper_time"></result>
+        <result property="costTime" column="cost_time"></result>
+    </resultMap>
+
+    <!-- 查询列表数据 -->
+    <select id="listEntities" resultType="com.cms.system.api.domain.pojo.SysOperLog" resultMap="SysUserResult">
+        select o.oper_id,
+        o.title,
+        o.business_type,
+        o.request_method,
+        o.oper_name,
+        o.oper_ip,
+        o.status,
+        o.oper_time,
+        o.cost_time
+        from sys_oper_log o
+        left join sys_user u on u.user_name = o.oper_name
+        left join sys_user_role ur on ur.user_id = u.user_id
+        <where>
+            <if test="title != null and title != ''">
+                and o.title like concat('%',#{title},'%')
+            </if>
+            <if test="operName != null and operName != ''">
+                and o.oper_name = concat('%',#{operName},'%')
+            </if>
+            <if test="operUrl != null and operUrl != ''">
+                and o.oper_url = concat('%',#{operUrl},'%')
+            </if>
+            <if test="status != null and status != ''">
+                and o.status = #{status}
+            </if>
+            <if test="beginTime != null and endTime != null">
+                and o.oper_time between #{beginTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="roleId != null">
+                and ur.role_id = #{roleId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

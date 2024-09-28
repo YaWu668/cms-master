@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.system.mapper.SysUserMapper">
+
+    <!-- 字段映射 -->
+    <resultMap type="com.cms.system.api.domain.dto.SysUserDto" id="SysUserResult">
+        <id property="userId" column="user_id"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="nickName" column="nick_name"/>
+        <result property="email" column="email"/>
+        <result property="phonenumber" column="phonenumber"/>
+        <result property="sex" column="sex"/>
+        <result property="avatar" column="avatar"/>
+        <result property="password" column="password"/>
+        <result property="dateOfHire" column="dateOfHire"/>
+        <result property="leader" column="leader"/>
+        <result property="personnelType" column="personnel_type"/>
+        <result property="idNumber" column="idNumber"/>
+        <result property="weChatId" column="we_chat_id"/>
+        <result property="qqId" column="qq_id"/>
+        <result property="birthday" column="birthday"/>
+        <result property="maritalStatus" column="marital_status"/>
+        <result property="householdType" column="household_type"/>
+        <result property="fertilityStatus" column="fertility_status"/>
+        <result property="status" column="status"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="loginIp" column="login_ip"/>
+        <result property="loginDate" column="login_date"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+        <association property="dept" javaType="com.cms.system.api.domain.dto.SysDeptDto" resultMap="deptResult"/>
+        <collection property="roles" javaType="java.util.List" resultMap="RoleResult"/>
+    </resultMap>
+
+    <resultMap id="deptResult" type="com.cms.system.api.domain.dto.SysDeptDto">
+        <id property="deptId" column="dept_id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="deptName" column="dept_name"/>
+        <result property="ancestors" column="ancestors"/>
+        <result property="orderNum" column="order_num"/>
+        <result property="leader" column="leader"/>
+        <result property="status" column="dept_status"/>
+    </resultMap>
+
+    <resultMap id="RoleResult" type="com.cms.system.api.domain.dto.SysRoleDto">
+        <id property="roleId" column="role_id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="roleKey" column="role_key"/>
+        <result property="roleSort" column="role_sort"/>
+        <result property="dataScope" column="data_scope"/>
+        <result property="status" column="role_status"/>
+    </resultMap>
+
+    <!--查询用户列表数据-->
+    <select id="listEntities" parameterType="com.cms.system.api.domain.dto.SysUserDto" resultMap="SysUserResult">
+        select u.user_id,
+        u.dept_id,
+        u.nick_name,
+        u.user_name,
+        u.email,
+        u.phonenumber,
+        u.sex,
+        u.leader,
+        u.status,
+        u.create_time,
+        d.dept_name
+        from sys_user u
+        left join sys_dept d on u.dept_id = d.dept_id
+        where u.del_flag = '0'
+        <if test="userName != null and userName != ''">
+            and u.user_name like concat('%',#{ userName },'%')
+        </if>
+        <if test="status != null and status != ''">
+            and u.status = #{ status }
+        </if>
+        <if test="deptId != null and deptId != 0">
+            and (u.dept_id = #{deptId} or u.dept_id in ( select t.dept_id from sys_dept t where
+            find_in_set(#{deptId},ancestors) ))
+        </if>
+    </select>
+
+    <select id="selectAllocatedList" resultType="com.cms.system.api.domain.dto.SysUserDto">
+        select u.user_id,
+        u.dept_id,
+        u.nick_name,
+        u.user_name,
+        u.email,
+        u.phonenumber,
+        u.sex,
+        u.leader,
+        u.status,
+        u.create_time,
+        d.dept_name
+        from sys_user u
+        left join sys_dept d on u.dept_id = d.dept_id
+        left join sys_user_role ur on ur.user_id = u.user_id
+        where u.del_flag = '0'
+        <if test="query.userName != null and query.userName != ''">
+            and u.user_name like concat('%',#{ query.userName },'%')
+        </if>
+        <if test="query.status != null and query.status != ''">
+            and status = #{ query.status }
+        </if>
+        and ur.role_id = #{roleId}
+    </select>
+
+    <select id="selectUnallocatedList" resultType="com.cms.system.api.domain.dto.SysUserDto">
+        select u.user_id,
+        u.dept_id,
+        u.nick_name,
+        u.user_name,
+        u.email,
+        u.phonenumber,
+        u.sex,
+        u.leader,
+        u.status,
+        u.create_time,
+        d.dept_name
+        from sys_user u
+        left join sys_dept d on u.dept_id = d.dept_id
+        left join sys_user_role ur on ur.user_id = u.user_id and ur.role_id = #{roleId}
+        where u.del_flag = '0'
+        <if test="query.userName != null and query.userName != ''">
+            and u.user_name like concat('%',#{ query.userName },'%')
+        </if>
+        <if test="query.status != null and query.status != ''">
+            and status = #{ query.status }
+        </if>
+        and ur.user_id is null
+        and u.user_id != 1
+    </select>
+
+</mapper>

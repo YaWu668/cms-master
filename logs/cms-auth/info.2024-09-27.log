@@ -1,0 +1,194 @@
+14:21:58.949 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
+14:21:59.014 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 6.2.5.Final
+14:21:59.416 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+14:21:59.417 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+14:22:12.742 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource@1777043124 {name='bootstrapProperties-cms-auth-dev.yml,cms-project', properties={}}, BootstrapPropertySource@1482344533 {name='bootstrapProperties-cms-auth.yml,cms-project', properties={}}, BootstrapPropertySource@1538849250 {name='bootstrapProperties-cms-auth,cms-project', properties={}}]
+14:22:12.754 [main] INFO  c.c.a.CmsAuthApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "dev"
+14:22:13.886 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [multipleStoresDetected,262] - Multiple Spring Data modules found, entering strict repository configuration mode
+14:22:13.889 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,132] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+14:22:13.922 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,201] - Finished Spring Data repository scanning in 6 ms. Found 0 Redis repository interfaces.
+14:22:14.176 [main] INFO  o.s.c.c.s.GenericScope - [setSerializationId,283] - BeanFactory id=a4555949-8ccc-38bf-952d-4b4c3548c9e8
+14:22:14.474 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'com.cms.common.redis.config.RedisConfig' of type [com.cms.common.redis.config.RedisConfig$$EnhancerBySpringCGLIB$$342ba404] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+14:22:14.963 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [initialize,108] - Tomcat initialized with port(s): 8080 (http)
+14:22:14.979 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Initializing ProtocolHandler ["http-nio-8080"]
+14:22:14.983 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
+14:22:14.984 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.83]
+14:22:15.242 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
+14:22:15.243 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - [prepareWebApplicationContext,292] - Root WebApplicationContext: initialization completed in 2469 ms
+14:22:16.444 [main] INFO  o.s.c.o.FeignClientFactoryBean - [getTarget,418] - For 'cms-system' URL not provided. Will try picking an instance via load-balancing.
+14:22:16.534 [main] INFO  o.s.c.o.FeignClientFactoryBean - [getTarget,418] - For 'cms-system' URL not provided. Will try picking an instance via load-balancing.
+14:22:16.895 [main] INFO  c.a.c.s.SentinelWebMvcConfigurer - [addInterceptors,52] - [Sentinel Starter] register SentinelWebInterceptor with urlPatterns: [/**].
+14:22:23.849 [main] INFO  o.s.b.a.e.w.EndpointLinksResolver - [<init>,58] - Exposing 1 endpoint(s) beneath base path '/actuator'
+14:22:23.987 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Starting ProtocolHandler ["http-nio-8080"]
+14:22:24.010 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [start,220] - Tomcat started on port(s): 8080 (http) with context path ''
+14:22:24.038 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+14:22:24.039 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+14:22:34.583 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Pausing ProtocolHandler ["http-nio-8080"]
+14:22:34.583 [main] INFO  o.a.c.c.StandardService - [log,173] - Stopping service [Tomcat]
+14:22:34.590 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Stopping ProtocolHandler ["http-nio-8080"]
+14:22:34.594 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Destroying ProtocolHandler ["http-nio-8080"]
+14:45:35.115 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
+14:45:35.159 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 6.2.5.Final
+14:45:35.474 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+14:45:35.474 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+14:45:46.159 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource@704869156 {name='bootstrapProperties-cms-auth-dev.yml,cms-project', properties={}}, BootstrapPropertySource@1777043124 {name='bootstrapProperties-cms-auth.yml,cms-project', properties={}}, BootstrapPropertySource@1482344533 {name='bootstrapProperties-cms-auth,cms-project', properties={}}]
+14:45:46.170 [main] INFO  c.c.a.CmsAuthApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "dev"
+14:45:47.191 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [multipleStoresDetected,262] - Multiple Spring Data modules found, entering strict repository configuration mode
+14:45:47.194 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,132] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+14:45:47.222 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,201] - Finished Spring Data repository scanning in 5 ms. Found 0 Redis repository interfaces.
+14:45:47.438 [main] INFO  o.s.c.c.s.GenericScope - [setSerializationId,283] - BeanFactory id=a4555949-8ccc-38bf-952d-4b4c3548c9e8
+14:45:47.690 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'com.cms.common.redis.config.RedisConfig' of type [com.cms.common.redis.config.RedisConfig$$EnhancerBySpringCGLIB$$545ecc6b] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+14:45:48.093 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [initialize,108] - Tomcat initialized with port(s): 8080 (http)
+14:45:48.102 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Initializing ProtocolHandler ["http-nio-8080"]
+14:45:48.104 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
+14:45:48.104 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.83]
+14:45:48.313 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
+14:45:48.314 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - [prepareWebApplicationContext,292] - Root WebApplicationContext: initialization completed in 2123 ms
+14:45:49.239 [main] INFO  o.s.c.o.FeignClientFactoryBean - [getTarget,418] - For 'cms-system' URL not provided. Will try picking an instance via load-balancing.
+14:45:49.328 [main] INFO  o.s.c.o.FeignClientFactoryBean - [getTarget,418] - For 'cms-system' URL not provided. Will try picking an instance via load-balancing.
+14:45:49.573 [main] INFO  c.a.c.s.SentinelWebMvcConfigurer - [addInterceptors,52] - [Sentinel Starter] register SentinelWebInterceptor with urlPatterns: [/**].
+14:45:53.466 [main] INFO  o.s.b.a.e.w.EndpointLinksResolver - [<init>,58] - Exposing 1 endpoint(s) beneath base path '/actuator'
+14:45:53.566 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Starting ProtocolHandler ["http-nio-8080"]
+14:45:53.576 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [start,220] - Tomcat started on port(s): 8080 (http) with context path ''
+14:45:53.589 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+14:45:53.589 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+14:46:01.062 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Pausing ProtocolHandler ["http-nio-8080"]
+14:46:01.062 [main] INFO  o.a.c.c.StandardService - [log,173] - Stopping service [Tomcat]
+14:46:01.066 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Stopping ProtocolHandler ["http-nio-8080"]
+14:46:01.068 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Destroying ProtocolHandler ["http-nio-8080"]
+17:23:07.021 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
+17:23:07.078 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 6.2.5.Final
+17:23:07.411 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+17:23:07.411 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+17:23:12.081 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource@1181567472 {name='bootstrapProperties-cms-auth-dev.yml,cms-project', properties={}}, BootstrapPropertySource@1896708863 {name='bootstrapProperties-cms-auth.yml,cms-project', properties={}}, BootstrapPropertySource@763236610 {name='bootstrapProperties-cms-auth,cms-project', properties={}}]
+17:23:12.092 [main] INFO  c.c.a.CmsAuthApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "dev"
+17:23:13.154 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [multipleStoresDetected,262] - Multiple Spring Data modules found, entering strict repository configuration mode
+17:23:13.157 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,132] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+17:23:13.185 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,201] - Finished Spring Data repository scanning in 5 ms. Found 0 Redis repository interfaces.
+17:23:13.395 [main] INFO  o.s.c.c.s.GenericScope - [setSerializationId,283] - BeanFactory id=a4555949-8ccc-38bf-952d-4b4c3548c9e8
+17:23:13.677 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'com.cms.common.redis.config.RedisConfig' of type [com.cms.common.redis.config.RedisConfig$$EnhancerBySpringCGLIB$$4961ac90] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+17:23:14.086 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [initialize,108] - Tomcat initialized with port(s): 8080 (http)
+17:23:14.097 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Initializing ProtocolHandler ["http-nio-8080"]
+17:23:14.099 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
+17:23:14.100 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.83]
+17:23:14.322 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
+17:23:14.322 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - [prepareWebApplicationContext,292] - Root WebApplicationContext: initialization completed in 2214 ms
+17:23:15.194 [main] INFO  o.s.c.o.FeignClientFactoryBean - [getTarget,418] - For 'cms-system' URL not provided. Will try picking an instance via load-balancing.
+17:23:15.307 [main] INFO  o.s.c.o.FeignClientFactoryBean - [getTarget,418] - For 'cms-system' URL not provided. Will try picking an instance via load-balancing.
+17:23:15.581 [main] INFO  c.a.c.s.SentinelWebMvcConfigurer - [addInterceptors,52] - [Sentinel Starter] register SentinelWebInterceptor with urlPatterns: [/**].
+17:23:19.824 [main] INFO  o.s.b.a.e.w.EndpointLinksResolver - [<init>,58] - Exposing 1 endpoint(s) beneath base path '/actuator'
+17:23:19.902 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Starting ProtocolHandler ["http-nio-8080"]
+17:23:19.915 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [start,220] - Tomcat started on port(s): 8080 (http) with context path ''
+17:23:19.931 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+17:23:19.932 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+17:23:20.108 [main] INFO  c.a.c.n.r.NacosServiceRegistry - [register,76] - nacos registry, cms-project cms-auth 182.91.27.81:8080 register finished
+17:23:21.157 [main] INFO  c.c.a.CmsAuthApplication - [logStarted,61] - Started CmsAuthApplication in 15.972 seconds (JVM running for 18.747)
+17:23:21.174 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-auth.yml, group=cms-project
+17:23:21.175 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-auth-dev.yml, group=cms-project
+17:23:21.175 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-auth, group=cms-project
+17:23:21.780 [RMI TCP Connection(1)-182.91.27.81] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+17:23:21.780 [RMI TCP Connection(1)-182.91.27.81] INFO  o.s.w.s.DispatcherServlet - [initServletBean,525] - Initializing Servlet 'dispatcherServlet'
+17:23:21.782 [RMI TCP Connection(1)-182.91.27.81] INFO  o.s.w.s.DispatcherServlet - [initServletBean,547] - Completed initialization in 1 ms
+17:24:21.485 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
+17:24:21.541 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 6.2.5.Final
+17:24:21.882 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+17:24:21.882 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+17:24:26.799 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource@1181567472 {name='bootstrapProperties-cms-auth-dev.yml,cms-project', properties={}}, BootstrapPropertySource@1896708863 {name='bootstrapProperties-cms-auth.yml,cms-project', properties={}}, BootstrapPropertySource@763236610 {name='bootstrapProperties-cms-auth,cms-project', properties={}}]
+17:24:26.809 [main] INFO  c.c.a.CmsAuthApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "dev"
+17:24:27.983 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [multipleStoresDetected,262] - Multiple Spring Data modules found, entering strict repository configuration mode
+17:24:27.987 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,132] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+17:24:28.036 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,201] - Finished Spring Data repository scanning in 6 ms. Found 0 Redis repository interfaces.
+17:24:28.353 [main] INFO  o.s.c.c.s.GenericScope - [setSerializationId,283] - BeanFactory id=a4555949-8ccc-38bf-952d-4b4c3548c9e8
+17:24:28.621 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'com.cms.common.redis.config.RedisConfig' of type [com.cms.common.redis.config.RedisConfig$$EnhancerBySpringCGLIB$$4961ac90] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+17:24:29.148 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [initialize,108] - Tomcat initialized with port(s): 8080 (http)
+17:24:29.170 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Initializing ProtocolHandler ["http-nio-8080"]
+17:24:29.174 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
+17:24:29.175 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.83]
+17:24:29.532 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
+17:24:29.532 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - [prepareWebApplicationContext,292] - Root WebApplicationContext: initialization completed in 2707 ms
+17:24:30.419 [main] INFO  o.s.c.o.FeignClientFactoryBean - [getTarget,418] - For 'cms-system' URL not provided. Will try picking an instance via load-balancing.
+17:24:30.478 [main] INFO  o.s.c.o.FeignClientFactoryBean - [getTarget,418] - For 'cms-system' URL not provided. Will try picking an instance via load-balancing.
+17:24:30.709 [main] INFO  c.a.c.s.SentinelWebMvcConfigurer - [addInterceptors,52] - [Sentinel Starter] register SentinelWebInterceptor with urlPatterns: [/**].
+17:24:35.584 [main] INFO  o.s.b.a.e.w.EndpointLinksResolver - [<init>,58] - Exposing 1 endpoint(s) beneath base path '/actuator'
+17:24:35.687 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Starting ProtocolHandler ["http-nio-8080"]
+17:24:35.706 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [start,220] - Tomcat started on port(s): 8080 (http) with context path ''
+17:24:35.728 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+17:24:35.728 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+17:24:35.899 [main] INFO  c.a.c.n.r.NacosServiceRegistry - [register,76] - nacos registry, cms-project cms-auth 182.91.27.81:8080 register finished
+17:24:37.118 [main] INFO  c.c.a.CmsAuthApplication - [logStarted,61] - Started CmsAuthApplication in 17.313 seconds (JVM running for 19.278)
+17:24:37.140 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-auth.yml, group=cms-project
+17:24:37.141 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-auth-dev.yml, group=cms-project
+17:24:37.142 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-auth, group=cms-project
+17:24:38.766 [RMI TCP Connection(9)-182.91.27.81] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+17:24:38.766 [RMI TCP Connection(9)-182.91.27.81] INFO  o.s.w.s.DispatcherServlet - [initServletBean,525] - Initializing Servlet 'dispatcherServlet'
+17:24:38.770 [RMI TCP Connection(9)-182.91.27.81] INFO  o.s.w.s.DispatcherServlet - [initServletBean,547] - Completed initialization in 3 ms
+17:32:04.638 [nacos.client.cachedata.internal.notifier] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource@237605651 {name='bootstrapProperties-cms-auth-dev.yml,cms-project', properties={server.port=10241, spring.redis.host=127.0.0.1, spring.redis.port=6379}}, BootstrapPropertySource@941015838 {name='bootstrapProperties-cms-auth.yml,cms-project', properties={}}, BootstrapPropertySource@236373735 {name='bootstrapProperties-cms-auth,cms-project', properties={}}]
+17:32:04.647 [nacos.client.cachedata.internal.notifier] INFO  o.s.b.SpringApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "dev"
+17:32:04.662 [nacos.client.cachedata.internal.notifier] INFO  o.s.b.SpringApplication - [logStarted,61] - Started application in 1.174 seconds (JVM running for 466.823)
+17:32:04.887 [nacos.client.cachedata.internal.notifier] INFO  o.s.c.e.e.RefreshEventListener - [handle,73] - Refresh keys changed: [spring.redis.host, spring.redis.port, server.port]
+21:43:14.846 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
+21:43:14.913 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 6.2.5.Final
+21:43:15.317 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+21:43:15.318 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+21:43:26.126 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource@2082545616 {name='bootstrapProperties-cms-auth-dev.yml,cms-project', properties={server.port=10241, spring.redis.host=127.0.0.1, spring.redis.port=6379}}, BootstrapPropertySource@117460541 {name='bootstrapProperties-cms-auth.yml,cms-project', properties={}}, BootstrapPropertySource@763677574 {name='bootstrapProperties-cms-auth,cms-project', properties={}}]
+21:43:26.140 [main] INFO  c.c.a.CmsAuthApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "dev"
+21:43:27.171 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [multipleStoresDetected,262] - Multiple Spring Data modules found, entering strict repository configuration mode
+21:43:27.174 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,132] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+21:43:27.202 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,201] - Finished Spring Data repository scanning in 7 ms. Found 0 Redis repository interfaces.
+21:43:27.379 [main] INFO  o.s.c.c.s.GenericScope - [setSerializationId,283] - BeanFactory id=a4555949-8ccc-38bf-952d-4b4c3548c9e8
+21:43:27.603 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'com.cms.common.redis.config.RedisConfig' of type [com.cms.common.redis.config.RedisConfig$$EnhancerBySpringCGLIB$$7d5703df] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+21:43:27.986 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [initialize,108] - Tomcat initialized with port(s): 10241 (http)
+21:43:27.994 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Initializing ProtocolHandler ["http-nio-10241"]
+21:43:27.996 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
+21:43:27.996 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.83]
+21:43:28.257 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
+21:43:28.257 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - [prepareWebApplicationContext,292] - Root WebApplicationContext: initialization completed in 2095 ms
+21:43:29.160 [main] INFO  o.s.c.o.FeignClientFactoryBean - [getTarget,418] - For 'cms-system' URL not provided. Will try picking an instance via load-balancing.
+21:43:29.234 [main] INFO  o.s.c.o.FeignClientFactoryBean - [getTarget,418] - For 'cms-system' URL not provided. Will try picking an instance via load-balancing.
+21:43:29.476 [main] INFO  c.a.c.s.SentinelWebMvcConfigurer - [addInterceptors,52] - [Sentinel Starter] register SentinelWebInterceptor with urlPatterns: [/**].
+21:43:35.535 [main] INFO  o.s.b.a.e.w.EndpointLinksResolver - [<init>,58] - Exposing 1 endpoint(s) beneath base path '/actuator'
+21:43:35.641 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Starting ProtocolHandler ["http-nio-10241"]
+21:43:35.653 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [start,220] - Tomcat started on port(s): 10241 (http) with context path ''
+21:43:35.670 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+21:43:35.670 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+21:43:35.825 [main] INFO  c.a.c.n.r.NacosServiceRegistry - [register,76] - nacos registry, cms-project cms-auth 172.22.32.32:10241 register finished
+21:43:37.818 [main] INFO  c.c.a.CmsAuthApplication - [logStarted,61] - Started CmsAuthApplication in 25.592 seconds (JVM running for 28.193)
+21:43:37.842 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-auth.yml, group=cms-project
+21:43:37.845 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-auth-dev.yml, group=cms-project
+21:43:37.846 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-auth, group=cms-project
+21:43:40.368 [RMI TCP Connection(7)-172.17.239.72] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+21:43:40.369 [RMI TCP Connection(7)-172.17.239.72] INFO  o.s.w.s.DispatcherServlet - [initServletBean,525] - Initializing Servlet 'dispatcherServlet'
+21:43:40.372 [RMI TCP Connection(7)-172.17.239.72] INFO  o.s.w.s.DispatcherServlet - [initServletBean,547] - Completed initialization in 3 ms
+22:11:31.437 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
+22:11:31.491 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 6.2.5.Final
+22:11:31.834 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+22:11:31.835 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+22:11:39.233 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource@1715686600 {name='bootstrapProperties-cms-auth-dev.yml,cms-project', properties={server.port=10241, spring.redis.host=127.0.0.1, spring.redis.port=6379}}, BootstrapPropertySource@1123166613 {name='bootstrapProperties-cms-auth.yml,cms-project', properties={}}, BootstrapPropertySource@1765690649 {name='bootstrapProperties-cms-auth,cms-project', properties={}}]
+22:11:39.248 [main] INFO  c.c.a.CmsAuthApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "dev"
+22:11:40.599 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [multipleStoresDetected,262] - Multiple Spring Data modules found, entering strict repository configuration mode
+22:11:40.603 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,132] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+22:11:40.639 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,201] - Finished Spring Data repository scanning in 8 ms. Found 0 Redis repository interfaces.
+22:11:40.914 [main] INFO  o.s.c.c.s.GenericScope - [setSerializationId,283] - BeanFactory id=a4555949-8ccc-38bf-952d-4b4c3548c9e8
+22:11:41.278 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'com.cms.common.redis.config.RedisConfig' of type [com.cms.common.redis.config.RedisConfig$$EnhancerBySpringCGLIB$$58f91399] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+22:11:41.892 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [initialize,108] - Tomcat initialized with port(s): 10241 (http)
+22:11:41.903 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Initializing ProtocolHandler ["http-nio-10241"]
+22:11:41.905 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
+22:11:41.905 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.83]
+22:11:42.134 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
+22:11:42.134 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - [prepareWebApplicationContext,292] - Root WebApplicationContext: initialization completed in 2864 ms
+22:11:43.247 [main] INFO  o.s.c.o.FeignClientFactoryBean - [getTarget,418] - For 'cms-system' URL not provided. Will try picking an instance via load-balancing.
+22:11:43.358 [main] INFO  o.s.c.o.FeignClientFactoryBean - [getTarget,418] - For 'cms-system' URL not provided. Will try picking an instance via load-balancing.
+22:11:43.757 [main] INFO  c.a.c.s.SentinelWebMvcConfigurer - [addInterceptors,52] - [Sentinel Starter] register SentinelWebInterceptor with urlPatterns: [/**].
+22:11:52.339 [main] INFO  o.s.b.a.e.w.EndpointLinksResolver - [<init>,58] - Exposing 1 endpoint(s) beneath base path '/actuator'
+22:11:52.445 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Starting ProtocolHandler ["http-nio-10241"]
+22:11:52.457 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [start,220] - Tomcat started on port(s): 10241 (http) with context path ''
+22:11:52.472 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+22:11:52.472 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+22:11:52.604 [main] INFO  c.a.c.n.r.NacosServiceRegistry - [register,76] - nacos registry, cms-project cms-auth 172.22.32.32:10241 register finished
+22:11:54.563 [main] INFO  c.c.a.CmsAuthApplication - [logStarted,61] - Started CmsAuthApplication in 25.296 seconds (JVM running for 27.78)
+22:11:54.580 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-auth.yml, group=cms-project
+22:11:54.581 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-auth-dev.yml, group=cms-project
+22:11:54.582 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-auth, group=cms-project
+22:11:54.753 [RMI TCP Connection(7)-172.17.239.72] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+22:11:54.755 [RMI TCP Connection(7)-172.17.239.72] INFO  o.s.w.s.DispatcherServlet - [initServletBean,525] - Initializing Servlet 'dispatcherServlet'
+22:11:54.758 [RMI TCP Connection(7)-172.17.239.72] INFO  o.s.w.s.DispatcherServlet - [initServletBean,547] - Completed initialization in 3 ms

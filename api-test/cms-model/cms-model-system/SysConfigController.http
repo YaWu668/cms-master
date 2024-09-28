@@ -1,0 +1,3 @@
+### 查询列表数据
+GET {{ gateway_host }}/system/config/list?configName=123&configType=X
+Authorization: Bearer {{access_token}}

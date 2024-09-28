@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="cms-common-core" />
+        <module name="cms-api-system" />
+        <module name="cms-gateway" />
+        <module name="cms-common-datascope" />
+        <module name="cms-common-sensitive" />
+        <module name="cms-common-security" />
+        <module name="cms-models-file" />
+        <module name="cms-common-swagger" />
+        <module name="cms-auth" />
+        <module name="cms-common-redis" />
+        <module name="cms-models-zhengshu" />
+        <module name="cms-common-log" />
+        <module name="cms-models-bisai" />
+        <module name="cms-common-config" />
+        <module name="cms-models-xiangmu" />
+        <module name="cms-models-system" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="bisai" target="1.8" />
+      <module name="cms-api" target="1.8" />
+      <module name="cms-api-system" target="1.8" />
+      <module name="cms-auth" target="1.8" />
+      <module name="cms-common" target="1.8" />
+      <module name="cms-common-config" target="1.8" />
+      <module name="cms-common-core" target="1.8" />
+      <module name="cms-common-datascope" target="1.8" />
+      <module name="cms-common-log" target="1.8" />
+      <module name="cms-common-minio" target="1.8" />
+      <module name="cms-common-redis" target="1.8" />
+      <module name="cms-common-security" target="1.8" />
+      <module name="cms-common-sensitive" target="1.8" />
+      <module name="cms-common-swagger" target="1.8" />
+      <module name="cms-gateway" target="1.8" />
+      <module name="cms-models" target="1.8" />
+      <module name="cms-models-bisai" target="1.8" />
+      <module name="cms-models-file" target="1.8" />
+      <module name="cms-models-system" target="1.8" />
+      <module name="cms-models-xiangmu" target="1.8" />
+      <module name="cms-models-zhengshu" target="1.8" />
+      <module name="cms-parent" target="1.8" />
+      <module name="crs-models-xiangmu" target="1.8" />
+      <module name="sensitive" target="1.8" />
+      <module name="xiangmu" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

@@ -1,0 +1,68 @@
+package com.cms.file.controller;
+
+import com.cms.common.core.exception.ServiceException;
+import com.cms.common.core.utils.StringUtils;
+import com.cms.common.core.utils.file.FileUtils;
+import com.cms.common.core.web.controller.BaseController;
+import com.cms.common.core.web.domain.Response;
+import com.cms.common.log.annotation.Log;
+import com.cms.common.log.enums.BusinessType;
+import com.cms.file.domain.SysFile;
+import com.cms.file.service.SysFileService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * 系统文件控制器
+ *
+ * @author 邓志军
+ * @date 2024年8月28日10:18:46
+ */
+@Api(tags = {"系统文件控制器"})
+@RestController
+public class SysFileController extends BaseController {
+
+    @Resource
+    private SysFileService sysFileService;
+
+    /**
+     * 文件上传
+     *
+     * @param file 上传的文件对象
+     * @return 文件对象
+     */
+    @ApiOperation(value = "文件上传", notes = "文件上传", httpMethod = "POST")
+    @PostMapping("/upload")
+    @Log(title = "文件上传", businessType = BusinessType.UPLOAD)
+    public Response<SysFile> upload(@RequestBody MultipartFile file) {
+        if (StringUtils.isNull(file)) {
+            throw new ServiceException("上传文件不允许为空!");
+        }
+        // 1、存储文件
+        String url = this.sysFileService.uploadFile(file);
+        // 2、包装返回对象
+        SysFile sysFile = new SysFile(FileUtils.getName(url), url, file.getSize());
+        // 3、返回数据
+        return this.success(sysFile);
+    }
+
+    /**
+     * 下载文件
+     *
+     * @param file 文件对象
+     */
+    @ApiOperation(value = "下载文件", notes = "下载文件", httpMethod = "POST")
+    @PostMapping("/download")
+    public Response<?> download(HttpServletResponse response, @RequestBody SysFile file) {
+        return this.success(this.sysFileService.download(response, file));
+    }
+}
