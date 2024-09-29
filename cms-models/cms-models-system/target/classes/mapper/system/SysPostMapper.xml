@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.system.mapper.SysPostMapper">
+
+    <select id="listAllEntities" resultType="com.cms.system.domain.vo.SysPostListVo">
+        select p.post_id,
+        p.post_code,
+        p.post_type,
+        p.post_name,
+        p.status,
+        count(up.user_id) as user_count
+        from sys_post p
+        left join sys_user_post up on p.post_id = up.post_id
+        <where>
+            <if test="postCode != null and postCode != ''">
+                and post_code = #{postCode}
+            </if>
+            <if test="postName != null and postName != ''">
+                and post_name like concat('%',#{postName},'%')
+            </if>
+            <if test="postType != null">
+                and post_type = #{postType}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
+        group by p.post_id
+    </select>
+</mapper>

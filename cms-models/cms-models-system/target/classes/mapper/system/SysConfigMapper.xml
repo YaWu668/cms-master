@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cms.system.mapper.SysConfigMapper">
+
+    <delete id="deleteEntity">
+        delete from sys_config where config_id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getEntityList" resultType="com.cms.system.domain.pojo.SysConfig">
+        select
+        config_id,
+        config_name,
+        config_key,
+        config_value,
+        config_type,
+        create_time,
+        remark
+        from
+        sys_config
+        <where>
+            <if test="configName != '' and configName != null">
+                and config_name like concat('%', #{configName}, '%')
+            </if>
+            <if test="configType != '' and configType != null">
+                and config_type = #{configType}
+            </if>
+            <if test="beginTime != null and endTime != null">
+                and create_time between #{beginTime, jdbcType=TIMESTAMP} and #{endTime, jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- 父工程 -->
+    <parent>
+        <groupId>com.cms</groupId>
+        <artifactId>cms-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../cms-parent</relativePath>
+    </parent>
+
+    <description>cms公共通用模块</description>
+
+    <packaging>pom</packaging>
+
+    <artifactId>cms-common</artifactId>
+
+    <!-- 聚合工程 -->
+    <modules>
+        <module>cms-common-core</module>
+        <module>cms-common-redis</module>
+        <module>cms-common-security</module>
+        <module>cms-common-log</module>
+        <module>cms-common-swagger</module>
+        <module>cms-common-config</module>
+        <module>cms-common-datascope</module>
+        <module>cms-common-sensitive</module>
+    </modules>
+
+</project>

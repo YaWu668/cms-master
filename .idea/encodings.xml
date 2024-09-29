@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/cms-api/cms-api-system/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-api/cms-api-system/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-auth/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-auth/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-common/cms-common-config/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-common/cms-common-config/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-common/cms-common-core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-common/cms-common-core/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-common/cms-common-datascope/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-common/cms-common-datascope/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-common/cms-common-log/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-common/cms-common-log/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-common/cms-common-redis/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-common/cms-common-redis/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-common/cms-common-security/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-common/cms-common-security/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-common/cms-common-sensitive/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-common/cms-common-sensitive/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-common/cms-common-swagger/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-common/cms-common-swagger/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-gateway/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-models/cms-models-bisai/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-models/cms-models-bisai/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-models/cms-models-file/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-models/cms-models-file/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-models/cms-models-system/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-models/cms-models-system/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-models/cms-models-xiangmu/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-models/cms-models-xiangmu/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-models/cms-models-zhengshu/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/cms-models/cms-models-zhengshu/src/main/resources" charset="UTF-8" />
+  </component>
+</project>

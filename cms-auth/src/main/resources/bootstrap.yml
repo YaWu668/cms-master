@@ -1,0 +1,20 @@
+# Spring
+spring:
+  application:
+    # 应用名称
+    name: cms-auth
+  profiles:
+    # 环境配置
+    active: dev
+  cloud:
+    nacos:
+      # 服务注册、配置拉取地址
+      server-addr: 127.0.0.1:8848
+      discovery:
+        namespace: dev
+        group: cms-project
+      config:
+        namespace: dev
+        group: cms-project
+        # 配置文件格式
+        file-extension: yml
