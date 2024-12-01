@@ -1,8 +1,0 @@
-20:47:37.128 [reactor-http-nio-4] ERROR c.c.g.h.GatewayExceptionHandler - [handle,48] - [网关异常处理]请求路径:/favicon.ico,异常信息:404 NOT_FOUND
-20:47:38.384 [reactor-http-nio-4] ERROR c.c.g.h.GatewayExceptionHandler - [handle,48] - [网关异常处理]请求路径:/service-worker.js,异常信息:404 NOT_FOUND
-20:47:39.402 [reactor-http-nio-4] ERROR c.c.g.h.GatewayExceptionHandler - [handle,48] - [网关异常处理]请求路径:/favicon.ico,异常信息:404 NOT_FOUND
-20:47:43.747 [reactor-http-nio-4] ERROR c.c.g.h.GatewayExceptionHandler - [handle,48] - [网关异常处理]请求路径:/favicon.ico,异常信息:404 NOT_FOUND
-20:47:45.309 [reactor-http-nio-4] ERROR c.c.g.h.GatewayExceptionHandler - [handle,48] - [网关异常处理]请求路径:/favicon.ico,异常信息:404 NOT_FOUND
-20:47:47.044 [reactor-http-nio-4] ERROR c.c.g.h.GatewayExceptionHandler - [handle,48] - [网关异常处理]请求路径:/favicon.ico,异常信息:404 NOT_FOUND
-20:47:48.623 [reactor-http-nio-4] ERROR c.c.g.h.GatewayExceptionHandler - [handle,48] - [网关异常处理]请求路径:/favicon.ico,异常信息:404 NOT_FOUND
-20:48:19.634 [reactor-http-nio-4] ERROR c.c.g.h.GatewayExceptionHandler - [handle,48] - [网关异常处理]请求路径:/service-worker.js,异常信息:404 NOT_FOUND
