@@ -11,11 +11,11 @@
 
     <artifactId>cms-models-system</artifactId>
 
+
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
-
     <description>
         cms-modules-system 系统模块
     </description>

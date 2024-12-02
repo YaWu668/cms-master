@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:mysql://localhost:3306/cms-plus</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="cms-plus@118.126.93.98" uuid="405b284d-30c6-44c0-b9be-64c2cf8c4744">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://118.126.93.98:3306/cms-plus</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

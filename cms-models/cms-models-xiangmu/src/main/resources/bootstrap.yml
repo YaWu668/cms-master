@@ -1,6 +1,6 @@
 # Tomcat
 server:
-  port: 100668
+  port: 10668
 
 # Spring
 spring:
@@ -13,7 +13,7 @@ spring:
   cloud:
     nacos:
       # 服务注册、配置拉取地址
-      server-addr: 127.0.0.1:8848
+      server-addr: 110.41.189.159:8848
       #  server-addr: 192.168.137.220:8848
       discovery:
         namespace: dev
@@ -25,6 +25,26 @@ spring:
         file-extension: yml
         # 共享配置
         shared-configs:
-          - data-id: application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+          - data-id: applicationXM-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
             group: cms-project
             namespace: dev
+
+
+
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*.xml
+  configuration:
+    # 控制台打印完整带参数SQL语句
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    # 数据库字段映射到实体的驼峰命名规则
+    db-column-underline: true
+    # 数据库表映射到实体的驼峰命名规则
+    db-table-underline: true
+    # 开启驼峰命名规则
+    map-underscore-to-camel-case: true
+    db-config:
+      # 主键类型
+      id-type: auto
+      # 数据库类型
+      db-type: mysql
