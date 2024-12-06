@@ -1,8 +1,11 @@
 package com.xk.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import java.io.Serializable;
+
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,11 +20,11 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("xm_project")
+@lombok.experimental.Accessors(chain = true)
 public class Project  {
     //项目ID
     @TableId
     private Long projectId;
-
     //项目名称
     private String name;
     //负责人的id, 确定负责人
@@ -29,7 +32,7 @@ public class Project  {
     //成员的id 会存储所有成员的id,存储是用户的id,不是成员表的 示例:[1, 2]
     private String memberId;
     //第一负责指导老师的id
-    private Long oneTeacherId;
+//    private Long oneTeacherId;
     //指导老师的id 示例:[1, 2]
     private String teacherId;
     //企业老师的id 示例:[1, 2]
@@ -38,8 +41,8 @@ public class Project  {
     private Long collegeGroupId;
     //专家组的id
     private Long specialistGroupId;
-    //年度类型的id
-    private Long yearTypeId;
+    //年度组的id
+    private Long yearGroupId;
     //年度数据的id
     private Long yearDataId;
     //活动的开始时间
@@ -51,7 +54,7 @@ public class Project  {
     //项目类型, (字典)示例: 1为创新训练项目, 2为创业训练项目, 3为创业实践
     private Long type;
     //项目级别 (字典)示例 : 1为国家级, 2为区级(省级),3为校级
-    private Long rank;
+    private Long projectRank;
     //学科类别 (字典)示例 1为工科 ,  2为文科
     private Long subjectCategory;
     //项目类别 (字典)示例 1为一般项目 2为重点支持领域项目
@@ -69,9 +72,9 @@ public class Project  {
     //指导老师和企业老师对项目的支持情况, 仅创新训练类型项目是指导老师支持情况
     private String teacherSupport;
     //学生报名详细信息表的id 示例:[1, 2]
-    private String studentApplyId;
-    //老师报名详细信息表的id 示例:[1, 2]
-    private String teacherApplyId;
+//    private String studentApplyId;
+//    //老师报名详细信息表的id 示例:[1, 2]
+//    private String teacherApplyId;
     //一.研究目的
     private String aOne;
     //二.研究内容
@@ -126,12 +129,12 @@ public class Project  {
     private String cTen;
     //十一.风险防范
     private String cEleven;
-    //财政拨款的金额
-    private Double fiscalAppropriation;
-    //财政拨款的金额
-    private Double schoolAllocation;
-    //申请金额合计
-    private Double totalMoney;
+    //todo Bean拷贝可能有问题,手动传入 ,财政拨款的金额
+    private BigDecimal fiscalAppropriation;
+    //todo Bean拷贝可能有问题,手动传入 ,学校预算
+    private BigDecimal schoolAllocation;
+    //todo Bean拷贝可能有问题,手动传入 ,申请金额合计
+    private BigDecimal totalMoney;
     //详细经费预算, 没有设计业务, 前端发什么样子json, 就存储什么样子
     private String budget;
     //指导老师的意见
@@ -155,6 +158,7 @@ public class Project  {
     //更新时间
     private Date updateTime;
     //删除标志（0代表未删除，1代表已删除）
+    @TableLogic(value = "0", delval = "1")
     private Integer delFlag;
 
 

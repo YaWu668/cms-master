@@ -1,5 +1,6 @@
 package com.xk;
 
+import com.alibaba.nacos.api.annotation.NacosProperties;
 import com.cms.common.security.annotation.EnableCustomConfig;
 import com.cms.common.security.annotation.EnableRyFeignClients;
 import com.cms.common.swagger.annotation.EnableCustomSwagger2;

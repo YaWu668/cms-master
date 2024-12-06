@@ -27,11 +27,11 @@
 		</encoder>
 		<filter class="ch.qos.logback.classic.filter.LevelFilter">
             <!-- 过滤的级别 -->
-            <level>INFO</level>
+            <level>DEBUG</level>
             <!-- 匹配时的操作：接收（记录） -->
-            <onMatch>ACCEPT</onMatch>
+            <onMatch>DEBUG</onMatch>
             <!-- 不匹配时的操作：拒绝（不记录） -->
-            <onMismatch>DENY</onMismatch>
+            <onMismatch>DEBUG</onMismatch>
         </filter>
 	</appender>
 
@@ -51,23 +51,23 @@
             <!-- 过滤的级别 -->
             <level>ERROR</level>
 			<!-- 匹配时的操作：接收（记录） -->
-            <onMatch>ACCEPT</onMatch>
+            <onMatch>DEBUG</onMatch>
 			<!-- 不匹配时的操作：拒绝（不记录） -->
-            <onMismatch>DENY</onMismatch>
+            <onMismatch>DEBUG</onMismatch>
         </filter>
     </appender>
 
     <!-- 系统模块日志级别控制  -->
-	<logger name="com.cms" level="info" />
+	<logger name="com.cms" level="DEBUG" />
 	<!-- Spring日志级别控制  -->
-	<logger name="org.springframework" level="info" />
+	<logger name="org.springframework" level="DEBUG" />
 
-	<root level="info">
+	<root level="DEBUG">
 		<appender-ref ref="console" />
 	</root>
 
 	<!--系统操作日志-->
-    <root level="info">
+    <root level="DEBUG">
         <appender-ref ref="file_info" />
         <appender-ref ref="file_error" />
     </root>

@@ -1,4 +1,4 @@
-00:01:08.876 [lettuce-nioEventLoop-4-1] INFO  i.l.c.p.CommandHandler - [log,217] - null Unexpected exception during request: java.io.IOException: 远程主机强迫关闭了一个现有的连接。
+01:01:44.372 [lettuce-nioEventLoop-4-1] INFO  i.l.c.p.CommandHandler - [log,217] - null Unexpected exception during request: java.io.IOException: 远程主机强迫关闭了一个现有的连接。
 java.io.IOException: 远程主机强迫关闭了一个现有的连接。
 	at sun.nio.ch.SocketDispatcher.read0(Native Method)
 	at sun.nio.ch.SocketDispatcher.read(SocketDispatcher.java:43)
@@ -17,7 +17,7 @@ java.io.IOException: 远程主机强迫关闭了一个现有的连接。
 	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
 	at java.lang.Thread.run(Thread.java:750)
-00:01:08.876 [lettuce-nioEventLoop-4-2] INFO  i.l.c.p.CommandHandler - [log,217] - null Unexpected exception during request: java.io.IOException: 远程主机强迫关闭了一个现有的连接。
+01:01:44.374 [lettuce-nioEventLoop-4-2] INFO  i.l.c.p.CommandHandler - [log,217] - null Unexpected exception during request: java.io.IOException: 远程主机强迫关闭了一个现有的连接。
 java.io.IOException: 远程主机强迫关闭了一个现有的连接。
 	at sun.nio.ch.SocketDispatcher.read0(Native Method)
 	at sun.nio.ch.SocketDispatcher.read(SocketDispatcher.java:43)
@@ -36,89 +36,7 @@ java.io.IOException: 远程主机强迫关闭了一个现有的连接。
 	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
 	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
 	at java.lang.Thread.run(Thread.java:750)
-00:01:09.120 [lettuce-eventExecutorLoop-1-5] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was /118.126.93.98:6379
-00:01:09.120 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was /118.126.93.98:6379
-00:01:09.510 [lettuce-nioEventLoop-4-3] INFO  i.l.c.p.ReconnectionHandler - [lambda$null$3,174] - Reconnected to 118.126.93.98:6379
-00:01:09.510 [lettuce-nioEventLoop-4-4] INFO  i.l.c.p.ReconnectionHandler - [lambda$null$3,174] - Reconnected to 118.126.93.98:6379
-00:19:17.957 [SpringApplicationShutdownHook] INFO  c.a.c.n.r.NacosServiceRegistry - [deregister,95] - De-registering from Nacos Server now...
-00:19:18.027 [SpringApplicationShutdownHook] INFO  c.a.c.n.r.NacosServiceRegistry - [deregister,115] - De-registration finished.
-00:19:18.212 [SpringApplicationShutdownHook] INFO  c.z.h.HikariDataSource - [close,350] - HikariPool-1 - Shutdown initiated...
-00:19:18.241 [SpringApplicationShutdownHook] INFO  c.z.h.HikariDataSource - [close,352] - HikariPool-1 - Shutdown completed.
-01:09:42.835 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
-01:09:42.921 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 6.2.5.Final
-01:09:43.345 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
-01:09:43.345 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
-01:09:47.754 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource@173059685 {name='bootstrapProperties-cms-system-dev.yml,cms-project', properties={server.port=10240, spring.redis.host=118.126.93.98, spring.redis.port=6379, spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver, spring.datasource.url=jdbc:mysql://118.126.93.98:3306/cms-plus?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8, spring.datasource.username=root, spring.datasource.password=Fack_you@., swagger.title=系统模块接口文档, swagger.name=邓志军, swagger.description=系统模块接口文档, swagger.Contact.name=邓志军}}, BootstrapPropertySource@310412574 {name='bootstrapProperties-cms-system.yml,cms-project', properties={}}, BootstrapPropertySource@1585711807 {name='bootstrapProperties-cms-system,cms-project', properties={}}, BootstrapPropertySource@1457417579 {name='bootstrapProperties-application-dev.yml,cms-project', properties={spring.autoconfigure.exclude=com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure, spring.servlet.multipart.max-file-size=5MB, spring.servlet.multipart.max-request-size=5MB, spring.mvc.pathmatch.matching-strategy=ant_path_matcher, spring.jackson.default-property-inclusion=non_null, mybatis-plus.mapper-locations=classpath*:mapper/**/*.xml, mybatis-plus.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl, mybatis-plus.global-config.db-config.logic-delete-field=del_flag, mybatis-plus.global-config.db-config.logic-delete-value=1, mybatis-plus.global-config.db-config.logic-not-delete-value=0}}]
-01:09:47.768 [main] INFO  c.c.s.CmsSystemApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "dev"
-01:09:49.397 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [multipleStoresDetected,262] - Multiple Spring Data modules found, entering strict repository configuration mode
-01:09:49.399 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,132] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-01:09:49.433 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,201] - Finished Spring Data repository scanning in 14 ms. Found 0 Redis repository interfaces.
-01:09:49.823 [main] INFO  o.s.c.c.s.GenericScope - [setSerializationId,283] - BeanFactory id=be3f3d72-f416-336a-814b-b2a307ff1bed
-01:09:50.261 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'com.cms.common.redis.config.RedisConfig' of type [com.cms.common.redis.config.RedisConfig$$EnhancerBySpringCGLIB$$58d6127a] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-01:09:50.720 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [initialize,108] - Tomcat initialized with port(s): 10240 (http)
-01:09:50.731 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Initializing ProtocolHandler ["http-nio-10240"]
-01:09:50.733 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
-01:09:50.733 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.83]
-01:09:50.983 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
-01:09:50.984 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - [prepareWebApplicationContext,292] - Root WebApplicationContext: initialization completed in 3178 ms
-01:09:53.617 [main] INFO  c.z.h.HikariDataSource - [getConnection,110] - HikariPool-1 - Starting...
-01:09:55.074 [main] INFO  c.z.h.HikariDataSource - [getConnection,123] - HikariPool-1 - Start completed.
-01:09:57.649 [main] INFO  c.a.c.s.SentinelWebMvcConfigurer - [addInterceptors,52] - [Sentinel Starter] register SentinelWebInterceptor with urlPatterns: [/**].
-01:09:59.469 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-01:10:00.100 [main] INFO  o.s.b.a.e.w.EndpointLinksResolver - [<init>,58] - Exposing 1 endpoint(s) beneath base path '/actuator'
-01:10:00.788 [main] INFO  o.s.c.o.FeignClientFactoryBean - [getTarget,418] - For 'cms-system' URL not provided. Will try picking an instance via load-balancing.
-01:10:02.762 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-01:10:02.930 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Starting ProtocolHandler ["http-nio-10240"]
-01:10:02.942 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [start,220] - Tomcat started on port(s): 10240 (http) with context path ''
-01:10:02.954 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
-01:10:02.954 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
-01:10:03.377 [main] INFO  c.a.c.n.r.NacosServiceRegistry - [register,76] - nacos registry, cms-project cms-system 192.168.159.1:10240 register finished
-01:10:04.833 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-01:10:05.397 [main] INFO  c.c.s.CmsSystemApplication - [logStarted,61] - Started CmsSystemApplication in 24.698 seconds (JVM running for 26.709)
-01:10:05.412 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-system, group=cms-project
-01:10:05.412 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-system.yml, group=cms-project
-01:10:05.421 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-system-dev.yml, group=cms-project
-01:10:05.520 [RMI TCP Connection(5)-172.25.208.1] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-01:10:05.521 [RMI TCP Connection(5)-172.25.208.1] INFO  o.s.w.s.DispatcherServlet - [initServletBean,525] - Initializing Servlet 'dispatcherServlet'
-01:10:05.523 [RMI TCP Connection(5)-172.25.208.1] INFO  o.s.w.s.DispatcherServlet - [initServletBean,547] - Completed initialization in 2 ms
-01:22:12.726 [SpringApplicationShutdownHook] INFO  c.a.c.n.r.NacosServiceRegistry - [deregister,95] - De-registering from Nacos Server now...
-01:22:12.794 [SpringApplicationShutdownHook] INFO  c.a.c.n.r.NacosServiceRegistry - [deregister,115] - De-registration finished.
-01:22:12.929 [SpringApplicationShutdownHook] INFO  c.z.h.HikariDataSource - [close,350] - HikariPool-1 - Shutdown initiated...
-01:22:13.783 [SpringApplicationShutdownHook] INFO  c.z.h.HikariDataSource - [close,352] - HikariPool-1 - Shutdown completed.
-03:14:05.997 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
-03:14:06.045 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 6.2.5.Final
-03:14:06.331 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
-03:14:06.331 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
-03:14:10.060 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource@2122991287 {name='bootstrapProperties-cms-system-dev.yml,cms-project', properties={server.port=10240, spring.redis.host=118.126.93.98, spring.redis.port=6379, spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver, spring.datasource.url=jdbc:mysql://118.126.93.98:3306/cms-plus?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8, spring.datasource.username=root, spring.datasource.password=Fack_you@., swagger.title=系统模块接口文档, swagger.name=邓志军, swagger.description=系统模块接口文档, swagger.Contact.name=邓志军}}, BootstrapPropertySource@803768841 {name='bootstrapProperties-cms-system.yml,cms-project', properties={}}, BootstrapPropertySource@420993295 {name='bootstrapProperties-cms-system,cms-project', properties={}}, BootstrapPropertySource@1723848804 {name='bootstrapProperties-application-dev.yml,cms-project', properties={spring.autoconfigure.exclude=com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure, spring.servlet.multipart.max-file-size=5MB, spring.servlet.multipart.max-request-size=5MB, spring.mvc.pathmatch.matching-strategy=ant_path_matcher, spring.jackson.default-property-inclusion=non_null, mybatis-plus.mapper-locations=classpath*:mapper/**/*.xml, mybatis-plus.configuration.log-impl=org.apache.ibatis.logging.stdout.StdOutImpl, mybatis-plus.global-config.db-config.logic-delete-field=del_flag, mybatis-plus.global-config.db-config.logic-delete-value=1, mybatis-plus.global-config.db-config.logic-not-delete-value=0}}]
-03:14:10.069 [main] INFO  c.c.s.CmsSystemApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "dev"
-03:14:11.194 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [multipleStoresDetected,262] - Multiple Spring Data modules found, entering strict repository configuration mode
-03:14:11.199 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,132] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-03:14:11.227 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,201] - Finished Spring Data repository scanning in 13 ms. Found 0 Redis repository interfaces.
-03:14:11.445 [main] INFO  o.s.c.c.s.GenericScope - [setSerializationId,283] - BeanFactory id=be3f3d72-f416-336a-814b-b2a307ff1bed
-03:14:11.733 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'com.cms.common.redis.config.RedisConfig' of type [com.cms.common.redis.config.RedisConfig$$EnhancerBySpringCGLIB$$fee6f636] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-03:14:12.042 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [initialize,108] - Tomcat initialized with port(s): 10240 (http)
-03:14:12.050 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Initializing ProtocolHandler ["http-nio-10240"]
-03:14:12.051 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
-03:14:12.051 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.83]
-03:14:12.217 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
-03:14:12.217 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - [prepareWebApplicationContext,292] - Root WebApplicationContext: initialization completed in 2125 ms
-03:14:14.282 [main] INFO  c.z.h.HikariDataSource - [getConnection,110] - HikariPool-1 - Starting...
-03:14:15.626 [main] INFO  c.z.h.HikariDataSource - [getConnection,123] - HikariPool-1 - Start completed.
-03:14:17.802 [main] INFO  c.a.c.s.SentinelWebMvcConfigurer - [addInterceptors,52] - [Sentinel Starter] register SentinelWebInterceptor with urlPatterns: [/**].
-03:14:19.447 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-03:14:20.094 [main] INFO  o.s.b.a.e.w.EndpointLinksResolver - [<init>,58] - Exposing 1 endpoint(s) beneath base path '/actuator'
-03:14:20.591 [main] INFO  o.s.c.o.FeignClientFactoryBean - [getTarget,418] - For 'cms-system' URL not provided. Will try picking an instance via load-balancing.
-03:14:22.445 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-03:14:22.587 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Starting ProtocolHandler ["http-nio-10240"]
-03:14:22.597 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [start,220] - Tomcat started on port(s): 10240 (http) with context path ''
-03:14:22.613 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
-03:14:22.613 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
-03:14:22.981 [main] INFO  c.a.c.n.r.NacosServiceRegistry - [register,76] - nacos registry, cms-project cms-system 192.168.159.1:10240 register finished
-03:14:24.440 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-03:14:24.958 [main] INFO  c.c.s.CmsSystemApplication - [logStarted,61] - Started CmsSystemApplication in 20.858 seconds (JVM running for 22.187)
-03:14:24.973 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-system, group=cms-project
-03:14:24.973 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-system.yml, group=cms-project
-03:14:24.982 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-system-dev.yml, group=cms-project
-03:14:25.428 [RMI TCP Connection(1)-172.25.208.1] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-03:14:25.429 [RMI TCP Connection(1)-172.25.208.1] INFO  o.s.w.s.DispatcherServlet - [initServletBean,525] - Initializing Servlet 'dispatcherServlet'
-03:14:25.432 [RMI TCP Connection(1)-172.25.208.1] INFO  o.s.w.s.DispatcherServlet - [initServletBean,547] - Completed initialization in 3 ms
+01:01:44.557 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was /118.126.93.98:6379
+01:01:44.566 [lettuce-eventExecutorLoop-1-5] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was /118.126.93.98:6379
+01:01:44.876 [lettuce-nioEventLoop-4-3] INFO  i.l.c.p.ReconnectionHandler - [lambda$null$3,174] - Reconnected to 118.126.93.98:6379
+01:01:44.876 [lettuce-nioEventLoop-4-4] INFO  i.l.c.p.ReconnectionHandler - [lambda$null$3,174] - Reconnected to 118.126.93.98:6379

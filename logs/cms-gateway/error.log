@@ -1,48 +1,172 @@
-00:12:06.399 [boundedElastic-148] ERROR c.a.c.n.d.r.NacosReactiveDiscoveryClient - [lambda$getServices$3,94] - get services from nacos server fail,
-com.alibaba.nacos.api.exception.NacosException: Client not connected, current status:UNHEALTHY
-	at com.alibaba.nacos.common.remote.client.RpcClient.request(RpcClient.java:639)
-	at com.alibaba.nacos.common.remote.client.RpcClient.request(RpcClient.java:619)
-	at com.alibaba.nacos.client.naming.remote.gprc.NamingGrpcClientProxy.requestToServer(NamingGrpcClientProxy.java:356)
-	at com.alibaba.nacos.client.naming.remote.gprc.NamingGrpcClientProxy.getServiceList(NamingGrpcClientProxy.java:282)
-	at com.alibaba.nacos.client.naming.remote.NamingClientProxyDelegate.getServiceList(NamingClientProxyDelegate.java:162)
-	at com.alibaba.nacos.client.naming.NacosNamingService.getServicesOfServer(NacosNamingService.java:461)
-	at com.alibaba.nacos.client.naming.NacosNamingService.getServicesOfServer(NacosNamingService.java:449)
-	at com.alibaba.cloud.nacos.discovery.NacosServiceDiscovery.getServices(NacosServiceDiscovery.java:70)
-	at com.alibaba.cloud.nacos.discovery.reactive.NacosReactiveDiscoveryClient.lambda$getServices$3(NacosReactiveDiscoveryClient.java:87)
-	at reactor.core.publisher.FluxDefer.subscribe(FluxDefer.java:46)
-	at reactor.core.publisher.FluxSubscribeOn$SubscribeOnSubscriber.run(FluxSubscribeOn.java:194)
-	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:84)
-	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:37)
-	at java.util.concurrent.FutureTask.run$$$capture(FutureTask.java:266)
-	at java.util.concurrent.FutureTask.run(FutureTask.java)
-	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)
-	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
-	at java.lang.Thread.run(Thread.java:750)
-00:12:06.399 [boundedElastic-145] ERROR c.a.c.n.d.r.NacosReactiveDiscoveryClient - [lambda$getServices$3,94] - get services from nacos server fail,
-com.alibaba.nacos.api.exception.NacosException: Client not connected, current status:UNHEALTHY
-	at com.alibaba.nacos.common.remote.client.RpcClient.request(RpcClient.java:639)
-	at com.alibaba.nacos.common.remote.client.RpcClient.request(RpcClient.java:619)
-	at com.alibaba.nacos.client.naming.remote.gprc.NamingGrpcClientProxy.requestToServer(NamingGrpcClientProxy.java:356)
-	at com.alibaba.nacos.client.naming.remote.gprc.NamingGrpcClientProxy.getServiceList(NamingGrpcClientProxy.java:282)
-	at com.alibaba.nacos.client.naming.remote.NamingClientProxyDelegate.getServiceList(NamingClientProxyDelegate.java:162)
-	at com.alibaba.nacos.client.naming.NacosNamingService.getServicesOfServer(NacosNamingService.java:461)
-	at com.alibaba.nacos.client.naming.NacosNamingService.getServicesOfServer(NacosNamingService.java:449)
-	at com.alibaba.cloud.nacos.discovery.NacosServiceDiscovery.getServices(NacosServiceDiscovery.java:70)
-	at com.alibaba.cloud.nacos.discovery.reactive.NacosReactiveDiscoveryClient.lambda$getServices$3(NacosReactiveDiscoveryClient.java:87)
-	at reactor.core.publisher.FluxDefer.subscribe(FluxDefer.java:46)
-	at reactor.core.publisher.FluxSubscribeOn$SubscribeOnSubscriber.run(FluxSubscribeOn.java:194)
-	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:84)
-	at reactor.core.scheduler.WorkerTask.call(WorkerTask.java:37)
-	at java.util.concurrent.FutureTask.run$$$capture(FutureTask.java:266)
-	at java.util.concurrent.FutureTask.run(FutureTask.java)
-	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)
-	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
-	at java.lang.Thread.run(Thread.java:750)
-03:12:14.674 [reactor-http-nio-3] ERROR c.c.g.h.GatewayExceptionHandler - [handle,48] - [网关异常处理]请求路径:/student/applyFor/,异常信息:404 NOT_FOUND
-03:12:58.571 [reactor-http-nio-3] ERROR c.c.g.h.GatewayExceptionHandler - [handle,48] - [网关异常处理]请求路径:/student/applyFor/,异常信息:404 NOT_FOUND
-03:13:29.502 [reactor-http-nio-3] ERROR c.c.g.f.AuthFilter - [unauthorizedResponse,145] - [鉴权异常处理]请求路径: /xm/student/applyFor/
-03:13:39.149 [boundedElastic-6] ERROR c.c.g.h.GatewayExceptionHandler - [handle,48] - [网关异常处理]请求路径:/auth/login,异常信息:503 SERVICE_UNAVAILABLE "Unable to find instance for cms-auth"
+00:00:04.569 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-xiangmu applying {pattern=/cms-xiangmu/**} to Path
+00:00:04.572 [boundedElastic-17] DEBUG o.s.c.g.f.GatewayMetricsFilter - [lambda$onApplicationEvent$0,66] - New routes count: 9
+00:00:04.590 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-xiangmu applying filter {regexp=/cms-xiangmu/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:00:04.591 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-xiangmu
+00:00:04.591 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-file applying {pattern=/cms-file/**} to Path
+00:00:04.591 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-file applying filter {regexp=/cms-file/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:00:04.592 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-file
+00:00:04.592 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-gateway applying {pattern=/cms-gateway/**} to Path
+00:00:04.592 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-gateway applying filter {regexp=/cms-gateway/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:00:04.592 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-gateway
+00:00:04.592 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-system applying {pattern=/cms-system/**} to Path
+00:00:04.592 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-system applying filter {regexp=/cms-system/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:00:04.593 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-system
+00:00:04.593 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-auth applying {pattern=/cms-auth/**} to Path
+00:00:04.593 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-auth applying filter {regexp=/cms-auth/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:00:04.593 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-auth
+00:00:04.593 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-system applying {_genkey_0=/system/**} to Path
+00:00:04.593 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-system applying filter {_genkey_0=1} to StripPrefix
+00:00:04.594 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-system
+00:00:04.594 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-file applying {_genkey_0=/file/**} to Path
+00:00:04.594 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-file applying filter {_genkey_0=1} to StripPrefix
+00:00:04.594 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-file
+00:00:04.594 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-xiangmu applying {_genkey_0=/xm/**} to Path
+00:00:04.595 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-xiangmu applying filter {_genkey_0=1} to StripPrefix
+00:00:04.595 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-xiangmu
+00:00:04.595 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-auth applying {_genkey_0=/auth/**} to Path
+00:00:04.595 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-auth applying filter {_genkey_0=1} to StripPrefix
+00:00:04.595 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-auth
+00:00:34.600 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-xiangmu applying {pattern=/cms-xiangmu/**} to Path
+00:00:34.600 [boundedElastic-3] DEBUG o.s.c.g.f.GatewayMetricsFilter - [lambda$onApplicationEvent$0,66] - New routes count: 9
+00:00:34.601 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-xiangmu applying filter {regexp=/cms-xiangmu/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:00:34.601 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-xiangmu
+00:00:34.601 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-file applying {pattern=/cms-file/**} to Path
+00:00:34.601 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-file applying filter {regexp=/cms-file/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:00:34.602 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-file
+00:00:34.602 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-gateway applying {pattern=/cms-gateway/**} to Path
+00:00:34.602 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-gateway applying filter {regexp=/cms-gateway/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:00:34.602 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-gateway
+00:00:34.603 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-system applying {pattern=/cms-system/**} to Path
+00:00:34.603 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-system applying filter {regexp=/cms-system/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:00:34.603 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-system
+00:00:34.603 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-auth applying {pattern=/cms-auth/**} to Path
+00:00:34.604 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-auth applying filter {regexp=/cms-auth/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:00:34.604 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-auth
+00:00:34.604 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-system applying {_genkey_0=/system/**} to Path
+00:00:34.605 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-system applying filter {_genkey_0=1} to StripPrefix
+00:00:34.605 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-system
+00:00:34.605 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-file applying {_genkey_0=/file/**} to Path
+00:00:34.605 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-file applying filter {_genkey_0=1} to StripPrefix
+00:00:34.606 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-file
+00:00:34.606 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-xiangmu applying {_genkey_0=/xm/**} to Path
+00:00:34.606 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-xiangmu applying filter {_genkey_0=1} to StripPrefix
+00:00:34.607 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-xiangmu
+00:00:34.607 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-auth applying {_genkey_0=/auth/**} to Path
+00:00:34.607 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-auth applying filter {_genkey_0=1} to StripPrefix
+00:00:34.607 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-auth
+00:01:04.591 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-xiangmu applying {pattern=/cms-xiangmu/**} to Path
+00:01:04.591 [boundedElastic-10] DEBUG o.s.c.g.f.GatewayMetricsFilter - [lambda$onApplicationEvent$0,66] - New routes count: 9
+00:01:04.592 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-xiangmu applying filter {regexp=/cms-xiangmu/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:01:04.592 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-xiangmu
+00:01:04.592 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-file applying {pattern=/cms-file/**} to Path
+00:01:04.592 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-file applying filter {regexp=/cms-file/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:01:04.593 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-file
+00:01:04.593 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-gateway applying {pattern=/cms-gateway/**} to Path
+00:01:04.593 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-gateway applying filter {regexp=/cms-gateway/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:01:04.594 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-gateway
+00:01:04.594 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-system applying {pattern=/cms-system/**} to Path
+00:01:04.594 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-system applying filter {regexp=/cms-system/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:01:04.594 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-system
+00:01:04.594 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-auth applying {pattern=/cms-auth/**} to Path
+00:01:04.595 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-auth applying filter {regexp=/cms-auth/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:01:04.595 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-auth
+00:01:04.595 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-system applying {_genkey_0=/system/**} to Path
+00:01:04.596 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-system applying filter {_genkey_0=1} to StripPrefix
+00:01:04.596 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-system
+00:01:04.596 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-file applying {_genkey_0=/file/**} to Path
+00:01:04.596 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-file applying filter {_genkey_0=1} to StripPrefix
+00:01:04.597 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-file
+00:01:04.597 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-xiangmu applying {_genkey_0=/xm/**} to Path
+00:01:04.597 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-xiangmu applying filter {_genkey_0=1} to StripPrefix
+00:01:04.597 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-xiangmu
+00:01:04.597 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-auth applying {_genkey_0=/auth/**} to Path
+00:01:04.598 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-auth applying filter {_genkey_0=1} to StripPrefix
+00:01:04.598 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-auth
+00:01:07.162 [reactor-http-nio-8] DEBUG r.n.h.s.HttpServerOperations - [debug,254] - [1318e6b2, L:/0:0:0:0:0:0:0:1:8081 - R:/0:0:0:0:0:0:0:1:64921] New http connection, requesting read
+00:01:07.162 [reactor-http-nio-8] DEBUG r.n.t.TransportConfig - [debug,259] - [1318e6b2, L:/0:0:0:0:0:0:0:1:8081 - R:/0:0:0:0:0:0:0:1:64921] Initialized pipeline DefaultChannelPipeline{(reactor.left.httpCodec = io.netty.handler.codec.http.HttpServerCodec), (reactor.left.httpTrafficHandler = reactor.netty.http.server.HttpTrafficHandler), (reactor.right.reactiveBridge = reactor.netty.channel.ChannelOperationsHandler)}
+00:01:07.163 [reactor-http-nio-9] DEBUG r.n.h.s.HttpServerOperations - [debug,254] - [8a8f222e, L:/0:0:0:0:0:0:0:1:8081 - R:/0:0:0:0:0:0:0:1:64922] New http connection, requesting read
+00:01:07.163 [reactor-http-nio-9] DEBUG r.n.t.TransportConfig - [debug,259] - [8a8f222e, L:/0:0:0:0:0:0:0:1:8081 - R:/0:0:0:0:0:0:0:1:64922] Initialized pipeline DefaultChannelPipeline{(reactor.left.httpCodec = io.netty.handler.codec.http.HttpServerCodec), (reactor.left.httpTrafficHandler = reactor.netty.http.server.HttpTrafficHandler), (reactor.right.reactiveBridge = reactor.netty.channel.ChannelOperationsHandler)}
+00:01:07.163 [reactor-http-nio-9] DEBUG r.n.h.s.HttpServerOperations - [debug,259] - [8a8f222e, L:/0:0:0:0:0:0:0:1:8081 - R:/0:0:0:0:0:0:0:1:64922] Increasing pending responses, now 1
+00:01:07.164 [reactor-http-nio-9] DEBUG r.n.h.s.HttpServer - [debug,259] - [8a8f222e-1, L:/0:0:0:0:0:0:0:1:8081 - R:/0:0:0:0:0:0:0:1:64922] Handler is being applied: org.springframework.http.server.reactive.ReactorHttpHandlerAdapter@6fc97d9b
+00:01:07.164 [reactor-http-nio-9] DEBUG o.s.w.s.a.HttpWebHandlerAdapter - [traceDebug,120] - [8a8f222e-11] HTTP POST "/xm/student/applyFor/"
+00:01:07.164 [reactor-http-nio-9] DEBUG o.s.c.g.h.RoutePredicateHandlerMapping - [lambda$lookupRoute$6,143] - Route matched: cms-xiangmu
+00:01:07.165 [reactor-http-nio-9] DEBUG o.s.c.g.h.RoutePredicateHandlerMapping - [lambda$getHandlerInternal$0,91] - Mapping [Exchange: POST http://localhost:8081/xm/student/applyFor/] to Route{id='cms-xiangmu', uri=lb://cms-xiangmu, order=0, predicate=Paths: [/xm/**], match trailing slash: true, gatewayFilters=[[[StripPrefix parts = 1], order = 1]], metadata={}}
+00:01:07.165 [reactor-http-nio-9] DEBUG o.s.c.g.h.RoutePredicateHandlerMapping - [lambda$getHandler$1,189] - [8a8f222e-11] Mapped to org.springframework.cloud.gateway.handler.FilteringWebHandler@4a579dc0
+00:01:07.165 [reactor-http-nio-9] DEBUG o.s.c.g.h.FilteringWebHandler - [handle,85] - Sorted gatewayFilterFactories: [[GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.RemoveCachedBodyFilter@6ab50d1c}, order = -2147483648], [GatewayFilterAdapter{delegate=com.alibaba.csp.sentinel.adapter.gateway.sc.SentinelGatewayFilter@778197c0}, order = -2147483648], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.AdaptCachedBodyGlobalFilter@76fc5687}, order = -2147482648], [GatewayFilterAdapter{delegate=com.cms.gateway.filter.AuthFilter@7ebc5be6}, order = -200], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.NettyWriteResponseFilter@1214c98b}, order = -1], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.ForwardPathFilter@adc3344}, order = 0], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.GatewayMetricsFilter@4e647f39}, order = 0], [[StripPrefix parts = 1], order = 1], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.RouteToRequestUrlFilter@6e0d058a}, order = 10000], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.ReactiveLoadBalancerClientFilter@4627dfda}, order = 10150], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.LoadBalancerServiceInstanceCookieFilter@1f3361e9}, order = 10151], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.WebsocketRoutingFilter@484302ee}, order = 2147483646], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.NettyRoutingFilter@eebc0db}, order = 2147483647], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.ForwardRoutingFilter@3eb0fd88}, order = 2147483647]]
+00:01:07.166 [reactor-http-nio-9] DEBUG o.s.d.r.c.RedisConnectionUtils - [doGetConnection,143] - Fetching Redis Connection from RedisConnectionFactory
+00:01:07.166 [reactor-http-nio-9] DEBUG i.l.c.RedisChannelHandler - [dispatch,175] - dispatching command AsyncCommand [type=EXISTS, output=IntegerOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+00:01:07.167 [reactor-http-nio-9] DEBUG i.l.c.p.DefaultEndpoint - [channelWriteAndFlush,430] - [channel=0xf1bd98e3, /182.91.20.122:59970 -> /118.126.93.98:6379, epid=0x2] write() writeAndFlush command AsyncCommand [type=EXISTS, output=IntegerOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+00:01:07.167 [reactor-http-nio-9] DEBUG i.l.c.p.DefaultEndpoint - [write,207] - [channel=0xf1bd98e3, /182.91.20.122:59970 -> /118.126.93.98:6379, epid=0x2] write() done
+00:01:07.168 [lettuce-nioEventLoop-5-2] DEBUG i.l.c.p.CommandHandler - [write,383] - [channel=0xf1bd98e3, /182.91.20.122:59970 -> /118.126.93.98:6379, epid=0x2, chid=0x2] write(ctx, AsyncCommand [type=EXISTS, output=IntegerOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command], promise)
+00:01:07.168 [lettuce-nioEventLoop-5-2] DEBUG i.l.c.p.CommandEncoder - [encode,101] - [channel=0xf1bd98e3, /182.91.20.122:59970 -> /118.126.93.98:6379] writing command AsyncCommand [type=EXISTS, output=IntegerOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+00:01:07.222 [lettuce-nioEventLoop-5-2] DEBUG i.l.c.p.CommandHandler - [channelRead,578] - [channel=0xf1bd98e3, /182.91.20.122:59970 -> /118.126.93.98:6379, epid=0x2, chid=0x2] Received: 4 bytes, 1 commands in the stack
+00:01:07.223 [lettuce-nioEventLoop-5-2] DEBUG i.l.c.p.CommandHandler - [decode,652] - [channel=0xf1bd98e3, /182.91.20.122:59970 -> /118.126.93.98:6379, epid=0x2, chid=0x2] Stack contains: 1 commands
+00:01:07.223 [lettuce-nioEventLoop-5-2] DEBUG i.l.c.p.RedisStateMachine - [decode,298] - Decode done, empty stack: true
+00:01:07.224 [lettuce-nioEventLoop-5-2] DEBUG i.l.c.p.CommandHandler - [decode,680] - [channel=0xf1bd98e3, /182.91.20.122:59970 -> /118.126.93.98:6379, epid=0x2, chid=0x2] Completing command LatencyMeteredCommand [type=EXISTS, output=IntegerOutput [output=1, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+00:01:07.224 [reactor-http-nio-9] DEBUG o.s.d.r.c.RedisConnectionUtils - [doCloseConnection,389] - Closing Redis Connection.
+00:01:07.229 [reactor-http-nio-10] DEBUG r.n.r.PooledConnectionProvider - [debug,259] - [74738689] Created a new pooled channel, now: 0 active connections, 0 inactive connections and 0 pending acquire requests.
+00:01:07.229 [reactor-http-nio-10] DEBUG r.n.t.TransportConfig - [debug,259] - [74738689] Initialized pipeline DefaultChannelPipeline{(reactor.left.httpCodec = io.netty.handler.codec.http.HttpClientCodec), (reactor.right.reactiveBridge = reactor.netty.channel.ChannelOperationsHandler)}
+00:01:07.231 [reactor-http-nio-10] DEBUG r.n.t.TransportConnector - [debug,254] - [74738689] Connecting to [/192.168.159.1:10668].
+00:01:07.232 [reactor-http-nio-10] DEBUG r.n.r.DefaultPooledConnectionProvider - [debug,254] - [74738689, L:/192.168.159.1:64923 - R:/192.168.159.1:10668] Registering pool release on close event for channel
+00:01:07.232 [reactor-http-nio-10] DEBUG r.n.r.PooledConnectionProvider - [debug,259] - [74738689, L:/192.168.159.1:64923 - R:/192.168.159.1:10668] Channel connected, now: 1 active connections, 0 inactive connections and 0 pending acquire requests.
+00:01:07.232 [reactor-http-nio-10] DEBUG r.n.r.DefaultPooledConnectionProvider - [debug,259] - [74738689, L:/192.168.159.1:64923 - R:/192.168.159.1:10668] onStateChange(PooledConnection{channel=[id: 0x74738689, L:/192.168.159.1:64923 - R:/192.168.159.1:10668]}, [connected])
+00:01:07.233 [reactor-http-nio-10] DEBUG r.n.r.DefaultPooledConnectionProvider - [debug,259] - [74738689-1, L:/192.168.159.1:64923 - R:/192.168.159.1:10668] onStateChange(GET{uri=null, connection=PooledConnection{channel=[id: 0x74738689, L:/192.168.159.1:64923 - R:/192.168.159.1:10668]}}, [configured])
+00:01:07.233 [reactor-http-nio-10] DEBUG r.n.h.c.HttpClientConnect - [debug,259] - [74738689-1, L:/192.168.159.1:64923 - R:/192.168.159.1:10668] Handler is being applied: {uri=http://192.168.159.1:10668/student/applyFor/, method=POST}
+00:01:07.233 [reactor-http-nio-10] DEBUG r.n.r.DefaultPooledConnectionProvider - [debug,259] - [74738689-1, L:/192.168.159.1:64923 - R:/192.168.159.1:10668] onStateChange(POST{uri=/student/applyFor/, connection=PooledConnection{channel=[id: 0x74738689, L:/192.168.159.1:64923 - R:/192.168.159.1:10668]}}, [request_prepared])
+00:01:07.234 [reactor-http-nio-9] DEBUG r.n.c.FluxReceive - [debug,259] - [8a8f222e-1, L:/0:0:0:0:0:0:0:1:8081 - R:/0:0:0:0:0:0:0:1:64922] [terminated=false, cancelled=false, pending=1, error=null]: subscribing inbound receiver
+00:01:07.234 [reactor-http-nio-10] DEBUG r.n.r.DefaultPooledConnectionProvider - [debug,259] - [74738689-1, L:/192.168.159.1:64923 - R:/192.168.159.1:10668] onStateChange(POST{uri=/student/applyFor/, connection=PooledConnection{channel=[id: 0x74738689, L:/192.168.159.1:64923 - R:/192.168.159.1:10668]}}, [request_sent])
+00:01:17.167 [reactor-http-nio-9] DEBUG r.n.c.ChannelOperations - [debug,259] - [8a8f222e-1, L:/0:0:0:0:0:0:0:1:8081 ! R:/0:0:0:0:0:0:0:1:64922] [HttpServer] Channel inbound receiver cancelled (channel disconnected).
+00:01:17.168 [reactor-http-nio-10] DEBUG r.n.h.c.HttpClientOperations - [debug,254] - [74738689-1, L:/192.168.159.1:64923 - R:/192.168.159.1:10668] Http client inbound receiver cancelled, closing channel.
+00:01:17.168 [reactor-http-nio-10] DEBUG r.n.r.PooledConnectionProvider - [debug,259] - [74738689-1, L:/192.168.159.1:64923 ! R:/192.168.159.1:10668] Channel closed, now: 0 active connections, 0 inactive connections and 0 pending acquire requests.
+00:01:17.168 [reactor-http-nio-10] DEBUG r.n.r.DefaultPooledConnectionProvider - [debug,259] - [74738689-1, L:/192.168.159.1:64923 ! R:/192.168.159.1:10668] onStateChange(POST{uri=/student/applyFor/, connection=PooledConnection{channel=[id: 0x74738689, L:/192.168.159.1:64923 ! R:/192.168.159.1:10668]}}, [disconnecting])
+00:01:31.051 [nacos.publisher-com.alibaba.nacos.client.naming.event.InstancesChangeEvent] DEBUG c.a.n.c.n.NotifyCenter - [notifySubscriber,197] - [NotifyCenter] the com.alibaba.nacos.client.naming.event.InstancesChangeEvent@9fa5abf will received by com.alibaba.nacos.client.naming.event.InstancesChangeNotifier@301e5d23
+00:01:34.595 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-file applying {pattern=/cms-file/**} to Path
+00:01:34.595 [boundedElastic-29] DEBUG o.s.c.g.f.GatewayMetricsFilter - [lambda$onApplicationEvent$0,66] - New routes count: 8
+00:01:34.595 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-file applying filter {regexp=/cms-file/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:01:34.595 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-file
+00:01:34.596 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-gateway applying {pattern=/cms-gateway/**} to Path
+00:01:34.596 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-gateway applying filter {regexp=/cms-gateway/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:01:34.596 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-gateway
+00:01:34.596 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-system applying {pattern=/cms-system/**} to Path
+00:01:34.596 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-system applying filter {regexp=/cms-system/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:01:34.597 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-system
+00:01:34.597 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-auth applying {pattern=/cms-auth/**} to Path
+00:01:34.597 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-auth applying filter {regexp=/cms-auth/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:01:34.597 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-auth
+00:01:34.597 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-system applying {_genkey_0=/system/**} to Path
+00:01:34.598 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-system applying filter {_genkey_0=1} to StripPrefix
+00:01:34.598 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-system
+00:01:34.598 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-file applying {_genkey_0=/file/**} to Path
+00:01:34.598 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-file applying filter {_genkey_0=1} to StripPrefix
+00:01:34.599 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-file
+00:01:34.599 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-xiangmu applying {_genkey_0=/xm/**} to Path
+00:01:34.599 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-xiangmu applying filter {_genkey_0=1} to StripPrefix
+00:01:34.599 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-xiangmu
+00:01:34.599 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-auth applying {_genkey_0=/auth/**} to Path
+00:01:34.599 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-auth applying filter {_genkey_0=1} to StripPrefix
+00:01:34.600 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-auth
+00:02:04.651 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-file applying {pattern=/cms-file/**} to Path
+00:02:04.652 [boundedElastic-27] DEBUG o.s.c.g.f.GatewayMetricsFilter - [lambda$onApplicationEvent$0,66] - New routes count: 8
+00:02:04.652 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-file applying filter {regexp=/cms-file/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:02:04.653 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-file
+00:02:04.653 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-gateway applying {pattern=/cms-gateway/**} to Path
+00:02:04.653 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-gateway applying filter {regexp=/cms-gateway/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:02:04.654 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-gateway
+00:02:04.654 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-system applying {pattern=/cms-system/**} to Path
+00:02:04.654 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-system applying filter {regexp=/cms-system/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:02:04.654 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-system
+00:02:04.655 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-auth applying {pattern=/cms-auth/**} to Path
+00:02:04.655 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-auth applying filter {regexp=/cms-auth/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:02:04.655 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-auth
+00:02:04.655 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-system applying {_genkey_0=/system/**} to Path
+00:02:04.656 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-system applying filter {_genkey_0=1} to StripPrefix
+00:02:04.656 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-system
+00:02:04.656 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-file applying {_genkey_0=/file/**} to Path
+00:02:04.657 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-file applying filter {_genkey_0=1} to StripPrefix
+00:02:04.657 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-file
+00:02:04.657 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-xiangmu applying {_genkey_0=/xm/**} to Path
+00:02:04.657 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-xiangmu applying filter {_genkey_0=1} to StripPrefix
+00:02:04.658 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-xiangmu
+00:02:04.658 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-auth applying {_genkey_0=/auth/**} to Path
+00:02:04.658 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-auth applying filter {_genkey_0=1} to StripPrefix
+00:02:04.658 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-auth

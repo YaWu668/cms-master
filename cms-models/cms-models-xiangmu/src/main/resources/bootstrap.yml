@@ -28,6 +28,12 @@ spring:
           - data-id: applicationXM-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
             group: cms-project
             namespace: dev
+        # 扩展配置
+        extension-configs:
+          - data-id: cms-xiangmu-dev.yml
+            group: cms-project
+            namespace: dev
+            refresh: true
 
 
 

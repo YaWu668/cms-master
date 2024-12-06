@@ -1,6 +1,7 @@
 package com.xk.utils;
 
 
+import com.cms.common.core.exception.ServiceException;
 import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
@@ -35,6 +36,24 @@ public class BeanCopyUtils {
         }
         //返回数据
         return target;
+    }
+    /**
+     * 将一个JavaBean对象的属性值拷贝到另一个JavaBean对象中
+     * @param source 源对象
+     * @param targetBean 目标对象
+     * @param <V> 目标对象类型
+     *
+     */
+    public static <V> void copyBean(Object source,V targetBean){
+        if (source==null || targetBean==null){
+            throw new ServiceException("源对象或目标对象为空",500);
+        }
+        try {
+            //拷贝bean
+            BeanUtils.copyProperties(source,targetBean);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

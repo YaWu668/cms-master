@@ -1,20 +1,31 @@
 package com.xk.domain.dto;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
+import javax.validation.constraints.Pattern;
+
 import java.util.List;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Accessors(chain = true)
-public class ApplyForDTO{
+public class  ApplyForDTO{
+
     /**
      * a,b,c 三选一
      */
-    private ApplyForA applyForA;
+    private ApplyForA a;
     /**
      * a,b,c 三选一
      */
@@ -22,7 +33,7 @@ public class ApplyForDTO{
     /**
      * a,b,c 三选一
      */
-    private ApplyForC applyForC;
+    private ApplyForC c;
     /**
      * 详细经费预算, 没有设计业务, 前端发什么样子json, 就存储什么样子
      */
@@ -47,9 +58,10 @@ public class ApplyForDTO{
      * 财政拨款的金额(钱)
      */
     @NotNull(message = "财政拨款的金额(钱)不能为空")
-    private BigDecimal fiscalAppropriation;
+    @Pattern(regexp = "^-?([0-9]+|[0-9]{1,3}(,[0-9]{3})*)(.[0-9]{1,2})?$" ,message = "财政拨款的金额格式不正确")
+    private String fiscalAppropriation;
     /**
-     * 项目附加的URL地址, 提交只能提交压缩包
+     * 项目附加的URL地址, 提交只能提交压缩包,json格式,[url1,url2]
      */
     @NotNull(message = "项目附加的URL地址不能为空")
     private String materialsUrl;
@@ -77,18 +89,19 @@ public class ApplyForDTO{
      * 项目级别 1为国家级
      */
     @NotNull(message = "项目类型不能为空")
-    private Long rank;
+    private Long projectRank;
     /**
-     * 财政拨款的金额
+     * 学校拨款的金额
      */
     @NotNull(message = "财政拨款的金额不能为空")
-    private BigDecimal schoolAllocation;
+    @Pattern(regexp = "^-?([0-9]+|[0-9]{1,3}(,[0-9]{3})*)(.[0-9]{1,2})?$" ,message = "财政拨款的金额格式不正确")
+    private String schoolAllocation;
     /**
      * 学生人数,第一个必须是负责人,否则抛出异常
      */
     @Valid
     @NotNull(message = "学生报名人数不能为空")
-    private List<ApplyForStudent> applyForStudents;
+    private List<ApplyForStudent> students;
     /**
      * 学科类别 (字典)示例 1为工科 ,  2为文科
      */
@@ -104,7 +117,7 @@ public class ApplyForDTO{
      */
     @Valid
     @NotNull(message = "老师报名人数不能为空")
-    private List<ApplyForTeacher> applyForTeachers;
+    private List<ApplyForTeacher> teachers;
     /**
      * 指导老师和企业老师对项目的支持情况, 仅创新训练类型项目是指导老师支持情况
      */
@@ -114,7 +127,8 @@ public class ApplyForDTO{
      * 申请金额合计
      */
     @NotNull(message = "申请金额合计不能为空")
-    private BigDecimal totalMoney;
+    @Pattern(regexp = "^-?([0-9]+|[0-9]{1,3}(,[0-9]{3})*)(.[0-9]{1,2})?$" ,message = "申请金额合计格式不正确")
+    private String totalMoney;
     /**
      * 项目类型 1为创新训练项目
      */
@@ -130,9 +144,4 @@ public class ApplyForDTO{
      */
     @NotNull(message = "年度组的id不能为空")
     private Long yearGroupId;
-    /**
-     * 年度类型的id
-     */
-    @NotNull(message = "年度类型的id不能为空")
-    private Long yearTypeId;
 }

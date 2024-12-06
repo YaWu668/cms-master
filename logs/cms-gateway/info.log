@@ -1,215 +1,172 @@
-00:01:08.745 [lettuce-nioEventLoop-5-1] INFO  i.l.c.p.CommandHandler - [log,217] - null Unexpected exception during request: java.io.IOException: 远程主机强迫关闭了一个现有的连接。
-java.io.IOException: 远程主机强迫关闭了一个现有的连接。
-	at sun.nio.ch.SocketDispatcher.read0(Native Method)
-	at sun.nio.ch.SocketDispatcher.read(SocketDispatcher.java:43)
-	at sun.nio.ch.IOUtil.readIntoNativeBuffer(IOUtil.java:223)
-	at sun.nio.ch.IOUtil.read(IOUtil.java:192)
-	at sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:379)
-	at io.netty.buffer.PooledByteBuf.setBytes(PooledByteBuf.java:254)
-	at io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1132)
-	at io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:357)
-	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:151)
-	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
-	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
-	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
-	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
-	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
-	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
-	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
-	at java.lang.Thread.run(Thread.java:750)
-00:01:08.987 [lettuce-eventExecutorLoop-3-2] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was /118.126.93.98:6379
-00:01:09.468 [lettuce-nioEventLoop-5-3] INFO  i.l.c.p.ReconnectionHandler - [lambda$null$3,174] - Reconnected to 118.126.93.98:6379
-00:19:17.402 [SpringApplicationShutdownHook] INFO  c.a.c.n.r.NacosServiceRegistry - [deregister,95] - De-registering from Nacos Server now...
-00:19:17.468 [SpringApplicationShutdownHook] INFO  c.a.c.n.r.NacosServiceRegistry - [deregister,115] - De-registration finished.
-01:09:35.179 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
-01:09:35.239 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 6.2.5.Final
-01:09:35.802 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
-01:09:35.802 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
-01:09:40.771 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource {name='bootstrapProperties-cms-gateway-dev.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-gateway.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-gateway,cms-project'}]
-01:09:40.790 [main] INFO  c.c.g.CmsGatewayApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "dev"
-01:09:42.265 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [multipleStoresDetected,262] - Multiple Spring Data modules found, entering strict repository configuration mode
-01:09:42.268 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,132] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-01:09:42.292 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,201] - Finished Spring Data repository scanning in 8 ms. Found 0 Redis repository interfaces.
-01:09:42.565 [main] INFO  o.s.c.c.s.GenericScope - [setSerializationId,283] - BeanFactory id=e69dcc2f-0b5e-33b8-aab2-c1ec209db0ab
-01:09:42.799 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'com.cms.common.redis.config.RedisConfig' of type [com.cms.common.redis.config.RedisConfig$$EnhancerBySpringCGLIB$$6b10ecb4] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-01:09:42.837 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration' of type [org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-01:09:42.840 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration$ReactorDeferringLoadBalancerFilterConfig' of type [org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration$ReactorDeferringLoadBalancerFilterConfig] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-01:09:42.842 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'reactorDeferringLoadBalancerExchangeFilterFunction' of type [org.springframework.cloud.client.loadbalancer.reactive.DeferringLoadBalancerExchangeFilterFunction] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-01:09:46.173 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-01:09:46.607 [main] INFO  c.a.c.s.g.s.SentinelSCGAutoConfiguration - [sentinelGatewayFilter,144] - [Sentinel SpringCloudGateway] register SentinelGatewayFilter with order: -2147483648
-01:09:48.310 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-01:09:48.808 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [After]
-01:09:48.808 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Before]
-01:09:48.809 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Between]
-01:09:48.809 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Cookie]
-01:09:48.809 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Header]
-01:09:48.809 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Host]
-01:09:48.809 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Method]
-01:09:48.809 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Path]
-01:09:48.810 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Query]
-01:09:48.810 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [ReadBody]
-01:09:48.810 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [RemoteAddr]
-01:09:48.810 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [XForwardedRemoteAddr]
-01:09:48.810 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Weight]
-01:09:48.810 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [CloudFoundryRouteService]
-01:09:49.014 [main] INFO  o.s.b.a.e.w.EndpointLinksResolver - [<init>,58] - Exposing 1 endpoint(s) beneath base path '/actuator'
-01:09:50.794 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-01:09:50.933 [main] INFO  c.a.c.s.g.s.SentinelSCGAutoConfiguration - [sentinelGatewayBlockExceptionHandler,134] - [Sentinel SpringCloudGateway] register SentinelGatewayBlockExceptionHandler
-01:09:51.555 [main] INFO  o.s.b.w.e.n.NettyWebServer - [start,111] - Netty started on port 8081
-01:09:53.159 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-01:09:54.732 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-01:09:54.745 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
-01:09:54.745 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
-01:09:55.151 [main] INFO  c.a.c.n.r.NacosServiceRegistry - [register,76] - nacos registry, cms-project cms-gateway 192.168.159.1:8081 register finished
-01:09:55.753 [main] INFO  c.a.c.n.d.GatewayLocatorHeartBeatPublisher - [start,64] - Start nacos gateway locator heartBeat task scheduler.
-01:09:55.773 [main] INFO  c.c.g.CmsGatewayApplication - [logStarted,61] - Started CmsGatewayApplication in 22.639 seconds (JVM running for 24.675)
-01:09:55.780 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-gateway, group=cms-project
-01:09:55.781 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-gateway.yml, group=cms-project
-01:09:55.795 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-gateway-dev.yml, group=cms-project
-01:22:12.271 [SpringApplicationShutdownHook] INFO  c.a.c.n.r.NacosServiceRegistry - [deregister,95] - De-registering from Nacos Server now...
-01:22:12.344 [SpringApplicationShutdownHook] INFO  c.a.c.n.r.NacosServiceRegistry - [deregister,115] - De-registration finished.
-03:10:55.371 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
-03:10:55.403 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 6.2.5.Final
-03:10:55.703 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
-03:10:55.704 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
-03:10:59.449 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource {name='bootstrapProperties-cms-gateway-dev.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-gateway.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-gateway,cms-project'}]
-03:10:59.458 [main] INFO  c.c.g.CmsGatewayApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "dev"
-03:11:00.404 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [multipleStoresDetected,262] - Multiple Spring Data modules found, entering strict repository configuration mode
-03:11:00.405 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,132] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-03:11:00.425 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,201] - Finished Spring Data repository scanning in 7 ms. Found 0 Redis repository interfaces.
-03:11:00.615 [main] INFO  o.s.c.c.s.GenericScope - [setSerializationId,283] - BeanFactory id=e69dcc2f-0b5e-33b8-aab2-c1ec209db0ab
-03:11:00.807 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'com.cms.common.redis.config.RedisConfig' of type [com.cms.common.redis.config.RedisConfig$$EnhancerBySpringCGLIB$$bf71b659] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-03:11:00.830 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration' of type [org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-03:11:00.831 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration$ReactorDeferringLoadBalancerFilterConfig' of type [org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration$ReactorDeferringLoadBalancerFilterConfig] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-03:11:00.833 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'reactorDeferringLoadBalancerExchangeFilterFunction' of type [org.springframework.cloud.client.loadbalancer.reactive.DeferringLoadBalancerExchangeFilterFunction] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-03:11:03.835 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-03:11:04.043 [main] INFO  c.a.c.s.g.s.SentinelSCGAutoConfiguration - [sentinelGatewayFilter,144] - [Sentinel SpringCloudGateway] register SentinelGatewayFilter with order: -2147483648
-03:11:05.744 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-03:11:06.148 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [After]
-03:11:06.148 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Before]
-03:11:06.149 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Between]
-03:11:06.149 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Cookie]
-03:11:06.149 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Header]
-03:11:06.149 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Host]
-03:11:06.149 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Method]
-03:11:06.150 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Path]
-03:11:06.150 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Query]
-03:11:06.150 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [ReadBody]
-03:11:06.150 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [RemoteAddr]
-03:11:06.150 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [XForwardedRemoteAddr]
-03:11:06.150 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Weight]
-03:11:06.151 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [CloudFoundryRouteService]
-03:11:06.304 [main] INFO  o.s.b.a.e.w.EndpointLinksResolver - [<init>,58] - Exposing 1 endpoint(s) beneath base path '/actuator'
-03:11:07.889 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-03:11:07.971 [main] INFO  c.a.c.s.g.s.SentinelSCGAutoConfiguration - [sentinelGatewayBlockExceptionHandler,134] - [Sentinel SpringCloudGateway] register SentinelGatewayBlockExceptionHandler
-03:11:08.341 [main] INFO  o.s.b.w.e.n.NettyWebServer - [start,111] - Netty started on port 8081
-03:11:09.807 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-03:11:11.264 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-03:11:11.291 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
-03:11:11.291 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
-03:11:11.680 [main] INFO  c.a.c.n.r.NacosServiceRegistry - [register,76] - nacos registry, cms-project cms-gateway 192.168.159.1:8081 register finished
-03:11:12.145 [main] INFO  c.a.c.n.d.GatewayLocatorHeartBeatPublisher - [start,64] - Start nacos gateway locator heartBeat task scheduler.
-03:11:12.165 [main] INFO  c.c.g.CmsGatewayApplication - [logStarted,61] - Started CmsGatewayApplication in 18.682 seconds (JVM running for 19.985)
-03:11:12.170 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-gateway, group=cms-project
-03:11:12.171 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-gateway.yml, group=cms-project
-03:11:12.183 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-gateway-dev.yml, group=cms-project
-03:11:52.768 [nacos.client.cachedata.internal.notifier] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-03:11:53.025 [nacos.client.cachedata.internal.notifier] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource {name='bootstrapProperties-cms-gateway-dev.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-gateway.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-gateway,cms-project'}]
-03:11:53.031 [nacos.client.cachedata.internal.notifier] INFO  o.s.b.SpringApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "dev"
-03:11:53.040 [nacos.client.cachedata.internal.notifier] INFO  o.s.b.SpringApplication - [logStarted,61] - Started application in 1.751 seconds (JVM running for 60.861)
-03:11:53.160 [nacos.client.cachedata.internal.notifier] INFO  o.s.c.e.e.RefreshEventListener - [handle,73] - Refresh keys changed: [spring.cloud.gateway.routes[2].filters[0], spring.cloud.gateway.routes[2].uri, spring.cloud.gateway.routes[2].filters[1], spring.cloud.gateway.routes[3].filters[0], spring.cloud.gateway.routes[3].filters[1], spring.cloud.gateway.routes[3].id, spring.cloud.gateway.routes[2].id, spring.cloud.gateway.routes[3].predicates[0], spring.cloud.gateway.routes[3].uri, spring.cloud.gateway.routes[2].predicates[0]]
-03:12:30.699 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
-03:12:30.731 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 6.2.5.Final
-03:12:31.036 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
-03:12:31.037 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
-03:12:34.756 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource {name='bootstrapProperties-cms-gateway-dev.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-gateway.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-gateway,cms-project'}]
-03:12:34.765 [main] INFO  c.c.g.CmsGatewayApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "dev"
-03:12:35.655 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [multipleStoresDetected,262] - Multiple Spring Data modules found, entering strict repository configuration mode
-03:12:35.658 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,132] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-03:12:35.683 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,201] - Finished Spring Data repository scanning in 6 ms. Found 0 Redis repository interfaces.
-03:12:35.877 [main] INFO  o.s.c.c.s.GenericScope - [setSerializationId,283] - BeanFactory id=e69dcc2f-0b5e-33b8-aab2-c1ec209db0ab
-03:12:36.061 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'com.cms.common.redis.config.RedisConfig' of type [com.cms.common.redis.config.RedisConfig$$EnhancerBySpringCGLIB$$60ed6bb1] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-03:12:36.084 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration' of type [org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-03:12:36.085 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration$ReactorDeferringLoadBalancerFilterConfig' of type [org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration$ReactorDeferringLoadBalancerFilterConfig] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-03:12:36.086 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'reactorDeferringLoadBalancerExchangeFilterFunction' of type [org.springframework.cloud.client.loadbalancer.reactive.DeferringLoadBalancerExchangeFilterFunction] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-03:12:38.707 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-03:12:38.936 [main] INFO  c.a.c.s.g.s.SentinelSCGAutoConfiguration - [sentinelGatewayFilter,144] - [Sentinel SpringCloudGateway] register SentinelGatewayFilter with order: -2147483648
-03:12:40.581 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-03:12:40.969 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [After]
-03:12:40.969 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Before]
-03:12:40.969 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Between]
-03:12:40.970 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Cookie]
-03:12:40.970 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Header]
-03:12:40.970 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Host]
-03:12:40.970 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Method]
-03:12:40.970 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Path]
-03:12:40.971 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Query]
-03:12:40.971 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [ReadBody]
-03:12:40.971 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [RemoteAddr]
-03:12:40.971 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [XForwardedRemoteAddr]
-03:12:40.971 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Weight]
-03:12:40.971 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [CloudFoundryRouteService]
-03:12:41.134 [main] INFO  o.s.b.a.e.w.EndpointLinksResolver - [<init>,58] - Exposing 1 endpoint(s) beneath base path '/actuator'
-03:12:42.690 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-03:12:42.754 [main] INFO  c.a.c.s.g.s.SentinelSCGAutoConfiguration - [sentinelGatewayBlockExceptionHandler,134] - [Sentinel SpringCloudGateway] register SentinelGatewayBlockExceptionHandler
-03:12:43.082 [main] INFO  o.s.b.w.e.n.NettyWebServer - [start,111] - Netty started on port 8081
-03:12:44.559 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-03:12:46.014 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-03:12:46.024 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
-03:12:46.024 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
-03:12:46.402 [main] INFO  c.a.c.n.r.NacosServiceRegistry - [register,76] - nacos registry, cms-project cms-gateway 192.168.159.1:8081 register finished
-03:12:46.876 [main] INFO  c.a.c.n.d.GatewayLocatorHeartBeatPublisher - [start,64] - Start nacos gateway locator heartBeat task scheduler.
-03:12:46.896 [main] INFO  c.c.g.CmsGatewayApplication - [logStarted,61] - Started CmsGatewayApplication in 18.024 seconds (JVM running for 19.314)
-03:12:46.902 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-gateway, group=cms-project
-03:12:46.902 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-gateway.yml, group=cms-project
-03:12:46.911 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-gateway-dev.yml, group=cms-project
-03:18:38.424 [nacos.client.cachedata.internal.notifier] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-03:18:38.717 [nacos.client.cachedata.internal.notifier] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource {name='bootstrapProperties-cms-gateway-dev.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-gateway.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-gateway,cms-project'}]
-03:18:38.723 [nacos.client.cachedata.internal.notifier] INFO  o.s.b.SpringApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "dev"
-03:18:38.732 [nacos.client.cachedata.internal.notifier] INFO  o.s.b.SpringApplication - [logStarted,61] - Started application in 1.781 seconds (JVM running for 371.149)
-03:18:38.905 [nacos.client.cachedata.internal.notifier] INFO  o.s.c.e.e.RefreshEventListener - [handle,73] - Refresh keys changed: [spring.cloud.gateway.routes[3].filters[0], spring.cloud.gateway.routes[3].filters[1]]
-03:19:05.297 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
-03:19:05.330 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 6.2.5.Final
-03:19:05.648 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
-03:19:05.648 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
-03:19:09.434 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource {name='bootstrapProperties-cms-gateway-dev.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-gateway.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-gateway,cms-project'}]
-03:19:09.443 [main] INFO  c.c.g.CmsGatewayApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "dev"
-03:19:10.349 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [multipleStoresDetected,262] - Multiple Spring Data modules found, entering strict repository configuration mode
-03:19:10.351 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,132] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-03:19:10.370 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,201] - Finished Spring Data repository scanning in 6 ms. Found 0 Redis repository interfaces.
-03:19:10.572 [main] INFO  o.s.c.c.s.GenericScope - [setSerializationId,283] - BeanFactory id=e69dcc2f-0b5e-33b8-aab2-c1ec209db0ab
-03:19:10.782 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'com.cms.common.redis.config.RedisConfig' of type [com.cms.common.redis.config.RedisConfig$$EnhancerBySpringCGLIB$$ea1a530c] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-03:19:10.809 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration' of type [org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-03:19:10.811 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration$ReactorDeferringLoadBalancerFilterConfig' of type [org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration$ReactorDeferringLoadBalancerFilterConfig] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-03:19:10.812 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'reactorDeferringLoadBalancerExchangeFilterFunction' of type [org.springframework.cloud.client.loadbalancer.reactive.DeferringLoadBalancerExchangeFilterFunction] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-03:19:13.561 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-03:19:13.758 [main] INFO  c.a.c.s.g.s.SentinelSCGAutoConfiguration - [sentinelGatewayFilter,144] - [Sentinel SpringCloudGateway] register SentinelGatewayFilter with order: -2147483648
-03:19:15.419 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-03:19:15.813 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [After]
-03:19:15.814 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Before]
-03:19:15.814 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Between]
-03:19:15.814 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Cookie]
-03:19:15.814 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Header]
-03:19:15.814 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Host]
-03:19:15.814 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Method]
-03:19:15.815 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Path]
-03:19:15.815 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Query]
-03:19:15.815 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [ReadBody]
-03:19:15.815 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [RemoteAddr]
-03:19:15.815 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [XForwardedRemoteAddr]
-03:19:15.815 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Weight]
-03:19:15.816 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [CloudFoundryRouteService]
-03:19:15.941 [main] INFO  o.s.b.a.e.w.EndpointLinksResolver - [<init>,58] - Exposing 1 endpoint(s) beneath base path '/actuator'
-03:19:17.498 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-03:19:17.572 [main] INFO  c.a.c.s.g.s.SentinelSCGAutoConfiguration - [sentinelGatewayBlockExceptionHandler,134] - [Sentinel SpringCloudGateway] register SentinelGatewayBlockExceptionHandler
-03:19:17.894 [main] INFO  o.s.b.w.e.n.NettyWebServer - [start,111] - Netty started on port 8081
-03:19:19.354 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-03:19:20.814 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-03:19:20.830 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
-03:19:20.830 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
-03:19:21.188 [main] INFO  c.a.c.n.r.NacosServiceRegistry - [register,76] - nacos registry, cms-project cms-gateway 192.168.159.1:8081 register finished
-03:19:21.647 [main] INFO  c.a.c.n.d.GatewayLocatorHeartBeatPublisher - [start,64] - Start nacos gateway locator heartBeat task scheduler.
-03:19:21.664 [main] INFO  c.c.g.CmsGatewayApplication - [logStarted,61] - Started CmsGatewayApplication in 18.453 seconds (JVM running for 20.226)
-03:19:21.669 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-gateway, group=cms-project
-03:19:21.670 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-gateway.yml, group=cms-project
-03:19:21.679 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-gateway-dev.yml, group=cms-project
+00:00:04.569 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-xiangmu applying {pattern=/cms-xiangmu/**} to Path
+00:00:04.572 [boundedElastic-17] DEBUG o.s.c.g.f.GatewayMetricsFilter - [lambda$onApplicationEvent$0,66] - New routes count: 9
+00:00:04.590 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-xiangmu applying filter {regexp=/cms-xiangmu/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:00:04.591 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-xiangmu
+00:00:04.591 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-file applying {pattern=/cms-file/**} to Path
+00:00:04.591 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-file applying filter {regexp=/cms-file/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:00:04.592 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-file
+00:00:04.592 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-gateway applying {pattern=/cms-gateway/**} to Path
+00:00:04.592 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-gateway applying filter {regexp=/cms-gateway/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:00:04.592 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-gateway
+00:00:04.592 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-system applying {pattern=/cms-system/**} to Path
+00:00:04.592 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-system applying filter {regexp=/cms-system/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:00:04.593 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-system
+00:00:04.593 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-auth applying {pattern=/cms-auth/**} to Path
+00:00:04.593 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-auth applying filter {regexp=/cms-auth/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:00:04.593 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-auth
+00:00:04.593 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-system applying {_genkey_0=/system/**} to Path
+00:00:04.593 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-system applying filter {_genkey_0=1} to StripPrefix
+00:00:04.594 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-system
+00:00:04.594 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-file applying {_genkey_0=/file/**} to Path
+00:00:04.594 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-file applying filter {_genkey_0=1} to StripPrefix
+00:00:04.594 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-file
+00:00:04.594 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-xiangmu applying {_genkey_0=/xm/**} to Path
+00:00:04.595 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-xiangmu applying filter {_genkey_0=1} to StripPrefix
+00:00:04.595 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-xiangmu
+00:00:04.595 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-auth applying {_genkey_0=/auth/**} to Path
+00:00:04.595 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-auth applying filter {_genkey_0=1} to StripPrefix
+00:00:04.595 [boundedElastic-10] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-auth
+00:00:34.600 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-xiangmu applying {pattern=/cms-xiangmu/**} to Path
+00:00:34.600 [boundedElastic-3] DEBUG o.s.c.g.f.GatewayMetricsFilter - [lambda$onApplicationEvent$0,66] - New routes count: 9
+00:00:34.601 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-xiangmu applying filter {regexp=/cms-xiangmu/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:00:34.601 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-xiangmu
+00:00:34.601 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-file applying {pattern=/cms-file/**} to Path
+00:00:34.601 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-file applying filter {regexp=/cms-file/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:00:34.602 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-file
+00:00:34.602 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-gateway applying {pattern=/cms-gateway/**} to Path
+00:00:34.602 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-gateway applying filter {regexp=/cms-gateway/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:00:34.602 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-gateway
+00:00:34.603 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-system applying {pattern=/cms-system/**} to Path
+00:00:34.603 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-system applying filter {regexp=/cms-system/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:00:34.603 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-system
+00:00:34.603 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-auth applying {pattern=/cms-auth/**} to Path
+00:00:34.604 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-auth applying filter {regexp=/cms-auth/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:00:34.604 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-auth
+00:00:34.604 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-system applying {_genkey_0=/system/**} to Path
+00:00:34.605 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-system applying filter {_genkey_0=1} to StripPrefix
+00:00:34.605 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-system
+00:00:34.605 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-file applying {_genkey_0=/file/**} to Path
+00:00:34.605 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-file applying filter {_genkey_0=1} to StripPrefix
+00:00:34.606 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-file
+00:00:34.606 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-xiangmu applying {_genkey_0=/xm/**} to Path
+00:00:34.606 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-xiangmu applying filter {_genkey_0=1} to StripPrefix
+00:00:34.607 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-xiangmu
+00:00:34.607 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-auth applying {_genkey_0=/auth/**} to Path
+00:00:34.607 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-auth applying filter {_genkey_0=1} to StripPrefix
+00:00:34.607 [boundedElastic-25] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-auth
+00:01:04.591 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-xiangmu applying {pattern=/cms-xiangmu/**} to Path
+00:01:04.591 [boundedElastic-10] DEBUG o.s.c.g.f.GatewayMetricsFilter - [lambda$onApplicationEvent$0,66] - New routes count: 9
+00:01:04.592 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-xiangmu applying filter {regexp=/cms-xiangmu/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:01:04.592 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-xiangmu
+00:01:04.592 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-file applying {pattern=/cms-file/**} to Path
+00:01:04.592 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-file applying filter {regexp=/cms-file/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:01:04.593 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-file
+00:01:04.593 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-gateway applying {pattern=/cms-gateway/**} to Path
+00:01:04.593 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-gateway applying filter {regexp=/cms-gateway/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:01:04.594 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-gateway
+00:01:04.594 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-system applying {pattern=/cms-system/**} to Path
+00:01:04.594 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-system applying filter {regexp=/cms-system/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:01:04.594 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-system
+00:01:04.594 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-auth applying {pattern=/cms-auth/**} to Path
+00:01:04.595 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-auth applying filter {regexp=/cms-auth/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:01:04.595 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-auth
+00:01:04.595 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-system applying {_genkey_0=/system/**} to Path
+00:01:04.596 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-system applying filter {_genkey_0=1} to StripPrefix
+00:01:04.596 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-system
+00:01:04.596 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-file applying {_genkey_0=/file/**} to Path
+00:01:04.596 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-file applying filter {_genkey_0=1} to StripPrefix
+00:01:04.597 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-file
+00:01:04.597 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-xiangmu applying {_genkey_0=/xm/**} to Path
+00:01:04.597 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-xiangmu applying filter {_genkey_0=1} to StripPrefix
+00:01:04.597 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-xiangmu
+00:01:04.597 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-auth applying {_genkey_0=/auth/**} to Path
+00:01:04.598 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-auth applying filter {_genkey_0=1} to StripPrefix
+00:01:04.598 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-auth
+00:01:07.162 [reactor-http-nio-8] DEBUG r.n.h.s.HttpServerOperations - [debug,254] - [1318e6b2, L:/0:0:0:0:0:0:0:1:8081 - R:/0:0:0:0:0:0:0:1:64921] New http connection, requesting read
+00:01:07.162 [reactor-http-nio-8] DEBUG r.n.t.TransportConfig - [debug,259] - [1318e6b2, L:/0:0:0:0:0:0:0:1:8081 - R:/0:0:0:0:0:0:0:1:64921] Initialized pipeline DefaultChannelPipeline{(reactor.left.httpCodec = io.netty.handler.codec.http.HttpServerCodec), (reactor.left.httpTrafficHandler = reactor.netty.http.server.HttpTrafficHandler), (reactor.right.reactiveBridge = reactor.netty.channel.ChannelOperationsHandler)}
+00:01:07.163 [reactor-http-nio-9] DEBUG r.n.h.s.HttpServerOperations - [debug,254] - [8a8f222e, L:/0:0:0:0:0:0:0:1:8081 - R:/0:0:0:0:0:0:0:1:64922] New http connection, requesting read
+00:01:07.163 [reactor-http-nio-9] DEBUG r.n.t.TransportConfig - [debug,259] - [8a8f222e, L:/0:0:0:0:0:0:0:1:8081 - R:/0:0:0:0:0:0:0:1:64922] Initialized pipeline DefaultChannelPipeline{(reactor.left.httpCodec = io.netty.handler.codec.http.HttpServerCodec), (reactor.left.httpTrafficHandler = reactor.netty.http.server.HttpTrafficHandler), (reactor.right.reactiveBridge = reactor.netty.channel.ChannelOperationsHandler)}
+00:01:07.163 [reactor-http-nio-9] DEBUG r.n.h.s.HttpServerOperations - [debug,259] - [8a8f222e, L:/0:0:0:0:0:0:0:1:8081 - R:/0:0:0:0:0:0:0:1:64922] Increasing pending responses, now 1
+00:01:07.164 [reactor-http-nio-9] DEBUG r.n.h.s.HttpServer - [debug,259] - [8a8f222e-1, L:/0:0:0:0:0:0:0:1:8081 - R:/0:0:0:0:0:0:0:1:64922] Handler is being applied: org.springframework.http.server.reactive.ReactorHttpHandlerAdapter@6fc97d9b
+00:01:07.164 [reactor-http-nio-9] DEBUG o.s.w.s.a.HttpWebHandlerAdapter - [traceDebug,120] - [8a8f222e-11] HTTP POST "/xm/student/applyFor/"
+00:01:07.164 [reactor-http-nio-9] DEBUG o.s.c.g.h.RoutePredicateHandlerMapping - [lambda$lookupRoute$6,143] - Route matched: cms-xiangmu
+00:01:07.165 [reactor-http-nio-9] DEBUG o.s.c.g.h.RoutePredicateHandlerMapping - [lambda$getHandlerInternal$0,91] - Mapping [Exchange: POST http://localhost:8081/xm/student/applyFor/] to Route{id='cms-xiangmu', uri=lb://cms-xiangmu, order=0, predicate=Paths: [/xm/**], match trailing slash: true, gatewayFilters=[[[StripPrefix parts = 1], order = 1]], metadata={}}
+00:01:07.165 [reactor-http-nio-9] DEBUG o.s.c.g.h.RoutePredicateHandlerMapping - [lambda$getHandler$1,189] - [8a8f222e-11] Mapped to org.springframework.cloud.gateway.handler.FilteringWebHandler@4a579dc0
+00:01:07.165 [reactor-http-nio-9] DEBUG o.s.c.g.h.FilteringWebHandler - [handle,85] - Sorted gatewayFilterFactories: [[GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.RemoveCachedBodyFilter@6ab50d1c}, order = -2147483648], [GatewayFilterAdapter{delegate=com.alibaba.csp.sentinel.adapter.gateway.sc.SentinelGatewayFilter@778197c0}, order = -2147483648], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.AdaptCachedBodyGlobalFilter@76fc5687}, order = -2147482648], [GatewayFilterAdapter{delegate=com.cms.gateway.filter.AuthFilter@7ebc5be6}, order = -200], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.NettyWriteResponseFilter@1214c98b}, order = -1], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.ForwardPathFilter@adc3344}, order = 0], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.GatewayMetricsFilter@4e647f39}, order = 0], [[StripPrefix parts = 1], order = 1], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.RouteToRequestUrlFilter@6e0d058a}, order = 10000], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.ReactiveLoadBalancerClientFilter@4627dfda}, order = 10150], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.LoadBalancerServiceInstanceCookieFilter@1f3361e9}, order = 10151], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.WebsocketRoutingFilter@484302ee}, order = 2147483646], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.NettyRoutingFilter@eebc0db}, order = 2147483647], [GatewayFilterAdapter{delegate=org.springframework.cloud.gateway.filter.ForwardRoutingFilter@3eb0fd88}, order = 2147483647]]
+00:01:07.166 [reactor-http-nio-9] DEBUG o.s.d.r.c.RedisConnectionUtils - [doGetConnection,143] - Fetching Redis Connection from RedisConnectionFactory
+00:01:07.166 [reactor-http-nio-9] DEBUG i.l.c.RedisChannelHandler - [dispatch,175] - dispatching command AsyncCommand [type=EXISTS, output=IntegerOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+00:01:07.167 [reactor-http-nio-9] DEBUG i.l.c.p.DefaultEndpoint - [channelWriteAndFlush,430] - [channel=0xf1bd98e3, /182.91.20.122:59970 -> /118.126.93.98:6379, epid=0x2] write() writeAndFlush command AsyncCommand [type=EXISTS, output=IntegerOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+00:01:07.167 [reactor-http-nio-9] DEBUG i.l.c.p.DefaultEndpoint - [write,207] - [channel=0xf1bd98e3, /182.91.20.122:59970 -> /118.126.93.98:6379, epid=0x2] write() done
+00:01:07.168 [lettuce-nioEventLoop-5-2] DEBUG i.l.c.p.CommandHandler - [write,383] - [channel=0xf1bd98e3, /182.91.20.122:59970 -> /118.126.93.98:6379, epid=0x2, chid=0x2] write(ctx, AsyncCommand [type=EXISTS, output=IntegerOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command], promise)
+00:01:07.168 [lettuce-nioEventLoop-5-2] DEBUG i.l.c.p.CommandEncoder - [encode,101] - [channel=0xf1bd98e3, /182.91.20.122:59970 -> /118.126.93.98:6379] writing command AsyncCommand [type=EXISTS, output=IntegerOutput [output=null, error='null'], commandType=io.lettuce.core.protocol.Command]
+00:01:07.222 [lettuce-nioEventLoop-5-2] DEBUG i.l.c.p.CommandHandler - [channelRead,578] - [channel=0xf1bd98e3, /182.91.20.122:59970 -> /118.126.93.98:6379, epid=0x2, chid=0x2] Received: 4 bytes, 1 commands in the stack
+00:01:07.223 [lettuce-nioEventLoop-5-2] DEBUG i.l.c.p.CommandHandler - [decode,652] - [channel=0xf1bd98e3, /182.91.20.122:59970 -> /118.126.93.98:6379, epid=0x2, chid=0x2] Stack contains: 1 commands
+00:01:07.223 [lettuce-nioEventLoop-5-2] DEBUG i.l.c.p.RedisStateMachine - [decode,298] - Decode done, empty stack: true
+00:01:07.224 [lettuce-nioEventLoop-5-2] DEBUG i.l.c.p.CommandHandler - [decode,680] - [channel=0xf1bd98e3, /182.91.20.122:59970 -> /118.126.93.98:6379, epid=0x2, chid=0x2] Completing command LatencyMeteredCommand [type=EXISTS, output=IntegerOutput [output=1, error='null'], commandType=io.lettuce.core.protocol.AsyncCommand]
+00:01:07.224 [reactor-http-nio-9] DEBUG o.s.d.r.c.RedisConnectionUtils - [doCloseConnection,389] - Closing Redis Connection.
+00:01:07.229 [reactor-http-nio-10] DEBUG r.n.r.PooledConnectionProvider - [debug,259] - [74738689] Created a new pooled channel, now: 0 active connections, 0 inactive connections and 0 pending acquire requests.
+00:01:07.229 [reactor-http-nio-10] DEBUG r.n.t.TransportConfig - [debug,259] - [74738689] Initialized pipeline DefaultChannelPipeline{(reactor.left.httpCodec = io.netty.handler.codec.http.HttpClientCodec), (reactor.right.reactiveBridge = reactor.netty.channel.ChannelOperationsHandler)}
+00:01:07.231 [reactor-http-nio-10] DEBUG r.n.t.TransportConnector - [debug,254] - [74738689] Connecting to [/192.168.159.1:10668].
+00:01:07.232 [reactor-http-nio-10] DEBUG r.n.r.DefaultPooledConnectionProvider - [debug,254] - [74738689, L:/192.168.159.1:64923 - R:/192.168.159.1:10668] Registering pool release on close event for channel
+00:01:07.232 [reactor-http-nio-10] DEBUG r.n.r.PooledConnectionProvider - [debug,259] - [74738689, L:/192.168.159.1:64923 - R:/192.168.159.1:10668] Channel connected, now: 1 active connections, 0 inactive connections and 0 pending acquire requests.
+00:01:07.232 [reactor-http-nio-10] DEBUG r.n.r.DefaultPooledConnectionProvider - [debug,259] - [74738689, L:/192.168.159.1:64923 - R:/192.168.159.1:10668] onStateChange(PooledConnection{channel=[id: 0x74738689, L:/192.168.159.1:64923 - R:/192.168.159.1:10668]}, [connected])
+00:01:07.233 [reactor-http-nio-10] DEBUG r.n.r.DefaultPooledConnectionProvider - [debug,259] - [74738689-1, L:/192.168.159.1:64923 - R:/192.168.159.1:10668] onStateChange(GET{uri=null, connection=PooledConnection{channel=[id: 0x74738689, L:/192.168.159.1:64923 - R:/192.168.159.1:10668]}}, [configured])
+00:01:07.233 [reactor-http-nio-10] DEBUG r.n.h.c.HttpClientConnect - [debug,259] - [74738689-1, L:/192.168.159.1:64923 - R:/192.168.159.1:10668] Handler is being applied: {uri=http://192.168.159.1:10668/student/applyFor/, method=POST}
+00:01:07.233 [reactor-http-nio-10] DEBUG r.n.r.DefaultPooledConnectionProvider - [debug,259] - [74738689-1, L:/192.168.159.1:64923 - R:/192.168.159.1:10668] onStateChange(POST{uri=/student/applyFor/, connection=PooledConnection{channel=[id: 0x74738689, L:/192.168.159.1:64923 - R:/192.168.159.1:10668]}}, [request_prepared])
+00:01:07.234 [reactor-http-nio-9] DEBUG r.n.c.FluxReceive - [debug,259] - [8a8f222e-1, L:/0:0:0:0:0:0:0:1:8081 - R:/0:0:0:0:0:0:0:1:64922] [terminated=false, cancelled=false, pending=1, error=null]: subscribing inbound receiver
+00:01:07.234 [reactor-http-nio-10] DEBUG r.n.r.DefaultPooledConnectionProvider - [debug,259] - [74738689-1, L:/192.168.159.1:64923 - R:/192.168.159.1:10668] onStateChange(POST{uri=/student/applyFor/, connection=PooledConnection{channel=[id: 0x74738689, L:/192.168.159.1:64923 - R:/192.168.159.1:10668]}}, [request_sent])
+00:01:17.167 [reactor-http-nio-9] DEBUG r.n.c.ChannelOperations - [debug,259] - [8a8f222e-1, L:/0:0:0:0:0:0:0:1:8081 ! R:/0:0:0:0:0:0:0:1:64922] [HttpServer] Channel inbound receiver cancelled (channel disconnected).
+00:01:17.168 [reactor-http-nio-10] DEBUG r.n.h.c.HttpClientOperations - [debug,254] - [74738689-1, L:/192.168.159.1:64923 - R:/192.168.159.1:10668] Http client inbound receiver cancelled, closing channel.
+00:01:17.168 [reactor-http-nio-10] DEBUG r.n.r.PooledConnectionProvider - [debug,259] - [74738689-1, L:/192.168.159.1:64923 ! R:/192.168.159.1:10668] Channel closed, now: 0 active connections, 0 inactive connections and 0 pending acquire requests.
+00:01:17.168 [reactor-http-nio-10] DEBUG r.n.r.DefaultPooledConnectionProvider - [debug,259] - [74738689-1, L:/192.168.159.1:64923 ! R:/192.168.159.1:10668] onStateChange(POST{uri=/student/applyFor/, connection=PooledConnection{channel=[id: 0x74738689, L:/192.168.159.1:64923 ! R:/192.168.159.1:10668]}}, [disconnecting])
+00:01:31.051 [nacos.publisher-com.alibaba.nacos.client.naming.event.InstancesChangeEvent] DEBUG c.a.n.c.n.NotifyCenter - [notifySubscriber,197] - [NotifyCenter] the com.alibaba.nacos.client.naming.event.InstancesChangeEvent@9fa5abf will received by com.alibaba.nacos.client.naming.event.InstancesChangeNotifier@301e5d23
+00:01:34.595 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-file applying {pattern=/cms-file/**} to Path
+00:01:34.595 [boundedElastic-29] DEBUG o.s.c.g.f.GatewayMetricsFilter - [lambda$onApplicationEvent$0,66] - New routes count: 8
+00:01:34.595 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-file applying filter {regexp=/cms-file/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:01:34.595 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-file
+00:01:34.596 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-gateway applying {pattern=/cms-gateway/**} to Path
+00:01:34.596 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-gateway applying filter {regexp=/cms-gateway/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:01:34.596 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-gateway
+00:01:34.596 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-system applying {pattern=/cms-system/**} to Path
+00:01:34.596 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-system applying filter {regexp=/cms-system/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:01:34.597 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-system
+00:01:34.597 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-auth applying {pattern=/cms-auth/**} to Path
+00:01:34.597 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-auth applying filter {regexp=/cms-auth/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:01:34.597 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-auth
+00:01:34.597 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-system applying {_genkey_0=/system/**} to Path
+00:01:34.598 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-system applying filter {_genkey_0=1} to StripPrefix
+00:01:34.598 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-system
+00:01:34.598 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-file applying {_genkey_0=/file/**} to Path
+00:01:34.598 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-file applying filter {_genkey_0=1} to StripPrefix
+00:01:34.599 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-file
+00:01:34.599 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-xiangmu applying {_genkey_0=/xm/**} to Path
+00:01:34.599 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-xiangmu applying filter {_genkey_0=1} to StripPrefix
+00:01:34.599 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-xiangmu
+00:01:34.599 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-auth applying {_genkey_0=/auth/**} to Path
+00:01:34.599 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-auth applying filter {_genkey_0=1} to StripPrefix
+00:01:34.600 [boundedElastic-27] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-auth
+00:02:04.651 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-file applying {pattern=/cms-file/**} to Path
+00:02:04.652 [boundedElastic-27] DEBUG o.s.c.g.f.GatewayMetricsFilter - [lambda$onApplicationEvent$0,66] - New routes count: 8
+00:02:04.652 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-file applying filter {regexp=/cms-file/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:02:04.653 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-file
+00:02:04.653 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-gateway applying {pattern=/cms-gateway/**} to Path
+00:02:04.653 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-gateway applying filter {regexp=/cms-gateway/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:02:04.654 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-gateway
+00:02:04.654 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-system applying {pattern=/cms-system/**} to Path
+00:02:04.654 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-system applying filter {regexp=/cms-system/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:02:04.654 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-system
+00:02:04.655 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-auth applying {pattern=/cms-auth/**} to Path
+00:02:04.655 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition ReactiveCompositeDiscoveryClient_cms-auth applying filter {regexp=/cms-auth/?(?<remaining>.*), replacement=/${remaining}} to RewritePath
+00:02:04.655 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: ReactiveCompositeDiscoveryClient_cms-auth
+00:02:04.655 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-system applying {_genkey_0=/system/**} to Path
+00:02:04.656 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-system applying filter {_genkey_0=1} to StripPrefix
+00:02:04.656 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-system
+00:02:04.656 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-file applying {_genkey_0=/file/**} to Path
+00:02:04.657 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-file applying filter {_genkey_0=1} to StripPrefix
+00:02:04.657 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-file
+00:02:04.657 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-xiangmu applying {_genkey_0=/xm/**} to Path
+00:02:04.657 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-xiangmu applying filter {_genkey_0=1} to StripPrefix
+00:02:04.658 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-xiangmu
+00:02:04.658 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lookup,208] - RouteDefinition cms-auth applying {_genkey_0=/auth/**} to Path
+00:02:04.658 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [loadGatewayFilters,134] - RouteDefinition cms-auth applying filter {_genkey_0=1} to StripPrefix
+00:02:04.658 [boundedElastic-28] DEBUG o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$getRoutes$3,110] - RouteDefinition matched: cms-auth
