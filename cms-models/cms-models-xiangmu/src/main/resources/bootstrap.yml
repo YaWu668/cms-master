@@ -15,9 +15,14 @@ spring:
       # 服务注册、配置拉取地址
       server-addr: 110.41.189.159:8848
       #  server-addr: 192.168.137.220:8848
+      # 注册中心配置,作用: 1.服务发现 2.配置中心
       discovery:
-        namespace: dev
+        #todo 开发环境的命名空间,根据实际情况修改替换dev
+        namespace: test
+        # 测试环境的命名空间
+#        namespace: test
         group: cms-project
+      # 配置中心配置 ,作用: 1.动态刷新配置 2.配置分发
       config:
         namespace: dev
         group: cms-project
@@ -25,32 +30,9 @@ spring:
         file-extension: yml
         # 共享配置
         shared-configs:
-          - data-id: applicationXM-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+          - data-id: applicationXM-dev.yml
             group: cms-project
             namespace: dev
-        # 扩展配置
-        extension-configs:
-          - data-id: cms-xiangmu-dev.yml
-            group: cms-project
-            namespace: dev
-            refresh: true
 
 
 
-mybatis-plus:
-  mapper-locations: classpath*:mapper/**/*.xml
-  configuration:
-    # 控制台打印完整带参数SQL语句
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  global-config:
-    # 数据库字段映射到实体的驼峰命名规则
-    db-column-underline: true
-    # 数据库表映射到实体的驼峰命名规则
-    db-table-underline: true
-    # 开启驼峰命名规则
-    map-underscore-to-camel-case: true
-    db-config:
-      # 主键类型
-      id-type: auto
-      # 数据库类型
-      db-type: mysql

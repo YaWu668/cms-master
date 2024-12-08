@@ -13,7 +13,10 @@ spring:
 #      server-addr: 127.0.0.1:8848
 #      server-addr: 118.126.93.98:8848
       discovery:
-        namespace: dev
+        #todo 开发环境的命名空间,根据实际情况修改替换dev
+#        namespace: dev
+        # 测试环境的命名空间
+        namespace: test
         group: cms-project
       config:
         namespace: dev
