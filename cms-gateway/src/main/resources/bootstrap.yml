@@ -19,8 +19,14 @@ spring:
         namespace: test
         group: cms-project
       # 配置中心配置 ,作用: 1.动态刷新配置 2.配置分发
+        # nacos的用户名和密码
+        username: nacos
+        password: 2161200224
       config:
         namespace: dev
         group: cms-project
         # 配置文件格式
         file-extension: yml
+        # nacos的用户名和密码
+        username: nacos
+        password: 2161200224

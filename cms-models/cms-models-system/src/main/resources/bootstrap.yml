@@ -16,13 +16,15 @@ spring:
       server-addr: 110.41.189.159:8848
 #      server-addr: 127.0.0.1:8848
 #      server-addr: 118.126.93.98:8848
-
       discovery:
         #todo 开发环境的命名空间,根据实际情况修改替换dev
 #        namespace: dev
         # 测试环境的命名空间
         namespace: test
         group: cms-project
+        # nacos的用户名和密码
+        username: nacos
+        password: 2161200224
       config:
         namespace: dev
         group: cms-project
@@ -33,3 +35,6 @@ spring:
           - data-id: application-dev.yml
             group: cms-project
             namespace: dev
+        # nacos的用户名和密码
+        username: nacos
+        password: 2161200224
