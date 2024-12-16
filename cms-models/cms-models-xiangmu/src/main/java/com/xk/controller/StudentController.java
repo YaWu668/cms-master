@@ -9,6 +9,7 @@ import com.xk.domain.dto.ApplyForC;
 import com.xk.domain.dto.ApplyForDTO;
 import com.xk.service.ProjectService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -27,6 +28,7 @@ public class StudentController  {
      * 服务对象
      */
     private final ProjectService projectService;
+
 
     /**
      * 申请项目

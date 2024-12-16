@@ -7,6 +7,8 @@ import java.lang.reflect.Field;
 public class BeanUtils {
 
     /**
+     *
+     * todo bug,全部为null才会true,看外面方法就知道了
      * 检查一个对象中的所有字段是否都不为 null
      *
      * @param bean 要检查的对象

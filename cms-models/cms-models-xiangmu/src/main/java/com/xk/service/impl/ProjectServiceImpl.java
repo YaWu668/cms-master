@@ -120,19 +120,19 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
         //把数据转到实体类当中并写入数据库
         Long projectId = insertProject(applyForDTO);
-        //插入学生表
+        //todo 有bug ,插入学生表
         try {
             insertProjectStudnet(applyForDTO,projectId);
         }catch (Exception e){
             throw new ServiceException("插入学生表失败,请检查",444);
         }
-        //插入老师表
+        //todo 有bug ,插入老师表
         try {
             insertProjectTeacher(applyForDTO,projectId);
         }catch(Exception e){
             throw new ServiceException("插入老师表失败,请检查",444);
         };
-        //项目进行表插入
+        //todo 有bug ,项目进行表插入
         try {
             insertProjectSchedule(projectId);
         }catch (Exception e){
