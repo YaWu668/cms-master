@@ -242,3 +242,47 @@ Consider the following:
 18:46:19.230 [RMI TCP Connection(9)-10.8.0.3] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
 18:46:19.232 [RMI TCP Connection(9)-10.8.0.3] INFO  o.s.w.s.DispatcherServlet - [initServletBean,525] - Initializing Servlet 'dispatcherServlet'
 18:46:19.234 [RMI TCP Connection(9)-10.8.0.3] INFO  o.s.w.s.DispatcherServlet - [initServletBean,547] - Completed initialization in 2 ms
+20:48:38.605 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
+20:48:38.670 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 6.2.5.Final
+20:48:39.065 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+20:48:39.066 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+20:48:44.120 [main] WARN  c.a.c.n.c.NacosPropertySourceBuilder - [loadNacosData,87] - Ignore the empty nacos configuration and get it based on dataId[cms-system] & group[cms-project]
+20:48:44.160 [main] WARN  c.a.c.n.c.NacosPropertySourceBuilder - [loadNacosData,87] - Ignore the empty nacos configuration and get it based on dataId[cms-system.yml] & group[cms-project]
+20:48:44.202 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource {name='bootstrapProperties-cms-system-guoA.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-system.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-system,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-application-guoA.yml,cms-project'}]
+20:48:44.211 [main] INFO  c.c.s.CmsSystemApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "guoA"
+20:48:45.452 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [multipleStoresDetected,262] - Multiple Spring Data modules found, entering strict repository configuration mode
+20:48:45.455 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,132] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+20:48:45.486 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,201] - Finished Spring Data repository scanning in 17 ms. Found 0 Redis repository interfaces.
+20:48:45.749 [main] INFO  o.s.c.c.s.GenericScope - [setSerializationId,283] - BeanFactory id=be3f3d72-f416-336a-814b-b2a307ff1bed
+20:48:46.020 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'com.cms.common.redis.config.RedisConfig' of type [com.cms.common.redis.config.RedisConfig$$EnhancerBySpringCGLIB$$59ad0bd3] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+20:48:46.409 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [initialize,108] - Tomcat initialized with port(s): 10240 (http)
+20:48:46.420 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Initializing ProtocolHandler ["http-nio-10240"]
+20:48:46.421 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
+20:48:46.422 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.83]
+20:48:46.586 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
+20:48:46.586 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - [prepareWebApplicationContext,292] - Root WebApplicationContext: initialization completed in 2339 ms
+20:48:48.971 [main] INFO  c.z.h.HikariDataSource - [getConnection,110] - HikariPool-1 - Starting...
+20:48:49.598 [main] INFO  c.z.h.HikariDataSource - [getConnection,123] - HikariPool-1 - Start completed.
+20:48:51.613 [main] INFO  c.a.c.s.SentinelWebMvcConfigurer - [addInterceptors,52] - [Sentinel Starter] register SentinelWebInterceptor with urlPatterns: [/**].
+20:48:53.431 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
+20:48:54.298 [main] INFO  o.s.b.a.e.w.EndpointLinksResolver - [<init>,58] - Exposing 1 endpoint(s) beneath base path '/actuator'
+20:48:54.776 [main] INFO  o.s.c.o.FeignClientFactoryBean - [getTarget,418] - For 'cms-system' URL not provided. Will try picking an instance via load-balancing.
+20:48:57.132 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
+20:48:57.189 [main] WARN  o.s.c.l.c.LoadBalancerCacheAutoConfiguration$LoadBalancerCaffeineWarnLogger - [logWarning,83] - Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+20:48:57.268 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Starting ProtocolHandler ["http-nio-10240"]
+20:48:57.278 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [start,220] - Tomcat started on port(s): 10240 (http) with context path ''
+20:48:57.287 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+20:48:57.287 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+20:48:57.633 [main] INFO  c.a.c.n.r.NacosServiceRegistry - [register,76] - nacos registry, cms-project cms-system 192.168.159.1:10240 register finished
+20:48:59.310 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
+20:48:59.832 [main] INFO  c.c.s.CmsSystemApplication - [logStarted,61] - Started CmsSystemApplication in 23.403 seconds (JVM running for 24.945)
+20:48:59.852 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-system-guoA.yml, group=cms-project
+20:48:59.853 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-system, group=cms-project
+20:48:59.854 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-system.yml, group=cms-project
+20:49:01.063 [RMI TCP Connection(7)-10.8.0.2] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+20:49:01.064 [RMI TCP Connection(7)-10.8.0.2] INFO  o.s.w.s.DispatcherServlet - [initServletBean,525] - Initializing Servlet 'dispatcherServlet'
+20:49:01.066 [RMI TCP Connection(7)-10.8.0.2] INFO  o.s.w.s.DispatcherServlet - [initServletBean,547] - Completed initialization in 2 ms
+20:57:47.477 [http-nio-10240-exec-9] ERROR c.c.c.s.h.GlobalExceptionHandler - [handleNotPermissionException,60] - 请求地址'/online',权限码校验失败'monitor:online:query'
+20:57:48.647 [http-nio-10240-exec-6] ERROR c.c.c.s.h.GlobalExceptionHandler - [handleNotPermissionException,60] - 请求地址'/user/list',权限码校验失败'system:user:query'
+20:57:49.699 [http-nio-10240-exec-2] ERROR c.c.c.s.h.GlobalExceptionHandler - [handleNotPermissionException,60] - 请求地址'/menu/list',权限码校验失败'system:menu:query'
+20:57:50.699 [http-nio-10240-exec-9] ERROR c.c.c.s.h.GlobalExceptionHandler - [handleNotPermissionException,60] - 请求地址'/post/list',权限码校验失败'system:post:query'

@@ -1,5 +1,6 @@
 package com.xk.utils;
 
+import com.cms.common.core.exception.ServiceException;
 import lombok.Data;
 
 import java.lang.reflect.Field;
@@ -8,7 +9,7 @@ public class BeanUtils {
 
     /**
      *
-     * todo bug,全部为null才会true,看外面方法就知道了
+     *
      * 检查一个对象中的所有字段是否都不为 null
      *
      * @param bean 要检查的对象
@@ -26,14 +27,14 @@ public class BeanUtils {
                 // 获取字段值
                 Object value = field.get(bean);
                 if (value == null) {
-//                    field.setAccessible(false);// 访问完后恢复原值
+                    field.setAccessible(false);// 访问完后恢复原值
                     return false; // 如果字段值为null，直接返回false
                 }
-//                field.setAccessible(false);// 访问完后恢复原值
+                field.setAccessible(false);// 访问完后恢复原值
             }
             return true; // 所有字段都不为 null
         } catch (IllegalAccessException e) {
-            throw new RuntimeException("字段访问失败", e);
+            throw new ServiceException("字段访问失败:"+e.getMessage(), 500);
         }
     }
 

@@ -120,22 +120,16 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
         //把数据转到实体类当中并写入数据库
         Long projectId = insertProject(applyForDTO);
-        //todo 有bug ,插入学生表
-        try {
-            insertProjectStudnet(applyForDTO,projectId);
-        }catch (Exception e){
-            throw new ServiceException("插入学生表失败,请检查",444);
+        //插入学生表
+        if(!insertProjectStudnet(applyForDTO,projectId)){
+            throw new ServiceException("插入学生表失败,请检查",500);
         }
         //todo 有bug ,插入老师表
-        try {
-            insertProjectTeacher(applyForDTO,projectId);
-        }catch(Exception e){
-            throw new ServiceException("插入老师表失败,请检查",444);
-        };
+        if(!insertProjectTeacher(applyForDTO,projectId)){
+            throw new ServiceException("插入老师表失败,请检查",500);
+        }
         //todo 有bug ,项目进行表插入
-        try {
-            insertProjectSchedule(projectId);
-        }catch (Exception e){
+        if(!insertProjectSchedule(projectId)){
             throw new ServiceException("项目进行表插入失败,请检查",444);
         }
         return Response.success("项目申请成功,等待审核");
@@ -144,14 +138,15 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     /**
      * 插入项目进度表,初始化,项目进行表进行初始化
      * @param projectId 项目id
+     *
      */
-    private void insertProjectSchedule( Long projectId) {
+    private boolean insertProjectSchedule( Long projectId) {
         //项目进度表初始化
         ProjectSchedule projectSchedule = new ProjectSchedule();
         projectSchedule.setProjectId(projectId)
                 .setUserId(SecurityUtils.getUserId())
                 .setContent("项目申请提交成功,等待审核");
-        projectScheduleService.save(projectSchedule);
+        return projectScheduleService.save(projectSchedule);
     }
 
     /**
@@ -173,6 +168,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * 学生报名表插入
      * @param applyForDTO 申请信息
      * @param projectId 项目id
+     * @return true表示成功,false表示失败
      */
     public boolean insertProjectStudnet(ApplyForDTO applyForDTO, Long projectId) {
         List<StudnetApplys> studnetApplys= BeanCopyUtils.copyBeans(applyForDTO.getStudents(),StudnetApplys.class);
