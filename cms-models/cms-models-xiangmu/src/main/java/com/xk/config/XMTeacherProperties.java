@@ -6,6 +6,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+/**
+ * 老师热更新配置
+ */
 
 /**
  *
@@ -21,7 +24,8 @@ public class XMTeacherProperties {
 
 
     /**
-     * 校验配置项是否有效
+     * 热配置初始化<br>
+     * 执行时机: 项目启动时 和 Nacos 配置变更时<br>
      */
     @PostConstruct
     public void validateConfig() {

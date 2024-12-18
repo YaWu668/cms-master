@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cms.common.core.exception.ServiceException;
 import com.cms.common.core.web.domain.Response;
 import com.cms.common.security.utils.SecurityUtils;
+import com.xk.config.ProjectScheduleConfig;
 import com.xk.config.XMStateProperties;
 import com.xk.config.XMStudnetProperties;
 import com.xk.config.XMTeacherProperties;
@@ -85,6 +86,10 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      */
     private final ProjectScheduleService projectScheduleService;
     /**
+     * 项目状态变化配置类，支持热更新
+     */
+    private final ProjectScheduleConfig projectScheduleConfig;
+    /**
      * 申请项目
      * @param applyForDTO 申请信息
      * @return
@@ -118,17 +123,17 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
         //todo 有空再写,验证队员和老师参数进行项目最多有2个
 
-        //把数据转到实体类当中并写入数据库
+        //1.把数据转到实体类当中并写入数据库,插入项目表新增项目
         Long projectId = insertProject(applyForDTO);
-        //插入学生表
+        //2.插入学生表
         if(!insertProjectStudnet(applyForDTO,projectId)){
             throw new ServiceException("插入学生表失败,请检查",500);
         }
-        //todo 有bug ,插入老师表
+        //3.插入老师表
         if(!insertProjectTeacher(applyForDTO,projectId)){
             throw new ServiceException("插入老师表失败,请检查",500);
         }
-        //todo 有bug ,项目进行表插入
+        //4.项目进行表插入
         if(!insertProjectSchedule(projectId)){
             throw new ServiceException("项目进行表插入失败,请检查",444);
         }
@@ -145,7 +150,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         ProjectSchedule projectSchedule = new ProjectSchedule();
         projectSchedule.setProjectId(projectId)
                 .setUserId(SecurityUtils.getUserId())
-                .setContent("项目申请提交成功,等待审核");
+                .setContent(projectScheduleConfig.getApplyForProjectApproval());
         return projectScheduleService.save(projectSchedule);
     }
 
@@ -208,7 +213,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 .setFirmTeacherId(firstTeacherToJsonArrray(applyForDTO.getTeachers()))//企业老师的 数组id
                 .setBeginTime(yearDataBaen.getBegin())
                 .setEndTime(yearDataBaen.getEnd())
-                .setState(stateList.get(0));
+                .setState(stateList.get(1));
         //导入立项依据
         boolean result = setABC(project,applyForDTO);
         if(!result){

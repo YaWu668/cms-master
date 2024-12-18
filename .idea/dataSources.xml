@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="cms-plus@localhost" uuid="cd31a391-71ec-46dd-9ed4-f7190cb27eed">
+    <data-source source="LOCAL" name="xm-plus@10.8.0.99" uuid="4cb5d1ac-1716-4af8-85d0-ecbdea3a0748">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:3306/cms-plus</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
-    <data-source source="LOCAL" name="cms-plus@118.126.93.98" uuid="405b284d-30c6-44c0-b9be-64c2cf8c4744">
-      <driver-ref>mysql.8</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://118.126.93.98:3306/cms-plus</jdbc-url>
+      <jdbc-url>jdbc:mysql://10.8.0.99:3306/xm-plus</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

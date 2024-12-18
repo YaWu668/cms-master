@@ -11,6 +11,9 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.util.Map;
 
+/**
+ * 学生热更新配置项
+ */
 @Data
 @Component
 @RefreshScope
@@ -34,17 +37,13 @@ public class XMStudnetProperties {
 
 
     /**
-     * 校验配置项是否有效
+     * 热配置初始化<br>
+     * 执行时机: 项目启动时 和 Nacos 配置变更时<br>
      */
     @PostConstruct
     public void validateConfig() {
         //非空校验
-        if(maxApplys == null ) {
-            throw new ServiceException("配置项:xm.studnet.maxApplys 不能为空，请检查 Nacos 配置，请联系管理员",500);
-        }
-        if(teacherBusinessGuidance == null) {
-            throw new ServiceException("配置项:xm.studnet.teacherBusinessGuidance 不能为空，请检查 Nacos 配置，请联系管理员", 500);
-        }
+        validateNotNull();
 
         // 校验 `maxApplys` 和 `teacherBusinessGuidance` 的键集合是否一致
         if (!maxApplys.keySet().equals(teacherBusinessGuidance.keySet())) {
@@ -58,10 +57,10 @@ public class XMStudnetProperties {
             }
         }
 
-        //校验字典:是否需要企业老师的支持(字典值)是否存在
-        for(Long value:teacherBusinessGuidance.values()){
-            if (!dictDataService.checkDictData(value,"xm_item_type")){
-                throw new ServiceException("配置项:xm.studnet.teacherBusinessGuidance 中是否需要企业老师的支持: "+value+" 不存在，请检查 Nacos 配置，请联系管理员",500);
+        //校验字典:项目类型(字典值)是否存在
+        for(Long key:teacherBusinessGuidance.keySet()){
+            if (!dictDataService.checkDictData(key,"xm_item_type")){
+                throw new ServiceException("配置项:xm.studnet.teacherBusinessGuidance 中项目类型: "+key+" 不存在，请检查 Nacos 配置，请联系管理员",500);
             }
         }
 
@@ -78,5 +77,17 @@ public class XMStudnetProperties {
             }
         }
 
+    }
+
+    /**
+     * 非空校验
+     */
+    private void validateNotNull() {
+        if(maxApplys == null ) {
+            throw new ServiceException("配置项:xm.studnet.maxApplys 不能为空，请检查 Nacos 配置，请联系管理员",500);
+        }
+        if(teacherBusinessGuidance == null) {
+            throw new ServiceException("配置项:xm.studnet.teacherBusinessGuidance 不能为空，请检查 Nacos 配置，请联系管理员", 500);
+        }
     }
 }
