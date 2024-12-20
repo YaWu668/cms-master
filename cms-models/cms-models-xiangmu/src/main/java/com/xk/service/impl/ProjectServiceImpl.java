@@ -7,15 +7,16 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cms.common.core.exception.ServiceException;
 import com.cms.common.core.web.domain.Response;
 import com.cms.common.security.utils.SecurityUtils;
-import com.xk.config.ProjectScheduleConfig;
-import com.xk.config.XMStateProperties;
-import com.xk.config.XMStudnetProperties;
-import com.xk.config.XMTeacherProperties;
+import com.xk.config.*;
+import com.xk.constant.ProjectConstant;
+import com.xk.constant.RoleConstant;
 import com.xk.domain.dto.ApplyForDTO;
 import com.xk.domain.dto.ApplyForStudent;
 import com.xk.domain.dto.ApplyForTeacher;
+import com.xk.domain.dto.ProjectAuditDto;
 import com.xk.entity.*;
 import com.xk.mapper.ProjectMapper;
+import com.xk.mapper.UserMapper;
 import com.xk.service.*;
 import com.xk.utils.BeanCopyUtils;
 import com.xk.utils.BeanUtils;
@@ -80,7 +81,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     /**
      * 项目状态配置
      */
-    private final XMStateProperties xmStateProperties;;
+//    private final XMStateProperties xmStateProperties;;
     /**
      * 项目进度表服务
      */
@@ -89,6 +90,32 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * 项目状态变化配置类，支持热更新
      */
     private final ProjectScheduleConfig projectScheduleConfig;
+    /**
+     * 项目审核配置类，支持热更新
+     */
+    private final XMAuditConfig xmAuditConfig;
+    /**
+     * 角色服务
+     */
+    private  final  RoleService roleService;
+    /**
+     * 学院数据服务
+     */
+    private final  CollegeDataService collegeDataService;
+
+    /**
+     * 用户mapper
+     */
+    private final UserMapper userMapper;
+    /**
+     * 专家组人员服务
+     */
+    private final SpecialistDataService specialistDataService;
+
+    /**
+     * 审核意见服务
+     */
+    private final AuditOpinionService auditOpinionService;
     /**
      * 申请项目
      * @param applyForDTO 申请信息
@@ -138,6 +165,458 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             throw new ServiceException("项目进行表插入失败,请检查",444);
         }
         return Response.success("项目申请成功,等待审核");
+    }
+
+    /**
+     * 权限校验审核通过后,操作审核表存指针(项目进度值抽象出来的指针)存在4个位置(多种情况)
+     *
+     *
+     * 1.假设审核进度值为7,但是当前项目类型最大顺序值为6,就审核步骤少于当中值7,当前项目状态为已完成;<a href="">修改项目表和项目进度表状态(特殊记录),还是会记录多余出来的审核步骤(审核表)</a><br><br>
+     * 2.当前项目已经审核完毕,不需要再次审核,审核进度值为0<br><br>
+     * 3.当前项目是审核不通过重新审核的,审核进度值为1,审核表已经有记录,会原本的记录覆盖<a href="">修改项目表和审核表<a><br><br>
+     * 4.正常审核,未完成审核进来的,审核进度值大于1,审核表会记录会新增一条记录<a href="">修改项目表和审核表<a><br><br>
+     * 5.第一条审核记录,审核进度值为1,审核表没有记录,会新增一条记录<a href="">修改项目表和审核表<a><br><br>
+     * 6.最后一个项目审核,审核进度等于最大审核顺序,审核完成<a href="">修改项目表,审核表,项目进度表</a><br><br>
+     * <a href="">把nacos定义配置审核顺序想象成列表,把项目表里的审核进度抽象为指针,这样可以抽象所有审核状态</a>
+     * @param projectAuditDto
+     * @return
+     */
+    @Override
+    public Response projectAudit(ProjectAuditDto projectAuditDto) {
+        //1.判断当前项目是否存在,并返回项目的bean对象,不存在抛出异常
+        Project project = getProject(projectAuditDto.getProjectid());
+        //2.情况二,当前项目已经审核完毕,不需要再次审核,直接抛出异常
+        projectAlreadyAudit(project);
+        //3.根据项目的审核状态,去查热更新配置类,返回当前项目的审核角色的id
+        Long roleId = getAuditRoleId(project.getAuditStatus(), project.getType());
+        //4.再判断当前用户拥有的角色id,是否是项目当前状态需要的角色id,如果不是抛出异常
+        isHaveUserRole(roleId);
+        //5.用户对应的角色是否有权限审核当前项目
+        if(!isHaveRole(roleId,project)){
+            throw new ServiceException("当前用户没有权限审核当前项目,请联系管理员",403);
+        }
+        //6.根据剩余5个情况,进行操作,并返回结果,参数项目bean,审核备注,(根据项目进度状态来判断审核进度)
+        if (!projectAlreadyAuditz(projectAuditDto, project,roleId)) {
+
+        }
+        return null;
+    }
+
+    /**
+     * 根据剩余5个情况,进行操作,并返回结果,参数项目bean,审核备注,(根据项目进度状态来判断审核进度)
+     * @param projectAuditDto 审核信息
+     * @param project 项目实体类
+     * @return 写入成功返回true,写入失败返回false
+     */
+    private boolean projectAlreadyAuditz(ProjectAuditDto projectAuditDto, Project project,Long roleId) {
+        //获取项目当前最大审核顺序值
+        int max = xmAuditConfig.getProjectAuditTypes().get(project.getType()).size();//需要的最大审核顺序值
+        Long a= project.getAuditStatus();//项目当前审核状态值
+        List<AuditOpinion> auditOpinions = auditOpinionService.selectByPropertieID(project.getProjectId());//获取项目的审核记录(有可能为空)
+        int b = auditOpinions.size();//审核记录条数
+
+
+        return false;
+        /*//todo 有空才写,判断a的是否 a>=0,否则进行异常处理,把项目转为审核不通过状态,并且项目进度表进行记录,然后返回true,(要求记录系统自动生成的审核记录)
+
+
+        //6.情况六(特别特殊)
+        if(a==max) { //可能出现 b>max && b>a情况或者是 b<max && b<a情况,都是后一个,但是a==max是不会变的
+            handleLastAudit(projectAuditDto, project, roleId);
+            return true;
+        }
+
+        //1.情况一,a>max,b>=max,当前项目已经审核完毕,不需要再次审核,直接抛出异常
+        if(a>max){//只要超出,需要管理员
+            handleOverAudit(projectAuditDto, project);
+            return true;
+        }
+        //2.情况三,
+        else if( a<max && a<=b && b<= max){
+            handleReAudit(projectAuditDto, project, roleId);
+            return true;
+        }
+        //4.情况四,
+        else if(a<max && a>b && b>max){
+            handleNormalAudit(projectAuditDto, project, roleId);
+            return true;
+        }
+        //5.情况五,
+        else if(a<max && a>b && b == 0){
+            handleFirstAudit(projectAuditDto, project, roleId);
+            return true;
+
+        }else {//未知情况,会进行记录
+
+        }
+        return false;*/
+    }
+
+
+    /**
+     *
+     *  处理情况一,审核进度操作,配置信息审核进度,<br>
+     * 两张表,1.项目表状态和 2.项目进度表的值,项目进度表添加这条记录(特殊标记:审核意见会添加到项目进度表里面,不管是通过还不通过)<br>
+     * 这个情况只有管理员状态才可以进行操作的,前面需要判断是不是管理员的角色<br>
+     *
+     * @param projectAuditDto  审核信息
+     * @param project 项目实体类
+     */
+    private void handleOverAudit(ProjectAuditDto projectAuditDto, Project project) {
+        //双重判断是不是管理员
+        if(!isHaveAdmin()){
+            throw new ServiceException("当前用户没有权限审核当前项目,请联系管理员",403);
+        }
+        //1.项目进度表最后一个节点
+        ProjectSchedule lastByProjectId = projectScheduleService.getLastByProjectId(project.getProjectId());
+        ProjectSchedule projectSchedule = new ProjectSchedule()
+                .setProjectId(project.getProjectId()) //项目id
+                .setRootId(lastByProjectId.getProjectScheduleId()) //上一级进度id项目进度id
+                .setUserId(SecurityUtils.getUserId()) //当前用户id
+                .setContent(projectAuditDto.getAuditState()== 0? //审核通过和不通过存储不同信息(0表示通过,1表示不通过)
+                        projectScheduleConfig.getAuditSpecialOne() +"\n 审核通过信息记录:"+projectAuditDto.getAuditOpinion()+" \n 审核用户的id"+SecurityUtils.getUserId() :
+                        projectScheduleConfig.getAuditSpecialTwo() +"\n 审核不通过信息记录:"+projectAuditDto.getAuditOpinion()+" \n 审核用户的id"+SecurityUtils.getUserId()); //审核意见
+
+        //2.通过和 项目表(更新) ,项目进度表(插入),
+        if(projectScheduleService.save(projectSchedule)){
+            throw new ServiceException("项目进度表插入失败,请检查",500);
+        }
+        project
+                .setState(projectAuditDto.getAuditState()==0? //项目状态(最后的审核),0为审核通过,1为审核不通过
+                        ProjectConstant.PROJECT_STATUS_IN_PROGRESS_VALUE: //2代表项目进行中
+                        ProjectConstant.PROJECT_STATUS_NOT_PASS_VALUE) //0代表审核不通过
+                .setAuditStatus(projectAuditDto.getAuditState()==0? //项目进度值(最后的审核)0为审核通过,1为审核不通过
+                                ProjectConstant.PROJECT_STATUS_PROGRESS://0代表审核结束
+                                ProjectConstant.PROJECT_STATUS_PROGRESS_INIT); //1代表从头开始审核
+        if(updateById(project)){
+            throw new ServiceException("项目表状态修改失败,请检查",500);
+        }
+    }
+
+    /**
+     * 处理情况三,重新审核操作,配置信息审核进度,会覆盖原本的记录<br>
+     * 操作两种表 项目表 和 审核表<br>
+     * @param projectAuditDto 项目审核信息
+     * @param project 项目实体类
+     * @param roleId 项目当前需要的审核角色的id(当前用户id)
+     */
+    private void handleReAudit(ProjectAuditDto projectAuditDto, Project project,Long roleId) {
+        //1.获取用户的id
+        Long userId = SecurityUtils.getUserId();
+
+        //2.获取项目当前的审核进度
+        Long auditStatus = project.getAuditStatus();
+        //3.根据审核进度值作为索引,获取审核表的节点
+        AuditOpinion nodeByIndex = auditOpinionService.getNodeByIndex(project.getProjectId(), auditStatus);
+        //4.覆盖原本的记录
+        nodeByIndex
+                .setAuditState(projectAuditDto.getAuditState())//审核状态
+                .setRoleId(roleId)//角色id
+                .setAuditOpinion(projectAuditDto.getAuditOpinion());//审核意见
+        //5.修改审核表
+        if(auditOpinionService.updateById(nodeByIndex)){
+            throw new ServiceException("审核表修改失败,请检查",500);
+        }
+        //5.项目表修改审核状态
+        project
+                .setAuditStatus(projectAuditDto.getAuditState()==0?//通过审核进度条+1,不通过直接设置为1
+                        auditStatus+1: //通过审核进度条+1
+                        ProjectConstant.PROJECT_STATUS_PROGRESS_INIT)//1代表从头开始审核
+                .setState(projectAuditDto.getAuditState()==0? //审核通过设置为状态值不变,审核不通过设置为0
+                        project.getState()://不变
+                        ProjectConstant.PROJECT_STATUS_NOT_PASS_VALUE);//0代表审核不通过
+        if(updateById(project)){
+            throw new ServiceException("项目表状态修改失败,请检查",500);
+        }
+    }
+
+
+
+    /**
+     * 情况四,正常审核操作(为完成审核),配置信息审核进度,会新增一条记录<br>
+     * 项目表和审核表
+     * @param projectAuditDto 项目审核信息
+     * @param project 项目实体类
+     * @param roleId 项目当前需要的审核角色的id(当前用户id)
+     */
+    private void handleNormalAudit(ProjectAuditDto projectAuditDto, Project project,Long roleId) {
+        //1.获取用户的id
+        Long userId = SecurityUtils.getUserId();
+        //2.获取项目当前的审核进度
+        Long auditStatus = project.getAuditStatus();
+        //3.获取审核表最后一条记录
+        AuditOpinion lastByProjectId = auditOpinionService.getLastByProjectId(project.getProjectId());
+        //5.封装审核表数据
+        AuditOpinion auditOpinion = new AuditOpinion()
+                .setProjectId(project.getProjectId())//项目id
+                .setUserId(userId) //当前用户id
+                .setRoleId(roleId)//角色id
+                .setRootId(lastByProjectId.getAuditOpinionId())//上一级审核id
+                .setAuditState(projectAuditDto.getAuditState())//审核状态
+                .setAuditOpinion(projectAuditDto.getAuditOpinion());//审核意见
+        if(auditOpinionService.save(auditOpinion)){
+            throw new ServiceException("审核表插入失败,请检查",500);
+        }
+        //6.根据是否审核通过,修改项目表
+        project
+                .setState(projectAuditDto.getAuditState()==0? //审核通过设置为状态值不变,审核不通过设置为0
+                        project.getState()://不变
+                        ProjectConstant.PROJECT_STATUS_NOT_PASS_VALUE)//0代表审核不通过
+                .setAuditStatus(projectAuditDto.getAuditState()==0? //审核通过 进度值+1,不通过直接设置为1
+                        auditStatus+1://通过审核进度条+1
+                        ProjectConstant.PROJECT_STATUS_PROGRESS_INIT);//1代表从头开始审核
+        if(updateById(project)){
+            throw new ServiceException("项目表状态修改失败,请检查",500);
+        }
+
+    }
+
+    /**
+     * 情况五,第一条审核记录,配置信息审核进度,会新增一条记录<br>
+     * 项目表(更新)和审核表(插入)<br>
+     * @param projectAuditDto 项目审核信息
+     * @param project 项目实体类
+     * @param roleId 项目当前需要的审核角色的id(当前用户id)
+     */
+    private void handleFirstAudit(ProjectAuditDto projectAuditDto, Project project,Long roleId){
+        //1.获取用户的id
+        Long userId = SecurityUtils.getUserId();
+        //2.创建审核表数据,给审核表初始化(如果意见初始化过抛出异常)
+        if(auditOpinionService.isProjectAudit(project.getProjectId())){
+            throw new ServiceException("当前项目有审核记录,当下项目是进入第一次审核项目的情况,又存在审核记录,请联系管理员",500);
+        }
+        AuditOpinion auditOpinion = new AuditOpinion()
+                .setProjectId(project.getProjectId())//项目id
+                .setUserId(userId) //当前用户id
+                .setRoleId(roleId)//角色id
+                .setAuditState(projectAuditDto.getAuditState())//审核状态
+                .setAuditOpinion(projectAuditDto.getAuditOpinion());//审核意见
+        //3.插入审核表
+        if(auditOpinionService.save(auditOpinion)){
+            throw new ServiceException("审核表插入失败,请检查",500);
+        }
+        //4.更新项目表
+        project
+                .setAuditStatus(projectAuditDto.getAuditState()==0?//通过审核进度条+1,不通过直接设置为1
+                project.getAuditStatus()+1://进度值+1
+                ProjectConstant.PROJECT_STATUS_PROGRESS_INIT)//1代表从头开始审核
+                .setState(projectAuditDto.getAuditState()==0? //审核通过设置为状态值不变,审核不通过设置为0
+                        project.getState()://不变
+                        ProjectConstant.PROJECT_STATUS_NOT_PASS_VALUE);//0代表审核不通过
+        if(updateById(project)){
+            throw new ServiceException("项目表状态修改失败,请检查",500);
+        }
+    }
+
+    /**
+     * 情况六,最后一个项目审核,配置信息审核进度,会修改项目表,审核表,项目进度表
+     * @param projectAuditDto
+     * @param project
+     */
+    private void handleLastAudit(ProjectAuditDto projectAuditDto, Project project,Long roleId) {
+        //1.获取用户的id
+
+        //2.校验审核
+    }
+
+    /**
+     * 判断当前用户,是否有权限审核当前项目,传入当前项目的审核角色的id,如果不是抛出异常<br>
+     * @param roleId 项目当前需要的审核角色的id
+     */
+    private void isHaveUserRole(Long roleId) {
+        //1.获取当前用户的id
+        Long userId = SecurityUtils.getUserId();
+        //2.根据用户id,查询用户实体类
+        List<Long> userRolesIds = userMapper.getUserRolesIds(userId);
+        //3.判断用户是否有当前项目的审核角色
+        if(!userRolesIds.contains(roleId)){
+            Role byId = roleService.getById(roleId);
+            throw new ServiceException("当前项目审核进度需要的角色不匹配,现在需要的角色是"+byId.getRoleName() == null ? "未知角色,请联系管理员" : byId.getRoleName(),400);
+        }
+    }
+
+    /**
+     * 判断当前用户,是否有权限审核当前项目,传入当前项目的审核角色的id<br>
+     * 下面都进行这些角色校验如何进行校验权限,是否有权限审核当前项目<br><br>
+     * 老师角色:只有报名绑定老师才能审核<br>
+     * 学院审核员:只有绑定对应的学院才能审核<br>
+     * 管理员:可以审核所有项目<br>
+     * 专家:只有绑定对应的专家才能审核<br><br>
+     * @param roleId 项目当前需要的审核角色的id
+     * @param project  项目实体类
+     * @Param project 项目实体类
+     * @return true表示当前用户有权限审核当前项目,<br>
+     * 反之,false为没有权限审核当前项目
+     */
+    private boolean isHaveRole(Long roleId,Project project) {
+        //1.根据角色id获取角色实体类
+        Role role = roleService.getById(roleId);
+        // 下面都根据项目状态需要的角色,进行校验用户是否有权限审核当前项目
+        //2.老师角色进行判断
+        if(role.getRoleKey().equals(RoleConstant.TEACHER)){
+            //判断当前用户,是不是报名的老师
+            return isHaveTeacher(project);
+        }
+        //3.学院审核员进行判断
+        if(role.getRoleKey().equals(RoleConstant.COLLEGE)){
+            //判断当前用户,是不是绑定对应的学院
+            return isHaveCollege(project);
+        }
+        //4.管理员进行判断
+        if(role.getRoleKey().equals(RoleConstant.ADMIN)){
+            return isHaveAdmin();
+        }
+        //5.专家进行判断
+        if(role.getRoleKey().equals(RoleConstant.EXPERT)){
+            return isHaveExpert(project);
+        }
+        //6.返回结果
+        return false;
+    }
+
+    /**
+     * 判断当前用户,是不是绑定对应的专家<br>
+     * 根据项目中专家id和用户id进行查询,专家数据表判断是否存在该用户<br>
+     *
+     * @param project 项目实体类
+     * @return true表示当前用户是绑定对应的专家,false表示不是绑定对应的专家
+     */
+    private boolean isHaveExpert(Project project) {
+        //1.获取当前用户的id
+        Long userId = SecurityUtils.getUserId();
+        //2.获取专家组的id,判断项目是否分组专家组
+        Long specialistGroupId = project.getSpecialistGroupId();
+        if(specialistGroupId == null){
+            throw new ServiceException("当前项目没有分组专家组,请联系管理员,进行分配专家",500);
+        }
+        //3.根据专家组id和用户id,查询专家数据表
+        LambdaQueryWrapper<SpecialistData> queryWrapper = new LambdaQueryWrapper<SpecialistData>()
+                .eq(SpecialistData::getSpecialistGroupId, specialistGroupId)
+                .eq(SpecialistData::getUserId, userId)
+                .last("LIMIT 1");
+        SpecialistData specialistData = specialistDataService.getOne(queryWrapper);
+        if (specialistData != null){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 判断当前用户,是不是管理员<br>
+     * @return true表示当前用户是管理员,false表示不是管理员
+     */
+    private boolean isHaveAdmin() {
+        //1.获取当前用户的id
+        Long userId = SecurityUtils.getUserId();
+        //2.根据用户id,查询用户实体类
+        List<Long> userRolesIds = userMapper.getUserRolesIds(userId);
+        //3.判断用户是否有管理员角色
+        Long adminId = roleService.getAdminId();
+        if(userRolesIds.contains(adminId)){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 判断当前用户,是不是绑定对应的学院组的里面角色<br>
+     * 根据项目中学院id和用户id进行查询,学院数据表判断是否存在该用户<br>
+     *
+     * @param project 项目实体类
+     * @return true表示当前用户是绑定对应的学院组的里面角色,false表示不是绑定对应的学院组的里面角色
+     */
+    private boolean isHaveCollege(Project project) {
+        //1.获取当前用户的id
+        Long userId = SecurityUtils.getUserId();
+        //2.获取学院组id
+        Long collegeGroupId = project.getCollegeGroupId();
+        //3.根据学院组id,查询学院组实体类
+        LambdaQueryWrapper<CollegeData> queryWrapper = new LambdaQueryWrapper<CollegeData>()
+                .eq(CollegeData::getCollegeGroupId, collegeGroupId)
+                .eq(CollegeData::getUserId, userId)
+                .last("LIMIT 1");
+        CollegeData collegeData = collegeDataService.getOne(queryWrapper);
+        //4.判断学院数据是否存在,如果存在,返回true,否则返回false
+        if(collegeData!= null){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 判断当前用户,是不是报名的老师
+     * @param project 项目实体类
+     * @return true表示当前用户是报名的老师,false表示不是报名的老师
+     */
+    private boolean isHaveTeacher(Project project) {
+        //1.获取当前用户的id
+        Long userId = SecurityUtils.getUserId();
+        //2.获取指导老师的id和企业老师的id并转为集合
+        String teacherId = project.getTeacherId();
+        String firmTeacherId = project.getFirmTeacherId();
+        List<Long> teacherIds = JSONUtil.toList(JSONUtil.parseArray(teacherId), Long.class);
+        List<Long> firmTeacherIds = JSONUtil.toList(JSONUtil.parseArray(firmTeacherId), Long.class);
+        //3.判断当前用户的id是否在集合中,如果在,返回true,否则返回false
+        if(teacherIds.contains(userId)||firmTeacherIds.contains(userId)){
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * 根据项目的审核状态,去查热更新配置类,返回当前项目的审核角色的id<br><br>
+     * 有一个特殊情况,就1情况,当前审核进度7,配置情况最大审核顺序6,就审核步骤少于当中值7,当前项目状态为已完成<br><br>
+     * 所以为保存项目进行,只能管理员才能进行最后的审核,所以返回管理员的角色id
+     * @param auditStatus 审核状态
+     * @param type 项目类型
+     * @return 当前项目审核状态需要的审核角色的id (特殊情况,当前进度超出最大审核值,返回管理员的角色id,只有管理员才可以进行最后的审核)
+     */
+    private Long getAuditRoleId(Long auditStatus, Long type) {
+        //1.先根据项目类型获取当前项目的配置信息
+        Map<Long, List<XMAuditConfig.AuditRole>> projectAuditTypes = xmAuditConfig.getProjectAuditTypes();
+        List<XMAuditConfig.AuditRole> auditRoles = projectAuditTypes.get(type);
+
+        //2.判断状态是否超出最大审核值,超出就返回管理员的角色id
+        if(auditStatus > auditRoles.size()){//状态值从1开始,项目配置审核列表元素个数不能小于1(审核值是单调递增的1),所以使用个数就可以判断是否超出最大审核值
+            return roleService.getAdminId();
+        }
+        //3.找出当前状态需要审核角色信息
+        XMAuditConfig.AuditRole role = auditRoles.stream()
+                .filter(auditRole -> auditRole.getOrder().equals(auditStatus))//根据审核状态找出对应的角色信息,排序信息全部单调递增1,只会找出一个角色信息
+                .collect(Collectors.toList()).get(0);//获取第一个角色的权限信息
+        //4.返回角色id
+        return roleService.selectByRoleKey(role.getName()).getRoleId();
+    }
+
+
+
+
+    /**
+     * 前项目已经审核完毕,不需要再次审核<br>
+     * 项目审核进度值为0表示项目已经审核完毕,不需要再次审核<br>
+     * 为0直接抛出异常
+     * @param project 项目实体类
+     */
+    public void projectAlreadyAudit(Project project) {
+        if(project.getAuditStatus() == 0L){
+            throw new ServiceException("当前项目已经审核完毕,不需要再次审核",444);
+        }
+    }
+
+
+    /**
+     * 判断当前项目是否存在,并返回项目的bean对象<br>
+     * 项目不存在抛出异常<br>
+     * @param projectId 项目id
+     * @return 项目的bean对象
+     */
+    public Project getProject(Long projectId) {
+        Project project = this.getById(projectId);
+        if(project == null){
+            throw new ServiceException("当前项目不存在,请检查",444);
+        }
+        return project;
     }
 
     /**
@@ -201,10 +680,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 .setTotalMoney(new BigDecimal(applyForDTO.getTotalMoney()));
         //根据年度数据id获取到开始和结束时间
         YearData yearDataBaen = yearDataService.getById(applyForDTO.getYearDataId());
-        List<Long> stateList = xmStateProperties.getStateList();
-        if (stateList == null || stateList.isEmpty()){
-            throw new ServiceException("xm.state.stateList项目状态配置不存在,请联系管理员",444);
-        }
+
 
         //写入负责人的id,参加人员的所有的id,
         project.setUserId(SecurityUtils.getUserId())//负责人的id
@@ -213,7 +689,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 .setFirmTeacherId(firstTeacherToJsonArrray(applyForDTO.getTeachers()))//企业老师的 数组id
                 .setBeginTime(yearDataBaen.getBegin())
                 .setEndTime(yearDataBaen.getEnd())
-                .setState(stateList.get(1));
+                .setState(ProjectConstant.PROJECT_STATUS_AUDIT_VALUE);
         //导入立项依据
         boolean result = setABC(project,applyForDTO);
         if(!result){

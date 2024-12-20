@@ -68,10 +68,11 @@ public class XMAuditConfig {
         projectAuditTypes.forEach((key, value) -> {
             //校验projectAuditTypes的key是否存在于字典表中
             validateKey(key);
-            //校验projectAuditTypes的vlaue集合是否为空
+            //校验projectAuditTypes的vlaue集合是否为空,value集合个数>2并且每个元素里面的属性不能为空,还是校验角色是否存在
             validateValue(key, value);
             //校验projectAuditTypes的vlaue集合的的order是否从1开始,并且order值递增为1
             validateOrder(key, value);
+
         });
 
 
@@ -95,7 +96,9 @@ public class XMAuditConfig {
     }
 
     /**
-     * 校验projectAuditTypes的value集合是否为空
+     * 校验projectAuditTypes的value集合是否为空,value集合个数>=1并且每个元素里面的属性不能为空<br>
+     * 会校验vlaue集合的所有元素的属性不能为空(order和name属性)<br>
+     * 会校验角色是否存在<br>
      * @param key 项目类型的key
      * @param value 项目类型的审核流程列表
      * @throws ServiceException 项目类型为空时抛出ServiceException
@@ -105,6 +108,28 @@ public class XMAuditConfig {
         if(value == null || value.isEmpty()){
             throw new ServiceException("配置项:xm.auditconfig.projectAuditTypes 中项目类型: "+key+" 的审核流程不能为空，请检查 Nacos 配置，请联系管理员",500);
         }
+
+        if(value.size()  <2){//这个不可以删审批流程不然会出现bug
+            throw new ServiceException("配置项:xm.auditconfig.projectAuditTypes 中项目类型: "+key+" 的审核流程个数必须大于等于2，请检查 Nacos 配置，请联系管理员",500);
+        }
+        value.forEach(auditRole -> {
+            //校验order和name属性是否为空
+            if(auditRole.getOrder() == null){
+                throw new ServiceException("配置项:xm.auditconfig.projectAuditTypes 中项目类型: "+key+" 的审核流程的order属性不能为空，请检查 Nacos 配置，请联系管理员",500);
+            }
+            if(auditRole.getName() == null || auditRole.getName().isEmpty()){
+                throw new ServiceException("配置项:xm.auditconfig.projectAuditTypes 中项目类型: "+key+" 的审核流程的name属性不能为空，请检查 Nacos 配置，请联系管理员",500);
+            }
+            //校验order属性是否从1开始和name属性是否存在于角色表中
+            if(auditRole.getOrder() <1L){
+                throw new ServiceException("配置项:xm.auditconfig.projectAuditTypes 中项目类型: "+key+" 的审核流程的order属性必须从1开始，请检查 Nacos 配置，请联系管理员",500);
+            }
+            //校验角色是否存在
+            if(!roleService.existRole(auditRole.getName())){
+                throw new ServiceException("配置项:xm.auditconfig.projectAuditTypes 中项目类型: "+key+" 的审核流程的name属性: "+auditRole.getName()+" 不存在，请检查 Nacos 配置，请联系管理员",500);
+            }
+        });
+
     }
 
     /**

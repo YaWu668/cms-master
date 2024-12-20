@@ -12,5 +12,27 @@ import com.xk.entity.Role;
  */
 public interface RoleService extends IService<Role> {
 
+    /**
+     * 根据传入角色权限字符串判断是否存在角色
+     * @param roleKey 角色权限字符串
+     * @return 角色是否存在, true:存在, false:不存在
+     */
+    boolean existRole(String roleKey);
+
+    /**
+     * 根据角色权限字符串查询角色信息
+     * @param roleKey 角色权限字符串
+     * @return 角色信息
+     */
+    Role selectByRoleKey(String roleKey);
+
+    /**
+     * 返回一生一项目管理员的管理员id
+     * @return 管理员id
+     * @throws Exception
+     */
+    Long getAdminId() ;
+
+
 }
 

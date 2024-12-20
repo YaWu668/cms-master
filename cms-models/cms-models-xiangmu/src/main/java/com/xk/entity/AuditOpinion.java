@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.experimental.Accessors;
+
 /**
  * 审核意见表(AuditOpinion)表实体类
  *
@@ -19,6 +21,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("xm_audit_opinion")
+@Accessors(chain = true)
 public class AuditOpinion  {
     //审核意见的ID
     @TableId

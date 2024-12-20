@@ -49,7 +49,7 @@ public class Project  {
     private Date beginTime;
     //活动的结束时间
     private Date endTime;
-    //状态序号表达式什么待定
+    //状态序号 项目状态的值 0:未通过审核, 1:审核中 ,2:项目进行中 ,3:待结题 4:通过结题 ,5不通结题
     private Long state;
     //项目类型, (字典)示例: 1为创新训练项目, 2为创业训练项目, 3为创业实践
     private Long type;
@@ -150,7 +150,7 @@ public class Project  {
     //项目结题文件url, 只能提交压缩包 示例: [URL1, URL2]
     private String concludeUrl;
     //当前项目审核状态进度, 看nacos配置角色审核项目顺序, 从1开始, 1代表需要序号为角色进行审核, 如果当前序号为0代表审核完毕
-    private Integer auditStatus;
+    private Long auditStatus;
     //创建者
     private String createBy;
     //创建时间

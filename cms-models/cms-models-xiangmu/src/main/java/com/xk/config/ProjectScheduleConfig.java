@@ -66,6 +66,12 @@ public class ProjectScheduleConfig {
      * 管理员撤回项目状态的记录信息。
      */
     private String withdraw;
+    /**
+     * 项目审核特殊情况一(项目申请时候,配置最多审核进度值为7,但是中途修改变小,为6时候就会转为审核成功,也会有审核记录和项目进度信息记录):
+     */
+    private String auditSpecialOne; //审核通过
+    //审核不通过
+    private  String auditSpecialTwo;
 
 
     /**
@@ -104,6 +110,12 @@ public class ProjectScheduleConfig {
         }
         if(withdraw == null){
             throw new ServiceException("配置项:xm.project-schedule-list.withdraw不能为空,请检nacos配置,或联系管理员!",500);
+        }
+        if(auditSpecialOne == null){
+            throw new ServiceException("配置项:xm.project-schedule-list.auditSpecialOne不能为空,请检nacos配置,或联系管理员!",500);
+        }
+        if(auditSpecialTwo == null){
+            throw new ServiceException("配置项:xm.project-schedule-list.auditSpecialTwo不能为空,请检nacos配置,或联系管理员!",500);
         }
     }
 }
