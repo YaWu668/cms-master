@@ -167,21 +167,21 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return Response.success("项目申请成功,等待审核");
     }
 
+
+
+
     /**
-     * 权限校验审核通过后,操作审核表存指针(项目进度值抽象出来的指针)存在4个位置(多种情况)
-     *
-     *
-     * 1.假设审核进度值为7,但是当前项目类型最大顺序值为6,就审核步骤少于当中值7,当前项目状态为已完成;<a href="">修改项目表和项目进度表状态(特殊记录),还是会记录多余出来的审核步骤(审核表)</a><br><br>
-     * 2.当前项目已经审核完毕,不需要再次审核,审核进度值为0<br><br>
-     * 3.当前项目是审核不通过重新审核的,审核进度值为1,审核表已经有记录,会原本的记录覆盖<a href="">修改项目表和审核表<a><br><br>
-     * 4.正常审核,未完成审核进来的,审核进度值大于1,审核表会记录会新增一条记录<a href="">修改项目表和审核表<a><br><br>
-     * 5.第一条审核记录,审核进度值为1,审核表没有记录,会新增一条记录<a href="">修改项目表和审核表<a><br><br>
-     * 6.最后一个项目审核,审核进度等于最大审核顺序,审核完成<a href="">修改项目表,审核表,项目进度表</a><br><br>
-     * <a href="">把nacos定义配置审核顺序想象成列表,把项目表里的审核进度抽象为指针,这样可以抽象所有审核状态</a>
+     * 权限校验审核通过后,操作审核表存指针(项目进度值抽象出来的指针)存在4个位置(多种情况)<br><br><br><br>
+     *新算法,下面算法会出现bug,使用指针法进行抽象,<br>
+     * 1.项目表里进行审核进度值抽象为指针,1代表该指针指向数组框起始位置,抽象值为a<br>
+     * 2.每个不同类型的项目审核顺序和大小,抽象为一个组数空间,抽象值max<br>
+     * 3.每审核一次抽象为给数组框添加一个数,抽象值为b<br>
+     * 1.条件:审核成功指针就会向前一点一次,如果审核失败话,指针就会从新回到数组的起始位置1,但是数组里面意见存储审核记录,不会消失,指针只会覆盖掉原来的记录,所以a>b时最大,大于1<br>
      * @param projectAuditDto
      * @return
      */
     @Override
+    @Transactional
     public Response projectAudit(ProjectAuditDto projectAuditDto) {
         //1.判断当前项目是否存在,并返回项目的bean对象,不存在抛出异常
         Project project = getProject(projectAuditDto.getProjectid());
@@ -197,9 +197,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         }
         //6.根据剩余5个情况,进行操作,并返回结果,参数项目bean,审核备注,(根据项目进度状态来判断审核进度)
         if (!projectAlreadyAuditz(projectAuditDto, project,roleId)) {
-
+             return Response.success("失败");
         }
-        return null;
+        return  Response.success("成功");
     }
 
     /**
@@ -211,11 +211,64 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     private boolean projectAlreadyAuditz(ProjectAuditDto projectAuditDto, Project project,Long roleId) {
         //获取项目当前最大审核顺序值
         int max = xmAuditConfig.getProjectAuditTypes().get(project.getType()).size();//需要的最大审核顺序值
-        Long a= project.getAuditStatus();//项目当前审核状态值
+        int a= project.getAuditStatus().intValue();//项目当前审核状态值
         List<AuditOpinion> auditOpinions = auditOpinionService.selectByPropertieID(project.getProjectId());//获取项目的审核记录(有可能为空)
         int b = auditOpinions.size();//审核记录条数
 
+        //看懂方法,列出全部数学逻辑
+        if(a<1){
+            throw new ServiceException("项目当前状态不允许审核",403);
+        }
 
+        if(max <=1){
+            throw new ServiceException("项目当前状态不允许审核",403);
+        }
+        //指针存在4个位置,判断当前项目的审核进度,并进行操作
+        //a==1时
+        if(a==1){
+            if(a == max){
+                throw  new ServiceException("审核流程要来两个2以上才可以,请联系管理员配置新的审核流程",403);
+            }
+            //新增操作
+            if(b == 0){
+                initAuditOpinion(projectAuditDto,project,roleId);
+                return true;
+            }
+            //覆盖操作
+            else if(b > 0){//覆盖情况2,3,4
+                return coverByAuditStatusVlaue(projectAuditDto, project, roleId);
+            }
+        }
+        //1<a<max时
+        else if(a<max){
+            if(b <= 0 ){
+                throw new ServiceException("当前审核进度为:"+a+" 但是审核数量为:"+b+"属于违法状态操作,请联系管理员",403);
+            }
+            //新增
+            if(1<=b && b<a){
+                return addAuditOpinion(projectAuditDto,project,roleId);
+            }
+            //覆盖 1<a<b<=max 或者 1<a<max<b
+            if(a<=b){
+                return coverByAuditStatusVlaue(projectAuditDto, project, roleId);
+            }
+        }
+        //a==max时
+        else if(a==max){
+            //新增操作,完结操作
+            if(b<max){
+                return addAuditOpinionAnd(projectAuditDto,project,roleId,a,b);
+            }
+            //覆盖操作
+            if(b>=max){
+                return addCoverByAuditStatusVlaue(projectAuditDto, project, roleId,b,max);
+            }
+        }
+        //a>max时
+        else if (a>max){
+            //覆盖全部
+            return addCoverByAuditStatusMaxVlaue(projectAuditDto, project, roleId,b,max);
+        }
         return false;
         /*//todo 有空才写,判断a的是否 a>=0,否则进行异常处理,把项目转为审核不通过状态,并且项目进度表进行记录,然后返回true,(要求记录系统自动生成的审核记录)
 
@@ -251,6 +304,312 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         }
         return false;*/
     }
+
+    /**
+     * 项目审核不通过,项目进度表进行记录,如果是项目审核通过,不要调用这个方法,只有a>=max才会进行记录到项目进度表当中
+     * @param project 项目实体类
+     *
+     */
+    private void handleProjectSchedule( Project project) {
+        //获取最后一个项目进度记录
+        ProjectSchedule last = projectScheduleService.getLastByProjectId(project.getProjectId());
+        //项目进度表进行记录
+        ProjectSchedule projectSchedule = new ProjectSchedule()
+                .setProjectId(project.getProjectId())
+                .setRootId(last.getProjectScheduleId())
+                .setUserId(SecurityUtils.getUserId())
+                .setContent(projectScheduleConfig.getNoPassTheAudit());
+        if(projectScheduleService.save(projectSchedule)){
+                throw new ServiceException("项目进度表插入失败,请检查",500);
+        }
+    }
+
+    /**
+     * 指针大于等于max,并且b>max,说明已经审核完毕,这里不需要记录审核表信息到审核表,会覆盖到已经审核通过的数据,<br>
+     * 审核表的信息回记录到项目进度表<br>
+     * 超出范围特殊,只有审核不通过才会进行记录到审核表当中,如果通过了,直接记录到项目进度表
+     * 需要管理员审核,直接抛出异常
+     * @param projectAuditDto 审核信息
+     * @param project 项目实体类
+     * @param roleId 项目当前需要的审核角色的id(当前用户id)
+     * @param b 审核记录条数
+     * @param max 最大审核顺序值
+     * @return 写入成功返回true,写入失败返回false
+     */
+    private boolean addCoverByAuditStatusMaxVlaue(ProjectAuditDto projectAuditDto, Project project, Long roleId, int b, int max) {
+        //1.b>max是固定不变的
+        if(b<max){
+            log.error("当前项目审核记录数量:"+b+"和当前项目审核进度:"+max+"不匹配,请联系管理员");
+            throw new ServiceException("当前项目审核记录数量:"+b+"和当前项目审核进度:"+max+"不匹配,请联系管理员",500);
+        }
+        //获取max存储位置的审核记录
+        AuditOpinion nodeByIndex = auditOpinionService.getNodeByIndex(project.getProjectId(), Long.valueOf(max));
+        //如果审核通过,这里审核表的数据不会覆盖,会存储到项目进度表
+        handleNormalAuditcopyBean(projectAuditDto, nodeByIndex, roleId, SecurityUtils.getUserId());//拷贝审核记录信息
+        if(projectAuditDto.getAuditState() != 0){//不通就会记录
+            //审核表
+            if(auditOpinionService.updateById(nodeByIndex)){
+                throw new ServiceException("审核表修改失败,请检查",500);
+            }
+        }
+        //4.项目表修改审核状态为审核通过,项目进度表修改值为0
+        project
+                .setAuditStatus(projectAuditDto.getAuditState()==0?//通过审核进度条+1,不通过直接设置为1
+                        ProjectConstant.PROJECT_STATUS_PROGRESS: //最后一个审核通过,进度条置为0
+                        ProjectConstant.PROJECT_STATUS_PROGRESS_INIT)//1代表从头开始审核
+                .setState(projectAuditDto.getAuditState()==0? //审核通过设置为状态值不变,审核不通过设置为0
+                        ProjectConstant.PROJECT_STATUS_IN_PROGRESS_VALUE://变为项目进行中
+                        ProjectConstant.PROJECT_STATUS_NOT_PASS_VALUE);//0代表审核不通过
+        //5.修改项目表
+        if(updateById(project)){
+            throw new ServiceException("项目表状态修改失败,请检查",500);
+        }
+        //6.项目进度表插入一条记录,记录状态
+        ProjectSchedule last = projectScheduleService.getLastByProjectId(project.getProjectId());
+        ProjectSchedule projectSchedule = new ProjectSchedule()
+                .setProjectId(project.getProjectId())
+                .setRootId(last.getProjectScheduleId())
+                .setUserId(SecurityUtils.getUserId())
+                .setContent(projectAuditDto.getAuditState() == 0 ? //审核通过记录项目进度
+                        projectScheduleConfig.getAuditSpecialOne()+"\n审核信息:"+projectAuditDto.getAuditOpinion()+"\n审核人的工号:"+SecurityUtils.getUsername()://这里指针指针>max,所以是特殊记录,通过记录信息
+                        projectScheduleConfig.getAuditSpecialTwo()+"\n审核信息:"+projectAuditDto.getAuditOpinion()+"\n审核人的工号:"+SecurityUtils.getUsername());//这里指针指针>max,所以是特殊记录,审核不通过记录信息
+        if(projectScheduleService.save(projectSchedule)){
+            throw new ServiceException("项目进度表插入失败,请检查",500);
+        }
+        return true;
+    }
+
+    /**
+     * 最后一个审核的覆盖操作<br>
+     * 1:新增审核记录,<br>
+     * 2:修改项目表状态为审核通过,项目进度表状态为完成修改值为0<br>
+     * 3:项目进度表记录项目完成时间,如果没有通过审核,不需要进度表记录
+     * @param projectAuditDto
+     * @param project
+     * @param roleId
+     * @return 成功返回true,失败抛出异常
+     */
+    private boolean addCoverByAuditStatusVlaue(ProjectAuditDto projectAuditDto, Project project, Long roleId,int b,int max) {
+        //获取指针指向的审核记录
+        AuditOpinion nodeByIndex = auditOpinionService.getNodeByIndex(project.getProjectId(), project.getAuditStatus());
+        //覆盖原本的审核记录
+        handleNormalAuditcopyBean(projectAuditDto, nodeByIndex, roleId, SecurityUtils.getUserId());
+        //更新审核表
+        if(auditOpinionService.updateById(nodeByIndex)){
+            throw new ServiceException("审核表修改失败,请检查",500);
+        }
+        //4.项目表修改审核状态为审核通过,项目进度表修改值为0
+        project
+                .setAuditStatus(projectAuditDto.getAuditState()==0?//通过审核进度条+1,不通过直接设置为1
+                        ProjectConstant.PROJECT_STATUS_PROGRESS: //最后一个审核通过,进度条置为0
+                        ProjectConstant.PROJECT_STATUS_PROGRESS_INIT)//1代表从头开始审核
+                .setState(projectAuditDto.getAuditState()==0? //审核通过设置为状态值不变,审核不通过设置为0
+                        ProjectConstant.PROJECT_STATUS_IN_PROGRESS_VALUE://变为项目进行中
+                        ProjectConstant.PROJECT_STATUS_NOT_PASS_VALUE);//0代表审核不通过
+        //5.修改项目表
+        if(updateById(project)){
+            throw new ServiceException("项目表状态修改失败,请检查",500);
+        }
+        //6.项目进度表插入一条记录,记录状态
+        ProjectSchedule last = projectScheduleService.getLastByProjectId(project.getProjectId());
+        ProjectSchedule projectSchedule = new ProjectSchedule()
+                .setProjectId(project.getProjectId())
+                .setRootId(last.getProjectScheduleId())
+                .setUserId(SecurityUtils.getUserId())
+                .setContent(projectAuditDto.getAuditState() == 0 ? //审核通过记录项目进度
+                        (b>max ? projectScheduleConfig.getAuditSpecialOne():projectScheduleConfig.getPassTheAudit()) ://审核通过记录信息,b>max记录信息比较特殊
+                        (b>max? projectScheduleConfig.getAuditSpecialTwo() :projectScheduleConfig.getNoPassTheAudit()));//审核不通过记录信息
+        if(projectScheduleService.save(projectSchedule)){
+            throw new ServiceException("项目进度表插入失败,请检查",500);
+        }
+        return true;
+    }
+
+    /**
+     * 指针指向最后一个审核角色,并且审核节点小于指针值<br>
+     * 1:新增审核记录,<br>
+     * 2:修改项目表状态为审核通过,项目进度表状态为完成修改值为0<br>
+     * 3:项目进度表记录项目完成时间
+     * @param projectAuditDto 审核信息
+     * @param project 项目实体类
+     * @param roleId 项目当前需要的审核角色的id(当前用户id)
+     * @return 成功返回true,失败抛出异常
+     */
+    private boolean  addAuditOpinionAnd(ProjectAuditDto projectAuditDto, Project project, Long roleId,int a, int b) {
+        //1.判断b=(a-1)才是合法操作,否则抛出异常
+        if(b != (a-1)){
+            log.error("当前项目审核记录数量:"+b+"和当前项目审核进度:"+a+"不匹配,请联系管理员");
+            throw new ServiceException("当前项目审核记录数量:"+b+"和当前项目审核进度:"+a+"不匹配,请联系管理员",500);
+        }
+        //2.获取最后一条审核记录
+        AuditOpinion lastByProjectId = auditOpinionService.getLastByProjectId(project.getProjectId());
+        AuditOpinion auditOpinion = BeanCopyUtils.copyBean(projectAuditDto, AuditOpinion.class);
+        auditOpinion.setUserId(SecurityUtils.getUserId())
+                .setRoleId(roleId)
+                .setRootId(lastByProjectId.getAuditOpinionId());
+        //3.新增审核记录
+        if(auditOpinionService.save(auditOpinion)){
+            throw new ServiceException("审核表新增失败,请检查",500);
+        }
+        //4.项目表修改审核状态为审核通过,项目进度表修改值为0
+        project
+                .setAuditStatus(projectAuditDto.getAuditState()==0?//通过审核进度条+1,不通过直接设置为1
+                        ProjectConstant.PROJECT_STATUS_PROGRESS: //最后一个审核通过,进度条置为0
+                        ProjectConstant.PROJECT_STATUS_PROGRESS_INIT)//1代表从头开始审核
+                .setState(projectAuditDto.getAuditState()==0? //审核通过设置为状态值不变,审核不通过设置为0
+                        ProjectConstant.PROJECT_STATUS_IN_PROGRESS_VALUE://变为项目进行中
+                        ProjectConstant.PROJECT_STATUS_NOT_PASS_VALUE);//0代表审核不通过
+        //5.修改项目表
+        if(updateById(project)){
+            throw new ServiceException("项目表状态修改失败,请检查",500);
+        }
+        //6.项目进度表插入一条记录,记录状态
+        ProjectSchedule last = projectScheduleService.getLastByProjectId(project.getProjectId());
+        ProjectSchedule projectSchedule = new ProjectSchedule()
+                .setProjectId(project.getProjectId())
+                .setRootId(last.getProjectScheduleId())
+                .setUserId(SecurityUtils.getUserId())
+                .setContent(projectAuditDto.getAuditState() == 0 ? //审核通过记录项目进度
+                        projectScheduleConfig.getPassTheAudit() ://审核通过记录信息
+                        projectScheduleConfig.getNoPassTheAudit());//审核不通过记录信息
+        if(projectScheduleService.save(projectSchedule)){
+            throw new ServiceException("项目进度表插入失败,请检查",500);
+        }
+        return true;
+    }
+
+    /**
+     * 给当前项目新增审核记录,并修改项目表和审核表的状态值
+     * @param projectAuditDto 审核信息
+     * @param project 项目实体类
+     * @param roleId 项目当前需要的审核角色的id(当前用户id)
+     * @return
+     */
+    public boolean addAuditOpinion(ProjectAuditDto projectAuditDto, Project project, Long roleId) {
+        //1.判断是否存在审核表,没有审核表抛出异常
+        if(auditOpinionService.isEmptyProjectAudit(project.getProjectId())){
+            log.error("当前项目没有审核记录\n"+project.toString()+"\n"+projectAuditDto.toString()+"\n"+roleId);
+            throw new ServiceException("当前项目没有审核记录\n"+project.toString()+"\n"+projectAuditDto.toString(),500);
+        }
+        //2.获取最后一条审核记录
+        AuditOpinion lastByProjectId = auditOpinionService.getLastByProjectId(project.getProjectId());
+        AuditOpinion auditOpinion = BeanCopyUtils.copyBean(projectAuditDto, AuditOpinion.class);
+        auditOpinion.setUserId(SecurityUtils.getUserId())
+               .setRoleId(roleId)
+                .setRootId(lastByProjectId.getAuditOpinionId());
+        //3.修改审核表
+        if(auditOpinionService.save(auditOpinion)){
+            throw new ServiceException("审核表新增失败,请检查",500);
+        }
+        //5.项目表修改审核状态
+        project
+                .setAuditStatus(projectAuditDto.getAuditState()==0?//通过审核进度条+1,不通过直接设置为1
+                        project.getAuditStatus()+1: //通过审核进度条+1
+                        ProjectConstant.PROJECT_STATUS_PROGRESS_INIT)//1代表从头开始审核
+                .setState(projectAuditDto.getAuditState()==0? //审核通过设置为状态值不变,审核不通过设置为0
+                        project.getState()://不变
+                        ProjectConstant.PROJECT_STATUS_NOT_PASS_VALUE);//0代表审核不通过
+        if(updateById(project)){
+            throw new ServiceException("项目表状态修改失败,请检查",500);
+        }
+
+        //6.审核不通过,需要记录到项目进度表
+        if(projectAuditDto.getAuditState() != 0){
+            handleProjectSchedule(project);
+        }
+        return true;
+    }
+
+    /**
+     * 根据项目进度指针,覆盖指定的审核记录,并修改项目表和审核表的状态值
+     * @param projectAuditDto 审核信息
+     * @param project 项目实体类
+     * @param roleId 项目当前需要的审核角色的id
+     * @return 成功覆盖指针指定节点返回true,失败抛出异常
+     */
+    public boolean coverByAuditStatusVlaue(ProjectAuditDto projectAuditDto, Project project, Long roleId){
+        //1.判断是否存在审核表,没有审核表抛出异常
+        if(auditOpinionService.isEmptyProjectAudit(project.getProjectId())){
+            log.error("当前项目没有审核记录\n"+project.toString()+"\n"+projectAuditDto.toString()+"\n"+roleId);
+            throw new ServiceException("当前项目没有审核记录\n"+project.toString()+"\n"+projectAuditDto.toString(),500);
+        }
+        //2.根据指针值,获取审核表对应的节点
+        AuditOpinion nodeByIndex = auditOpinionService.getNodeByIndex(project.getProjectId(), project.getAuditStatus());
+        //3审核信息拷贝
+        handleNormalAuditcopyBean(projectAuditDto, nodeByIndex, roleId, SecurityUtils.getUserId());
+        //4,修改审核表
+        if(auditOpinionService.updateById(nodeByIndex)){
+            throw new ServiceException("审核表修改失败,请检查",500);
+        }
+        //5.项目表修改审核状态
+        project
+                .setAuditStatus(projectAuditDto.getAuditState()==0?//通过审核进度条+1,不通过直接设置为1
+                        project.getAuditStatus()+1: //通过审核进度条+1
+                        ProjectConstant.PROJECT_STATUS_PROGRESS_INIT)//1代表从头开始审核
+                .setState(projectAuditDto.getAuditState()==0? //审核通过设置为状态值不变,审核不通过设置为0
+                        project.getState()://不变
+                        ProjectConstant.PROJECT_STATUS_NOT_PASS_VALUE);//0代表审核不通过
+        if(updateById(project)){
+            throw new ServiceException("项目表状态修改失败,请检查",500);
+        }
+        //6.审核不通过,需要记录到项目进度表
+        if(projectAuditDto.getAuditState() != 0){
+            handleProjectSchedule(project);
+        }
+        return true;
+    }
+
+    /**
+     * 审核信息拷贝到审核表,并修改审核表的角色id和用户id
+     * @param source 审核信息
+     * @param target 审核表节点
+     * @param roleId 角色id
+     * @param userId 用户id
+     */
+    private void handleNormalAuditcopyBean(ProjectAuditDto source, AuditOpinion target, Long roleId, Long userId){
+        BeanCopyUtils.copyBean(source, target);
+        target.setUserId(userId)
+                .setRoleId(roleId);
+    }
+
+    /**
+     *  初始化审核,项目表,审核表,不会出现初始化就有只有一次审核情况
+     * @param projectAuditDto 审核信息
+     * @param project 项目实体类
+     * @param roleId 项目当前需要的审核角色的id(当前用户id)
+     */
+    public void initAuditOpinion(ProjectAuditDto projectAuditDto, Project project, Long roleId) {
+        //1.初始审核表,判断
+        if(!auditOpinionService.isEmptyProjectAudit(project.getProjectId())){
+            throw new ServiceException("当前项目已经有审核记录,请不要重复提交",500);
+        }
+
+        AuditOpinion auditOpinion = BeanCopyUtils.copyBean(projectAuditDto, AuditOpinion.class);
+        auditOpinion.setUserId(SecurityUtils.getUserId())
+                .setRoleId(roleId)
+                .setRootId(-1L);
+        if(auditOpinionService.save(auditOpinion)){
+            throw new ServiceException("审核表插入失败,请检查",500);
+        }
+        //2.项目表
+        project
+                //指针值
+                .setAuditStatus(projectAuditDto.getAuditState()==0?//通过审核进度条+1,不通过直接设置为1)
+                        project.getAuditStatus()+1: //通过审核进度条+1
+                        ProjectConstant.PROJECT_STATUS_PROGRESS_INIT)//1代表从头开始审核
+                //项目状态值
+                .setState(projectAuditDto.getAuditState()==0? //审核通过设置为状态值不变,审核不通过设置为0
+                        project.getState()://不变
+                        ProjectConstant.PROJECT_STATUS_NOT_PASS_VALUE);//0代表审核不通过
+        if(updateById(project)){
+            throw new ServiceException("项目表状态修改失败,请检查",500);
+        }
+        //6.审核不通过,需要记录到项目进度表
+        if(projectAuditDto.getAuditState() != 0){
+            handleProjectSchedule(project);
+        }
+    }
+
 
 
     /**

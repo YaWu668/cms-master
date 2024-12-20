@@ -17,7 +17,7 @@ spring:
       server-addr: 10.8.0.99:8848
       # 注册中心配置,作用: 1.服务发现 2.配置中心
       discovery:
-        namespace: guob # todo 开发环境使用:XMdev  ****这里开发的空间每个人都不一样根据自己的分配的来设置***
+        namespace: guoA # todo 开发环境使用:XMdev  ****这里开发的空间每个人都不一样根据自己的分配的来设置***
 #         namespace: XMtest #测试环境使用:XMtest
         group: cms-project
         username: guoDev

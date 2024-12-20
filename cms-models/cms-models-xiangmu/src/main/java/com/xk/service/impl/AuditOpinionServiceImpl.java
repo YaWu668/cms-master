@@ -115,5 +115,16 @@ public class AuditOpinionServiceImpl extends ServiceImpl<AuditOpinionMapper, Aud
             }
         return false;
     }
+
+    @Override
+    public boolean isEmptyProjectAudit(Long projectId) {
+        LambdaQueryWrapper<AuditOpinion> eq = new LambdaQueryWrapper<AuditOpinion>()
+                .eq(AuditOpinion::getProjectId, projectId);
+        long count = this.count(eq);
+        if (count == 0) {
+            return true;
+        }
+        return false;
+    }
 }
 
