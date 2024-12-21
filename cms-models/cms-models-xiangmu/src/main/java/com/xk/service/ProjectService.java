@@ -31,7 +31,7 @@ public interface ProjectService extends IService<Project> {
      * 获取学生参与的项目
      * @return
      */
-    Response getStudentProjectList();
+    Response getStudentProjectList(int currentPage,int pageSize);
 
     /**
      * 获取学生负责项目
@@ -58,6 +58,6 @@ public interface ProjectService extends IService<Project> {
      * 获取自己创建的的项目
      * @return
      */
-    Response getMyCrectProject();
+    Response getMyCrectProject(int currentPage,int pageSize);
 }
 

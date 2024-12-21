@@ -43,9 +43,12 @@ public class StudentController  {
     @GetMapping("/get/project")
     // todo 权限 暂时不管
     @Log(title = "已参与项目或报名项目",businessType = BusinessType.OTHER)
-    public Response getStudentProjectList() {
-        // todo 分页
-        return projectService.getStudentProjectList();
+    // todo 分页默认值常量
+    public Response getStudentProjectList(
+            @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
+            @RequestParam(value = "pageSize",defaultValue = "10") int pageSize
+    ) {
+        return projectService.getStudentProjectList(currentPage,pageSize);
     }
 
 
@@ -56,10 +59,10 @@ public class StudentController  {
      */
     @GetMapping("/delete/{projectId}")
     // todo 权限 暂时不管
+    // todo 分页默认值常量
     @Log(title = "删除没有审核通过的项目",businessType = BusinessType.DELETE)
     // 只删除没有审核通过的，并且当前角色是该项目负责人的
     public Response delectProjectById(@PathVariable("projectId") @Valid Long projectId) {
-        // todo 分页
         return projectService.delectStudentProjectById(projectId);
     }
 
@@ -78,10 +81,14 @@ public class StudentController  {
     }
 
     @GetMapping("/search/project")
-    // todo
+    // todo 权限 暂时不管
+    // todo 分页默认值常量
     @Log(title = "搜索自己创建的项目",businessType = BusinessType.OTHER)
-    public Response searchProject() {
-        return projectService.getMyCrectProject();
+    public Response searchProject(
+            @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
+            @RequestParam(value = "pageSize",defaultValue = "10") int pageSize
+    ) {
+        return projectService.getMyCrectProject(currentPage,pageSize);
     }
 
 

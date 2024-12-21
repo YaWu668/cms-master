@@ -2,7 +2,9 @@ package com.xk.service.impl;
 
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cms.common.core.exception.ServiceException;
 import com.cms.common.core.web.domain.Response;
@@ -41,6 +43,10 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> implements ProjectService {
+    /**
+     * 分页接口
+     */
+    protected ProjectService itemService;
     /**
      *学生的配置
      */
@@ -213,9 +219,12 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * @return
      */
     @Override
-    public Response getStudentProjectList() {
+    public Response getStudentProjectList(int currentPage,int pageSize) {
         //当前登录用户ID
         Long userId = SecurityUtils.getLoginUser().getUserid();
+        // 创建分页对象
+        Page<Project> page = new Page<>(currentPage, pageSize);
+
         try{
             LambdaQueryWrapper<Project> queryWrapper = Wrappers.<Project>lambdaQuery()
                     .eq(Project::getDelFlag,0)//是否删除
@@ -223,7 +232,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                     .eq(Project::getCreateBy,userId) // 创建字段的id是否为当前用户id
                     .apply("JSON_CONTAINS(member_id, '["+userId.toString()+"]')");
 
-            List<Project> projectList = list(queryWrapper);
+            IPage<Project> projectList = itemService.page(page, queryWrapper);
+            //List<Project> projectList = list(queryWrapper);
 
             return Response.success(projectList,"获取学生参与项目以及报名项目成功！");
         }catch (Exception e){
@@ -303,15 +313,20 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * @return
      */
     @Override
-    public Response getMyCrectProject() {
+    public Response getMyCrectProject(int currentPage,int pageSize) {
         //当前登录用户ID
         Long userId = SecurityUtils.getLoginUser().getUserid();
 
+        //创建分页对象
+        Page<Project> page = new Page<>(currentPage, pageSize);
         try{
             LambdaQueryWrapper<Project> queryWrapper = Wrappers.<Project>lambdaQuery()
                     .eq(Project::getDelFlag,0)//是否删除
                     .eq(Project::getCreateBy,userId); // 项目创建者ID是否为当前登录用户ID
-            List<Project> projectList = list(queryWrapper);
+
+            //  执行分页查询
+            IPage<Project> projectList = itemService.page(page,queryWrapper);
+            //List<Project> projectList = list(queryWrapper);
             return Response.success(projectList,"获取学生创建项目成功！");
         }catch (Exception e){
             throw new ServiceException("查询学生当前创建项目失败",502);
