@@ -2,6 +2,7 @@ package com.xk.service.impl;
 
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -30,7 +31,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -284,10 +284,10 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
         //删除数据
         if (deleteProjectById(projectId)){
-            Response.success("删除成功！");
+            return Response.success("删除成功！");
+        }else {
+            return Response.error("删除项目失败请联系管理员");
         }
-
-        return null;
     }
 
     /**
@@ -377,60 +377,51 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * @return
      */
     private boolean deleteProjectById(Long projectId) {
-        LambdaQueryWrapper<Project> queueWrapper = Wrappers.<Project>lambdaQuery()
-                .eq(Project::getDelFlag, 0) // 未删除 字段为 0
-                .eq(Project::getProjectId,projectId);
-        //找到目标数据列
-        Project project = getOne(queueWrapper);
-        if (project==null){
-            throw new ServiceException("需要删除的目标数据不存在，或者已经被删除！",403);
-        }
-        project.setDelFlag(1);//标识删除
+        LambdaUpdateWrapper<Project> updateWrapper = Wrappers.<Project>lambdaUpdate()
+                //.eq(Project::getDelFlag, 0) // 未删除 字段为 0
+                .eq(Project::getProjectId,projectId) //对应数据
+                .set(Project::getDelFlag,1);//标记删除
 
-        boolean n = update(project,queueWrapper);//更新数据
+        boolean n = update(updateWrapper);//更新数据
 
         if (n){
             return true;
         }else {
-            throw new ServiceException("删除失败！",403);
+            throw new ServiceException("删除失败！数据不存在或已被删除",403);
         }
 
     }
 
     private boolean isAuditFailed(Long projectId){
-        try{
+//        try{
             LambdaQueryWrapper<Project> queueWrapper = Wrappers.<Project>lambdaQuery()
                     .eq(Project::getDelFlag, 0) // 未删除 字段为 0
                     .eq(Project::getProjectId,projectId); //目标项目
-            // todo 先暂时直接判断是否为5（未通过）
-            if(getOne(queueWrapper).getState()== 5){
+            // todo 先暂时直接判断是否为5（未通过） 还没加上常量
+            if(getOne(queueWrapper).getAuditStatus()== 5){
                 return true;
             }else {
                 throw new ServiceException("项目未处于审核未通过状态，无法删除！",403);
             }
-        }catch (Exception e){
-            throw new ServiceException("在查询项目是否通过的时候发生错误！",502);
-        }
+//        }catch (Exception e){
+//            throw new ServiceException("在查询项目是否通过的时候发生错误！",502);
+//        }
     }
 
 
     /**
      * 项目是否存在
+     *
      * @param projectId
-     * @return
      */
-    private boolean ProjectIsNull(Long projectId) {
-        try{
-            LambdaQueryWrapper<Project> queueWrapper = Wrappers.<Project>lambdaQuery()
-                    .eq(Project::getDelFlag, 0) // 未删除 字段为 0
-                    .eq(Project::getProjectId,projectId); //目标项目
-            if(count(queueWrapper)>0){
-                return true;
-            }else {
-                throw new ServiceException("该项目不存在！",404);
-            }
-        }catch (Exception e){
-            throw new ServiceException("在查询项目是否存在时候发生错误！",502);
+    private void ProjectIsNull(Long projectId) {
+
+        LambdaQueryWrapper<Project> queueWrapper = Wrappers.<Project>lambdaQuery()
+                .eq(Project::getDelFlag, 0) // 未删除 字段为 0
+                .eq(Project::getProjectId,projectId); //目标项目
+        if(count(queueWrapper)>0){
+        }else {
+            throw new ServiceException("该项目不存在！或已被删除",404);
         }
     }
 
@@ -441,20 +432,16 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * @return
      */
     private boolean isProjectAdmin(Long projectId,Long userId) {
-        try{
-            LambdaQueryWrapper<Project> queueWrapper = Wrappers.<Project>lambdaQuery()
-                    .eq(Project::getDelFlag, 0) // 未删除 字段为 0
-                    .eq(Project::getProjectId,projectId); //目标项目
-            if (getOne(queueWrapper).getUserId() == userId) {
-                //项目负责人
-                return true;
-            }else {
-                throw new ServiceException("您当前不是项目负责人无权删除该项目",403);
-            }
-
-        }catch (Exception e){
-            throw new ServiceException("删除项目时查询项目失败",502);
+        LambdaQueryWrapper<Project> queueWrapper = Wrappers.<Project>lambdaQuery()
+                .eq(Project::getDelFlag, 0) // 未删除 字段为 0
+                .eq(Project::getProjectId,projectId); //目标项目
+        if (getOne(queueWrapper).getUserId() == userId) {
+            //项目负责人
+            return true;
+        }else {
+            throw new ServiceException("您当前不是项目负责人无权删除该项目",403);
         }
+
     }
 
 

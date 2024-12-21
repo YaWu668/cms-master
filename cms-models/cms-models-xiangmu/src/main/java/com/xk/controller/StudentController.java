@@ -57,7 +57,7 @@ public class StudentController  {
      * @param projectId
      * @return
      */
-    @GetMapping("/delete/{projectId}")
+    @DeleteMapping("/delete/{projectId}")
     // todo 权限 暂时不管
     // todo 分页默认值常量
     @Log(title = "删除没有审核通过的项目",businessType = BusinessType.DELETE)
