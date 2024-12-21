@@ -40,4 +40,15 @@ public class StudentController  {
         return projectService.addProject(applyForDTO);
     }
 
+    /**
+     * 获取自己申报项目或者参加的项目
+     */
+    @GetMapping("/get/project")
+    //todo    @RequiresPermissions("xm:student:get:project")
+    @Log(title = "获取项目", businessType = BusinessType.OTHER)
+    public Response getProject() {
+        return Response.success();
+    }
+
+
 }
