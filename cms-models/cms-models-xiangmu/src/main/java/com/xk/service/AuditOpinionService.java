@@ -44,5 +44,12 @@ public interface AuditOpinionService extends IService<AuditOpinion> {
      * @return true表示有审核记录，false表示没有
      */
     boolean isProjectAudit(Long projectId);
+
+    /**
+     * 根据项目ID判断项目是否有审核记录
+     * @param projectId 项目ID
+     * @return true表示没有审核记录，false表示有
+     */
+    boolean isEmptyProjectAudit(Long projectId);
 }
 

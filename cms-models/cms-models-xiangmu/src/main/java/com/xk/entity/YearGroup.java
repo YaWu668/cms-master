@@ -40,5 +40,4 @@ public class YearGroup  {
     private Date updateTime;
 
 
-
 }
