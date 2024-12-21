@@ -5,7 +5,9 @@ import com.cms.common.log.annotation.Log;
 import com.cms.common.log.enums.BusinessType;
 import com.cms.common.security.annotation.RequiresPermissions;
 import com.xk.domain.dto.ProjectAuditDto;
+import com.xk.domain.dto.collegeListDto;
 import com.xk.domain.dto.yearListDTO;
+import com.xk.service.CollegeGroupService;
 import com.xk.service.ProjectService;
 import com.xk.service.YearGroupService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,11 @@ public class PulicController {
      * 年度组服务
      */
     private final YearGroupService yearGroupService;
+
+    /**
+     * 学院服务
+     */
+    private final CollegeGroupService collegeGroupService;
     /**
      * 项目审核
      * @return
@@ -49,5 +56,16 @@ public class PulicController {
     @Log(title = "获取年度组和年度数据列表的", businessType = BusinessType.OTHER)
     public Response<List<yearListDTO>> yearList(String name) {
         return yearGroupService.yearList(name);
+    }
+
+    /**
+     * 获取学院列表
+     * @param name 学院名称(模糊查询)
+     * @return 学院列表
+     */
+    @GetMapping(value ="/collegeList")
+    @Log(title = "获取学院列表", businessType = BusinessType.OTHER)
+    public Response<List<collegeListDto>> collegeList(String name) {
+        return collegeGroupService.collegeList(name);
     }
 }

@@ -1,7 +1,11 @@
 package com.xk.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.cms.common.core.web.domain.Response;
+import com.xk.domain.dto.collegeListDto;
 import com.xk.entity.CollegeGroup;
+
+import java.util.List;
 
 
 /**
@@ -11,6 +15,11 @@ import com.xk.entity.CollegeGroup;
  * @since 2024-12-05 21:21:54
  */
 public interface CollegeGroupService extends IService<CollegeGroup> {
-
+    /**
+     * 查询学院组表列表
+     * @param name 学院组名称
+     * @return
+     */
+    Response<List<collegeListDto>> collegeList(String name);
 }
 
