@@ -3,13 +3,9 @@ package com.xk.controller;
 import com.cms.common.core.web.domain.Response;
 import com.cms.common.log.annotation.Log;
 import com.cms.common.log.enums.BusinessType;
-import com.xk.domain.dto.ApplyForA;
-import com.xk.domain.dto.ApplyForB;
-import com.xk.domain.dto.ApplyForC;
 import com.xk.domain.dto.ApplyForDTO;
 import com.xk.service.ProjectService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -39,5 +35,54 @@ public class StudentController  {
     public Response applyProject(@RequestBody @Valid ApplyForDTO  applyForDTO) {
         return projectService.addProject(applyForDTO);
     }
+
+    /**
+     * 获取自己创建的项目列表或者是直接报名项目
+     * @return
+     */
+    @GetMapping("/get/project")
+    // todo 权限 暂时不管
+    @Log(title = "已参与项目或报名项目",businessType = BusinessType.OTHER)
+    public Response getStudentProjectList() {
+        // todo 分页
+        return projectService.getStudentProjectList();
+    }
+
+
+    /**
+     * 根据ID删除未通过的项目
+     * @param projectId
+     * @return
+     */
+    @GetMapping("/delete/{projectId}")
+    // todo 权限 暂时不管
+    @Log(title = "删除没有审核通过的项目",businessType = BusinessType.DELETE)
+    // 只删除没有审核通过的，并且当前角色是该项目负责人的
+    public Response delectProjectById(@PathVariable("projectId") @Valid Long projectId) {
+        // todo 分页
+        return projectService.delectStudentProjectById(projectId);
+    }
+
+    /**
+     * 获取学生 or 教师的报名表
+     * @param role
+     * @param name
+     * @return
+     */
+    @GetMapping("/getUserList/{role}/{name}")
+    // todo 权限
+    @Log(title = "用户名获取用户信息",businessType = BusinessType.OTHER)
+    //老师或者学生
+    public Response getUserApplyListByName(@PathVariable("role") int role, @PathVariable("name") String name) {
+        return projectService.getUserApply(role,name);
+    }
+
+    @GetMapping("/search/project")
+    // todo
+    @Log(title = "搜索自己创建的项目",businessType = BusinessType.OTHER)
+    public Response searchProject() {
+        return projectService.getMyCrectProject();
+    }
+
 
 }

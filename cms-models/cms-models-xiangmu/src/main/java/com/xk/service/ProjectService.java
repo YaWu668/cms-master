@@ -26,5 +26,38 @@ public interface ProjectService extends IService<Project> {
      * @return
      */
     Response projectAudit(ProjectAuditDto projectAuditDto);
+
+    /**
+     * 获取学生参与的项目
+     * @return
+     */
+    Response getStudentProjectList();
+
+    /**
+     * 获取学生负责项目
+     * @return
+     */
+    Response getStudentResponsibleProjectList();
+
+    /**
+     * 项目负责人删除学生项目,只删除未通过的
+     * @param projectId
+     * @return
+     */
+    Response delectStudentProjectById(Long projectId);
+
+    /**
+     * 获取学生
+     * @param role 角色：学生 0 老师 1
+     * @param name 学号/名字/工号
+     * @return
+     */
+    Response getUserApply(int role, String name);
+
+    /**
+     * 获取自己创建的的项目
+     * @return
+     */
+    Response getMyCrectProject();
 }
 

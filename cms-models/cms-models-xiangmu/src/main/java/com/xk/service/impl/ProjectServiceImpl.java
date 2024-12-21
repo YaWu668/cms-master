@@ -16,6 +16,8 @@ import com.xk.domain.dto.ApplyForTeacher;
 import com.xk.domain.dto.ProjectAuditDto;
 import com.xk.entity.*;
 import com.xk.mapper.ProjectMapper;
+import com.xk.mapper.StudnetApplysMapper;
+import com.xk.mapper.TeacherApplysMapper;
 import com.xk.mapper.UserMapper;
 import com.xk.service.*;
 import com.xk.utils.BeanCopyUtils;
@@ -26,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -116,6 +119,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * 审核意见服务
      */
     private final AuditOpinionService auditOpinionService;
+    private final StudnetApplysMapper studnetApplysMapper;
+    private final TeacherApplysMapper teacherApplysMapper;
+
     /**
      * 申请项目
      * @param applyForDTO 申请信息
@@ -201,6 +207,239 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         }
         return null;
     }
+
+    /**
+     * 获取学生参与项目成功
+     * @return
+     */
+    @Override
+    public Response getStudentProjectList() {
+        //当前登录用户ID
+        Long userId = SecurityUtils.getLoginUser().getUserid();
+        try{
+            LambdaQueryWrapper<Project> queryWrapper = Wrappers.<Project>lambdaQuery()
+                    .eq(Project::getDelFlag,0)//是否删除
+                    .or()
+                    .eq(Project::getCreateBy,userId) // 创建字段的id是否为当前用户id
+                    .apply("JSON_CONTAINS(member_id, '["+userId.toString()+"]')");
+
+            List<Project> projectList = list(queryWrapper);
+
+            return Response.success(projectList,"获取学生参与项目以及报名项目成功！");
+        }catch (Exception e){
+            throw new ServiceException("查询用户当前参与项目失败",502);
+        }
+    }
+
+    /**
+     * 获取学生负责项目
+     * @return
+     */
+    @Override
+    public Response getStudentResponsibleProjectList() {
+        //当前登录用户ID
+        Long userId = SecurityUtils.getLoginUser().getUserid();
+
+        try{
+            LambdaQueryWrapper<Project> queryWrapper = Wrappers.<Project>lambdaQuery()
+                    .eq(Project::getDelFlag,0)//是否删除
+                    .eq(Project::getUserId,userId); // 项目负责人ID是否为当前登录用户ID
+            List<Project> projectList = list(queryWrapper);
+            return Response.success(projectList,"获取学生负责项目成功！");
+        }catch (Exception e){
+            throw new ServiceException("查询学生当前负责项目失败",502);
+        }
+    }
+
+    /**
+     * 删除项目
+     * @param projectId
+     * @return
+     */
+    @Override
+    public Response delectStudentProjectById(Long projectId) {
+        // 登录用户Id
+        Long userId = SecurityUtils.getLoginUser().getUserid();
+
+        //检查项目是否存在(检查是否已经逻辑删除或者项目不存在)
+        ProjectIsNull(projectId);
+
+        // 检查是否为项目负责人
+        isProjectAdmin(projectId,userId);
+
+        //检查是否为未通过状态
+        isAuditFailed(projectId);
+
+        //删除数据
+        if (deleteProjectById(projectId)){
+            Response.success("删除成功！");
+        }
+
+        return null;
+    }
+
+    /**
+     * 查询学生或者教师
+     * @param role 角色：学生 0 老师 1
+     * @param name 学号/名字/工号
+     * @return
+     */
+    @Override
+    public Response getUserApply(int role, String name) {
+        switch (role) {
+            case 0:
+                //学生
+                return Response.success(getStudentApplyListByNameOrId(name));
+            case 1:
+                //教师
+                return Response.success(getTeacherApplyListByNameOrId(name));
+            default:
+                throw new ServiceException("未知的角色！", 403);
+        }
+    }
+
+    /**
+     * 获取自己创建的项目
+     * @return
+     */
+    @Override
+    public Response getMyCrectProject() {
+        //当前登录用户ID
+        Long userId = SecurityUtils.getLoginUser().getUserid();
+
+        try{
+            LambdaQueryWrapper<Project> queryWrapper = Wrappers.<Project>lambdaQuery()
+                    .eq(Project::getDelFlag,0)//是否删除
+                    .eq(Project::getCreateBy,userId); // 项目创建者ID是否为当前登录用户ID
+            List<Project> projectList = list(queryWrapper);
+            return Response.success(projectList,"获取学生创建项目成功！");
+        }catch (Exception e){
+            throw new ServiceException("查询学生当前创建项目失败",502);
+        }
+    }
+
+    /**
+     * 获取学生报名表，根据学号或者姓名
+     * @param text 学号/姓名
+     * @return
+     */
+    private List<StudnetApplys> getStudentApplyListByNameOrId(String text) {
+        try{
+            LambdaQueryWrapper<StudnetApplys> queueWrapper = Wrappers.<StudnetApplys>lambdaQuery()
+                    .eq(StudnetApplys::getUserId,text)// eq可以对比整数类型和字符串。不需要转类型了
+                    .or()
+                    .eq(StudnetApplys::getName,text); //姓名
+            return studnetApplysMapper.selectList(queueWrapper);
+        }catch (Exception e){
+            throw new ServiceException("在查询用户名的过程中失败",502);
+        }
+
+    }
+
+    /**
+     * 获取教师报名表，根据工号或者姓名
+     * @param text 工号/姓名
+     * @return
+     */
+    private List<TeacherApplys> getTeacherApplyListByNameOrId(String text) {
+        try{
+            LambdaQueryWrapper<TeacherApplys> queueWrapper = Wrappers.<TeacherApplys>lambdaQuery()
+                    .eq(TeacherApplys::getUserId,text)// eq可以对比整数类型和字符串。不需要转类型了
+                    .or()
+                    .eq(TeacherApplys::getName,text); //姓名
+            return teacherApplysMapper.selectList(queueWrapper);
+        }catch (Exception e){
+            throw new ServiceException("在查询用户名的过程中失败",502);
+        }
+
+    }
+
+    /**
+     * 删除项目(逻辑删除)
+     * @param projectId
+     * @return
+     */
+    private boolean deleteProjectById(Long projectId) {
+        LambdaQueryWrapper<Project> queueWrapper = Wrappers.<Project>lambdaQuery()
+                .eq(Project::getDelFlag, 0) // 未删除 字段为 0
+                .eq(Project::getProjectId,projectId);
+        //找到目标数据列
+        Project project = getOne(queueWrapper);
+        if (project==null){
+            throw new ServiceException("需要删除的目标数据不存在，或者已经被删除！",403);
+        }
+        project.setDelFlag(1);//标识删除
+
+        boolean n = update(project,queueWrapper);//更新数据
+
+        if (n){
+            return true;
+        }else {
+            throw new ServiceException("删除失败！",403);
+        }
+
+    }
+
+    private boolean isAuditFailed(Long projectId){
+        try{
+            LambdaQueryWrapper<Project> queueWrapper = Wrappers.<Project>lambdaQuery()
+                    .eq(Project::getDelFlag, 0) // 未删除 字段为 0
+                    .eq(Project::getProjectId,projectId); //目标项目
+            // todo 先暂时直接判断是否为5（未通过）
+            if(getOne(queueWrapper).getState()== 5){
+                return true;
+            }else {
+                throw new ServiceException("项目未处于审核未通过状态，无法删除！",403);
+            }
+        }catch (Exception e){
+            throw new ServiceException("在查询项目是否通过的时候发生错误！",502);
+        }
+    }
+
+
+    /**
+     * 项目是否存在
+     * @param projectId
+     * @return
+     */
+    private boolean ProjectIsNull(Long projectId) {
+        try{
+            LambdaQueryWrapper<Project> queueWrapper = Wrappers.<Project>lambdaQuery()
+                    .eq(Project::getDelFlag, 0) // 未删除 字段为 0
+                    .eq(Project::getProjectId,projectId); //目标项目
+            if(count(queueWrapper)>0){
+                return true;
+            }else {
+                throw new ServiceException("该项目不存在！",404);
+            }
+        }catch (Exception e){
+            throw new ServiceException("在查询项目是否存在时候发生错误！",502);
+        }
+    }
+
+    /**
+     * 检查用户是否为项目负责人
+     * @param projectId
+     * @param userId
+     * @return
+     */
+    private boolean isProjectAdmin(Long projectId,Long userId) {
+        try{
+            LambdaQueryWrapper<Project> queueWrapper = Wrappers.<Project>lambdaQuery()
+                    .eq(Project::getDelFlag, 0) // 未删除 字段为 0
+                    .eq(Project::getProjectId,projectId); //目标项目
+            if (getOne(queueWrapper).getUserId() == userId) {
+                //项目负责人
+                return true;
+            }else {
+                throw new ServiceException("您当前不是项目负责人无权删除该项目",403);
+            }
+
+        }catch (Exception e){
+            throw new ServiceException("删除项目时查询项目失败",502);
+        }
+    }
+
 
     /**
      * 根据剩余5个情况,进行操作,并返回结果,参数项目bean,审核备注,(根据项目进度状态来判断审核进度)
