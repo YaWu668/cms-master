@@ -270,9 +270,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             return addCoverByAuditStatusMaxVlaue(projectAuditDto, project, roleId,b,max);
         }
         return false;
-        /*//todo 有空才写,判断a的是否 a>=0,否则进行异常处理,把项目转为审核不通过状态,并且项目进度表进行记录,然后返回true,(要求记录系统自动生成的审核记录)
-
-
+        /*
         //6.情况六(特别特殊)
         if(a==max) { //可能出现 b>max && b>a情况或者是 b<max && b<a情况,都是后一个,但是a==max是不会变的
             handleLastAudit(projectAuditDto, project, roleId);

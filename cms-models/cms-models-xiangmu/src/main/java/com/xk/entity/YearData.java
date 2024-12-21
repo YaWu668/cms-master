@@ -24,7 +24,7 @@ public class YearData  {
     @TableId
     private Long yearDataId;
 
-    //年度类型的id
+    //年度组的id
     private Long yearGroupId;
     //年度数据的名称
     private String name;
