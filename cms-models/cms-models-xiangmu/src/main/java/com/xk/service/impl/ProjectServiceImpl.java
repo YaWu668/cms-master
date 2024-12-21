@@ -44,10 +44,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> implements ProjectService {
     /**
-     * 分页接口
-     */
-    protected ProjectService itemService;
-    /**
      *学生的配置
      */
     private final XMStudnetProperties xmStudnetProperties;
@@ -215,7 +211,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     }
 
     /**
-     * 获取学生参与项目成功
+     * 获取学生参与项目成功或者创建的项目
      * @return
      */
     @Override
@@ -225,15 +221,21 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         // 创建分页对象
         Page<Project> page = new Page<>(currentPage, pageSize);
 
+
+
         try{
             LambdaQueryWrapper<Project> queryWrapper = Wrappers.<Project>lambdaQuery()
                     .eq(Project::getDelFlag,0)//是否删除
-                    .or()
-                    .eq(Project::getCreateBy,userId) // 创建字段的id是否为当前用户id
-                    .apply("JSON_CONTAINS(member_id, '["+userId.toString()+"]')");
+                    .and(wq -> wq
+                            .apply("JSON_CONTAINS(member_id, '["+userId.toString()+"]')") //
+                            .or()
+                            .eq(Project::getCreateBy,userId) // 创建字段的id是否为当前用户id
+                    );
 
-            IPage<Project> projectList = itemService.page(page, queryWrapper);
-            //List<Project> projectList = list(queryWrapper);
+
+
+
+            IPage<Project> projectList = page(page, queryWrapper);
 
             return Response.success(projectList,"获取学生参与项目以及报名项目成功！");
         }catch (Exception e){
@@ -325,7 +327,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                     .eq(Project::getCreateBy,userId); // 项目创建者ID是否为当前登录用户ID
 
             //  执行分页查询
-            IPage<Project> projectList = itemService.page(page,queryWrapper);
+            IPage<Project> projectList = page(page,queryWrapper);
             //List<Project> projectList = list(queryWrapper);
             return Response.success(projectList,"获取学生创建项目成功！");
         }catch (Exception e){
