@@ -1157,3 +1157,81 @@ com.cms.common.core.exception.ServiceException: 负责人必须是申报列表�
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
 	at java.lang.Thread.run(Thread.java:750)
+21:18:10.093 [Thread-8] WARN  c.a.n.c.h.HttpClientBeanHolder - [shutdown,102] - [HttpClientBeanHolder] Start destroying common HttpClient
+21:18:10.091 [Thread-19] WARN  c.a.n.c.n.NotifyCenter - [shutdown,136] - [NotifyCenter] Start destroying Publisher
+21:18:10.113 [Thread-19] WARN  c.a.n.c.n.NotifyCenter - [shutdown,153] - [NotifyCenter] Destruction of the end
+21:18:10.129 [Thread-8] WARN  c.a.n.c.h.HttpClientBeanHolder - [shutdown,111] - [HttpClientBeanHolder] Destruction of the end
+21:18:10.811 [SpringApplicationShutdownHook] INFO  c.a.c.n.r.NacosServiceRegistry - [deregister,95] - De-registering from Nacos Server now...
+21:18:10.852 [SpringApplicationShutdownHook] INFO  c.a.c.n.r.NacosServiceRegistry - [deregister,115] - De-registration finished.
+00:45:11.603 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
+00:45:11.669 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 6.2.5.Final
+00:45:12.012 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+00:45:12.012 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+00:45:17.466 [main] ERROR o.s.b.w.e.t.TomcatStarter - [onStartup,61] - Error starting Tomcat context. Exception: org.springframework.beans.factory.UnsatisfiedDependencyException. Message: Error creating bean with name 'webMvcMetricsFilter' defined in class path resource [org/springframework/boot/actuate/autoconfigure/metrics/web/servlet/WebMvcMetricsAutoConfiguration.class]: Unsatisfied dependency expressed through method 'webMvcMetricsFilter' parameter 0; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'simpleMeterRegistry' defined in class path resource [org/springframework/boot/actuate/autoconfigure/metrics/export/simple/SimpleMetricsExportAutoConfiguration.class]: Initialization of bean failed; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'dataSourcePoolMetadataMeterBinder' defined in class path resource [org/springframework/boot/actuate/autoconfigure/metrics/jdbc/DataSourcePoolMetricsAutoConfiguration$DataSourcePoolMetadataMetricsConfiguration.class]: Unsatisfied dependency expressed through method 'dataSourcePoolMetadataMeterBinder' parameter 0; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'dataSource' defined in class path resource [org/springframework/boot/autoconfigure/jdbc/DataSourceConfiguration$Hikari.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [com.zaxxer.hikari.HikariDataSource]: Factory method 'dataSource' threw exception; nested exception is org.springframework.boot.autoconfigure.jdbc.DataSourceProperties$DataSourceBeanCreationException: Failed to determine a suitable driver class
+00:45:17.542 [main] ERROR o.s.b.d.LoggingFailureAnalysisReporter - [report,40] - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Failed to configure a DataSource: 'url' attribute is not specified and no embedded datasource could be configured.
+
+Reason: Failed to determine a suitable driver class
+
+
+Action:
+
+Consider the following:
+	If you want an embedded database (H2, HSQL or Derby), please put it on the classpath.
+	If you have database settings to be loaded from a particular profile you may need to activate it (the profiles quA are currently active).
+
+00:45:27.345 [main] WARN  c.a.c.n.c.NacosPropertySourceBuilder - [loadNacosData,87] - Ignore the empty nacos configuration and get it based on dataId[cms-file] & group[cms-project]
+00:45:28.597 [main] WARN  c.a.c.n.c.NacosPropertySourceBuilder - [loadNacosData,87] - Ignore the empty nacos configuration and get it based on dataId[cms-file.yml] & group[cms-project]
+00:45:28.914 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource {name='bootstrapProperties-cms-file-quA.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-file.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-file,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-application-quA.yml,cms-project'}]
+00:45:28.926 [main] INFO  c.c.f.CmsFileApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "quA"
+00:45:30.044 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [multipleStoresDetected,262] - Multiple Spring Data modules found, entering strict repository configuration mode
+00:45:30.047 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,132] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+00:45:30.069 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,201] - Finished Spring Data repository scanning in 6 ms. Found 0 Redis repository interfaces.
+00:45:30.310 [main] INFO  o.s.c.c.s.GenericScope - [setSerializationId,283] - BeanFactory id=fbf98fb9-c155-32e1-9504-0d001502687f
+00:45:30.561 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'com.cms.common.redis.config.RedisConfig' of type [com.cms.common.redis.config.RedisConfig$$EnhancerBySpringCGLIB$$64e7765e] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+00:45:30.993 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [initialize,108] - Tomcat initialized with port(s): 10242 (http)
+00:45:31.002 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Initializing ProtocolHandler ["http-nio-10242"]
+00:45:31.004 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
+00:45:31.004 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.83]
+00:45:31.185 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
+00:45:31.185 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - [prepareWebApplicationContext,292] - Root WebApplicationContext: initialization completed in 2240 ms
+00:45:32.731 [main] INFO  c.a.c.s.SentinelWebMvcConfigurer - [addInterceptors,52] - [Sentinel Starter] register SentinelWebInterceptor with urlPatterns: [/**].
+00:45:34.622 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
+00:45:35.287 [main] INFO  o.s.b.a.e.w.EndpointLinksResolver - [<init>,58] - Exposing 1 endpoint(s) beneath base path '/actuator'
+00:45:35.747 [main] INFO  o.s.c.o.FeignClientFactoryBean - [getTarget,418] - For 'cms-system' URL not provided. Will try picking an instance via load-balancing.
+00:45:37.689 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
+00:45:37.795 [main] WARN  o.s.c.l.c.LoadBalancerCacheAutoConfiguration$LoadBalancerCaffeineWarnLogger - [logWarning,83] - Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+00:45:37.950 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Starting ProtocolHandler ["http-nio-10242"]
+00:45:37.954 [main] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - [refresh,599] - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'; nested exception is org.springframework.boot.web.server.PortInUseException: Port 10242 is already in use
+00:45:38.008 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Pausing ProtocolHandler ["http-nio-10242"]
+00:45:38.008 [main] INFO  o.a.c.c.StandardService - [log,173] - Stopping service [Tomcat]
+00:45:38.014 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Stopping ProtocolHandler ["http-nio-10242"]
+00:45:38.015 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Destroying ProtocolHandler ["http-nio-10242"]
+00:45:38.030 [main] INFO  o.s.b.a.l.ConditionEvaluationReportLoggingListener - [logMessage,136] - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+00:45:38.060 [main] ERROR o.s.b.d.LoggingFailureAnalysisReporter - [report,40] - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 10242 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 10242 or configure this application to listen on another port.
+
+00:46:32.268 [Thread-7] WARN  c.a.n.c.h.HttpClientBeanHolder - [shutdown,102] - [HttpClientBeanHolder] Start destroying common HttpClient
+00:46:32.268 [Thread-19] WARN  c.a.n.c.n.NotifyCenter - [shutdown,136] - [NotifyCenter] Start destroying Publisher
+00:46:32.269 [Thread-19] WARN  c.a.n.c.n.NotifyCenter - [shutdown,153] - [NotifyCenter] Destruction of the end
+00:46:32.269 [Thread-7] WARN  c.a.n.c.h.HttpClientBeanHolder - [shutdown,111] - [HttpClientBeanHolder] Destruction of the end
