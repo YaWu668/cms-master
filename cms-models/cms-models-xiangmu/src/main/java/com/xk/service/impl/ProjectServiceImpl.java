@@ -158,6 +158,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
         //todo 有空再写,验证队员和老师参数进行项目最多有2个
 
+        //t
+
         //1.把数据转到实体类当中并写入数据库,插入项目表新增项目
         Long projectId = insertProject(applyForDTO);
         //2.插入学生表

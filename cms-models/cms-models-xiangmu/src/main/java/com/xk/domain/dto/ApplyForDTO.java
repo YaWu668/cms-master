@@ -14,6 +14,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import java.util.List;
 
@@ -101,7 +102,7 @@ public class  ApplyForDTO{
      */
     @Valid
     @NotNull(message = "学生报名人数不能为空")
-    @Min( value = 1,message = "学生报名人数不能少于1")
+    @Size( min = 1,message = "学生报名人数不能少于1")
     private List<ApplyForStudent> students;
     /**
      * 学科类别 (字典)示例 1为工科 ,  2为文科
@@ -118,7 +119,7 @@ public class  ApplyForDTO{
      */
     @Valid
     @NotNull(message = "老师报名人数不能为空")
-    @Min( value = 1,message = "老师报名人数不能少于1")
+    @Size( min = 1,message = "老师报名人数不能少于1")
     private List<ApplyForTeacher> teachers;
     /**
      * 指导老师和企业老师对项目的支持情况, 仅创新训练类型项目是指导老师支持情况
