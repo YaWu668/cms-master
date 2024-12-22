@@ -3,7 +3,6 @@ package com.xk.service.impl;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -13,10 +12,10 @@ import com.cms.common.security.utils.SecurityUtils;
 import com.xk.config.*;
 import com.xk.constant.ProjectConstant;
 import com.xk.constant.RoleConstant;
-import com.xk.domain.dto.ApplyForDTO;
-import com.xk.domain.dto.ApplyForStudent;
-import com.xk.domain.dto.ApplyForTeacher;
-import com.xk.domain.dto.ProjectAuditDto;
+import com.xk.domain.dto.*;
+import com.xk.domain.dto.StudentProjectDto;
+import com.xk.domain.dto.StudentApplyDto;
+import com.xk.domain.dto.TeacherApplyDto;
 import com.xk.entity.*;
 import com.xk.mapper.ProjectMapper;
 import com.xk.mapper.StudnetApplysMapper;
@@ -221,7 +220,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         //当前登录用户ID
         Long userId = SecurityUtils.getLoginUser().getUserid();
         // 创建分页对象
-        Page<Project> page = new Page<>(currentPage, pageSize);
+        Page<Project> page =new Page<>(currentPage,pageSize);
 
 
 
@@ -237,7 +236,17 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
 
 
-            IPage<Project> projectList = page(page, queryWrapper);
+
+//            // 查询结果拷贝
+//            List<StudentProjectDto> studentProjectDtos = BeanCopyUtils.copyBeans(
+//                    list(queryWrapper),
+//                    StudentProjectDto.class
+//            );
+
+            PageDTO<StudentProjectDto> projectList = PageDTO.of(
+                    page(page,queryWrapper),
+                    StudentProjectDto.class
+            );
 
             return Response.success(projectList,"获取学生参与项目以及报名项目成功！");
         }catch (Exception e){
@@ -323,14 +332,17 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
         //创建分页对象
         Page<Project> page = new Page<>(currentPage, pageSize);
+
         try{
             LambdaQueryWrapper<Project> queryWrapper = Wrappers.<Project>lambdaQuery()
                     .eq(Project::getDelFlag,0)//是否删除
                     .eq(Project::getCreateBy,userId); // 项目创建者ID是否为当前登录用户ID
 
             //  执行分页查询
-            IPage<Project> projectList = page(page,queryWrapper);
-            //List<Project> projectList = list(queryWrapper);
+
+            Page<Project> page_data = page(page,queryWrapper);
+            PageDTO<StudentProjectDto> projectList =  PageDTO.of(page_data, StudentProjectDto.class);
+
             return Response.success(projectList,"获取学生创建项目成功！");
         }catch (Exception e){
             throw new ServiceException("查询学生当前创建项目失败",502);
@@ -342,13 +354,19 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * @param text 学号/姓名
      * @return
      */
-    private List<StudnetApplys> getStudentApplyListByNameOrId(String text) {
+    private List<StudentApplyDto> getStudentApplyListByNameOrId(String text) {
         try{
             LambdaQueryWrapper<StudnetApplys> queueWrapper = Wrappers.<StudnetApplys>lambdaQuery()
                     .eq(StudnetApplys::getUserId,text)// eq可以对比整数类型和字符串。不需要转类型了
                     .or()
                     .eq(StudnetApplys::getName,text); //姓名
-            return studnetApplysMapper.selectList(queueWrapper);
+
+            // 查询结果拷贝
+            List<StudentApplyDto> studentApplyDtos = BeanCopyUtils.copyBeans(
+                    studnetApplysMapper.selectList(queueWrapper),
+                    StudentApplyDto.class
+            );
+            return studentApplyDtos;
         }catch (Exception e){
             throw new ServiceException("在查询用户名的过程中失败",502);
         }
@@ -360,13 +378,19 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * @param text 工号/姓名
      * @return
      */
-    private List<TeacherApplys> getTeacherApplyListByNameOrId(String text) {
+    private List<TeacherApplyDto> getTeacherApplyListByNameOrId(String text) {
         try{
             LambdaQueryWrapper<TeacherApplys> queueWrapper = Wrappers.<TeacherApplys>lambdaQuery()
                     .eq(TeacherApplys::getUserId,text)// eq可以对比整数类型和字符串。不需要转类型了
                     .or()
                     .eq(TeacherApplys::getName,text); //姓名
-            return teacherApplysMapper.selectList(queueWrapper);
+
+            // 查询结果拷贝
+            List<TeacherApplyDto> teacherApplyDtos = BeanCopyUtils.copyBeans(
+                    teacherApplysMapper.selectList(queueWrapper),
+                    TeacherApplyDto.class
+            );
+            return teacherApplyDtos;
         }catch (Exception e){
             throw new ServiceException("在查询用户名的过程中失败",502);
         }
