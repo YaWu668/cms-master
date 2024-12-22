@@ -17,4 +17,9 @@ public interface SysFileService {
     String uploadFile(MultipartFile file);
 
     boolean download(HttpServletResponse response, SysFile file);
+
+    /**
+     * 判断文件是否在桶内
+     */
+    boolean checkFileIsExist(String fileId);
 }

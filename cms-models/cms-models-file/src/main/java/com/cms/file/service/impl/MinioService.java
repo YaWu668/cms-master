@@ -8,10 +8,7 @@ import com.cms.file.config.MinioConfig;
 import com.cms.file.domain.SysFile;
 import com.cms.file.service.SysFileService;
 import com.cms.file.utils.FileUploadUtils;
-import io.minio.GetObjectArgs;
-import io.minio.GetObjectResponse;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
+import io.minio.*;
 import io.minio.errors.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -101,5 +98,22 @@ public class MinioService implements SysFileService {
         }
 
         return false;
+    }
+
+    public boolean checkFileIsExist(String objectName) {
+        try {
+            minioClient.statObject(
+                    StatObjectArgs
+                            .builder().
+                            bucket(this.minioConfig.
+                                    getFileBucketName()
+                            )
+                            .object(objectName)
+                            .build()
+            );
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 }

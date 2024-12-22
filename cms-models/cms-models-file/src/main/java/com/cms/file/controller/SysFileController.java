@@ -13,9 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -65,4 +63,16 @@ public class SysFileController extends BaseController {
     public Response<?> download(HttpServletResponse response, @RequestBody SysFile file) {
         return this.success(this.sysFileService.download(response, file));
     }
+
+    @ApiOperation(value = "判断文件是否存在", notes = "判断文件是否存在", httpMethod = "GET")
+    @GetMapping("/fileIsNull")
+    public Response fileIsNull(@RequestParam("fileName") String fileName) {
+        if (this.sysFileService.checkFileIsExist(fileName)){
+            return this.success("文件存在于桶内");
+        }else {
+            return this.error("文件不存在");
+        }
+    }
+
+
 }
