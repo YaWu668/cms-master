@@ -103,6 +103,7 @@ public class  ApplyForDTO{
     @Valid
     @NotNull(message = "学生报名人数不能为空")
     @Size( min = 1,message = "学生报名人数不能少于1")
+    @JsonProperty("students")
     private List<ApplyForStudent> students;
     /**
      * 学科类别 (字典)示例 1为工科 ,  2为文科
