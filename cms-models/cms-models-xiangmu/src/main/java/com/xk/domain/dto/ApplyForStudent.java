@@ -68,6 +68,11 @@ public class ApplyForStudent {
     @Max(value = 1, message = "性别不能大于1")
     private Long sex;
     /**
+     * 学号
+     */
+    @NotNull(message = "学号不能为空")
+    private  String userName;
+    /**
      * 学生的用户id
      */
     @NotNull(message = "学生的用户id不能为空")

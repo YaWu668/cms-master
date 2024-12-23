@@ -1,5 +1,6 @@
 package com.xk.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -31,8 +32,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -1581,6 +1584,23 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 throw new ServiceException(result.toString(), 444);
             }
         });
+
+        //验证 学生学号是否和id对应,先根据id批量查询用户信息
+        userServiceImpl.listByIds(studentId).stream().forEach(user -> {
+            //转换用户ID和学号
+            Map<Long, String> map = applyForDTO.getStudents().stream()
+                    .collect(Collectors.toMap(ApplyForStudent::getUserId, ApplyForStudent::getUserName));
+
+            //判断用户发的学号是否正确
+            String userName = map.get(user.getUserId());//用户的请求学号
+            if(StrUtil.isBlank(user.getUserName())){
+                throw new ServiceException("当前用户的学号:"+userName+"不存在数据库中,请联系管理员",500);
+            }
+            if(!user.getUserName().equals(userName)){
+                throw new ServiceException("当前用户的学号:"+userName+"与数据库中不一致,当前用户的id:"+user.getUserId()+"不一致,请联系管理员",444);
+            }
+        });
+
     }
 
 
