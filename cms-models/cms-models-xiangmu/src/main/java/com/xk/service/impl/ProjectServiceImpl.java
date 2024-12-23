@@ -1,12 +1,8 @@
 package com.xk.service.impl;
 
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -16,12 +12,10 @@ import com.cms.common.security.utils.SecurityUtils;
 import com.xk.config.*;
 import com.xk.constant.ProjectConstant;
 import com.xk.constant.RoleConstant;
-import com.xk.domain.dto.ApplyForDTO;
-import com.xk.domain.dto.ApplyForStudent;
-import com.xk.domain.dto.ApplyForTeacher;
-import com.xk.domain.dto.ProjectAuditDto;
-
-import com.xk.domain.vo.detail.*;
+import com.xk.domain.dto.*;
+import com.xk.domain.dto.StudentProjectDto;
+import com.xk.domain.dto.StudentApplyDto;
+import com.xk.domain.dto.TeacherApplyDto;
 import com.xk.entity.*;
 import com.xk.mapper.ProjectMapper;
 import com.xk.mapper.StudnetApplysMapper;
@@ -36,8 +30,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -228,7 +220,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         //当前登录用户ID
         Long userId = SecurityUtils.getLoginUser().getUserid();
         // 创建分页对象
-        Page<Project> page = new Page<>(currentPage, pageSize);
+        Page<Project> page =new Page<>(currentPage,pageSize);
 
 
 
@@ -244,7 +236,17 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
 
 
-            IPage<Project> projectList = page(page, queryWrapper);
+
+//            // 查询结果拷贝
+//            List<StudentProjectDto> studentProjectDtos = BeanCopyUtils.copyBeans(
+//                    list(queryWrapper),
+//                    StudentProjectDto.class
+//            );
+
+            PageDTO<StudentProjectDto> projectList = PageDTO.of(
+                    page(page,queryWrapper),
+                    StudentProjectDto.class
+            );
 
             return Response.success(projectList,"获取学生参与项目以及报名项目成功！");
         }catch (Exception e){
@@ -330,303 +332,41 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
         //创建分页对象
         Page<Project> page = new Page<>(currentPage, pageSize);
+
         try{
             LambdaQueryWrapper<Project> queryWrapper = Wrappers.<Project>lambdaQuery()
                     .eq(Project::getDelFlag,0)//是否删除
                     .eq(Project::getCreateBy,userId); // 项目创建者ID是否为当前登录用户ID
 
             //  执行分页查询
-            IPage<Project> projectList = page(page,queryWrapper);
-            //List<Project> projectList = list(queryWrapper);
+
+            Page<Project> page_data = page(page,queryWrapper);
+            PageDTO<StudentProjectDto> projectList =  PageDTO.of(page_data, StudentProjectDto.class);
+
             return Response.success(projectList,"获取学生创建项目成功！");
         }catch (Exception e){
             throw new ServiceException("查询学生当前创建项目失败",502);
         }
     }
 
-    @Override
-    public Response<DetailProjectVo> getProjectById(Long id,Long type) {
-        //1判断项目是否存在
-        List<Project> list = this.lambdaQuery().eq(Project::getProjectId, id).list();
-        Project project = list.get(0);
-        if(list.size() == 0){
-            throw new ServiceException("该项目不存在！或已被删除",404);
-        }
-        //1.权限校验
-        if(!checkUserRole(id,type)){
-            throw new ServiceException("当前用户没有权限查看该项目",403);
-        }
-        //2.把项目信息转成vo返回信息
-        DetailProjectVo projectVo = new DetailProjectVo();
-        //2.1    基本情况(Elementary)
-        Elementary elementary = convertElementaryInfo(project);
-        //2.2    成员信息(Personnels)
-        Personnels personnels = convertStudentApplyInfo(project);
-        //2.3    立项依据(According)
-        According according = convertAccordingInfo(project);
-        //2.4    预算(Expenditure)
-        Expenditure expenditure = convertExpenditureInfo(project);
-        //2.5    审核和项目进度(Audit)
-        Audit audit= convertAuditInfo(project);
-        //2.6    两个文件,申请文件和解题文件
-        convertProjectFiles(projectVo,project);
-        projectVo.setElementary(elementary)
-                .setPersonnels(personnels)
-                .setAccording(according)
-                .setExpenditure(expenditure)
-                .setAudit(audit);
-        return Response.success(projectVo);
-    }
-
-    /**
-     * 项目文件转换
-     * @param projectVo vo
-     * @param project 项目实体类
-     */
-    public void convertProjectFiles(DetailProjectVo projectVo, Project project) {
-        //结题文件
-        JSONArray array = JSONUtil.parseArray(project.getConcludeUrl());
-        List<String> concludeUrl = JSONUtil.toList(array, String.class);
-        //todo 申请文件改话,这里也要改
-        projectVo.setConcludeurl(concludeUrl)
-                .setMaterialsurl(project.getMaterialsUrl());
-
-    }
-
-    /**
-     * 项目转换成vo,审核和项目进度
-     * @param project 项目实体类
-     * @return  审核和项目进度vo
-     */
-    public Audit convertAuditInfo(Project project) {
-        // 审核意见
-        List<AuditOpinion> auditOpinions = auditOpinionService.selectByPropertieID(project.getProjectId());
-        List<AuditOpinion> sortedAuditOpinions = auditOpinions.stream()
-                .sorted(Comparator.comparing(AuditOpinion::getRootId))
-                .collect(Collectors.toList());
-        List<Opinion> audits = BeanCopyUtils.copyBeans(sortedAuditOpinions, Opinion.class);
-        // 项目进度
-        List<ProjectSchedule> scheduleList = projectScheduleService.listByProjectId(project.getProjectId());
-        List<ProjectSchedule> schedules = scheduleList.stream()
-                .sorted(Comparator.comparing(ProjectSchedule::getRootId))
-                .collect(Collectors.toList());
-        List<Schedule> list = BeanCopyUtils.copyBeans(schedules, Schedule.class);
-        Audit audit = new Audit()
-                .setOpinion(audits)
-                .setSchedule(list)
-                .setState(project.getState());
-        return audit;
-    }
-
-    /**
-     * 项目转换成vo,预算
-     * @param project 项目实体类
-     * @return 预算vo
-     */
-    public Expenditure convertExpenditureInfo(Project project) {
-        Expenditure expenditure = BeanCopyUtils.copyBean(project, Expenditure.class);
-        return expenditure;
-    }
-
-
-
-    /**
-     * 项目转换成vo,立项依据
-     * @param project 项目实体类
-     * @return 立项依据vo
-     */
-    public According convertAccordingInfo(Project project) {
-        According according = new According();
-        if (ProjectConstant.PROJECT_TYPE_INNOVATION_TRAINING.equals(project.getType())) {
-            ADetail aDetail = BeanCopyUtils.copyBean(project, ADetail.class);
-            according.setA(aDetail);
-        } else if (ProjectConstant.PROJECT_TYPE_STARTUP_TRAINING.equals(project.getType())){
-            BDetail bDetail = BeanCopyUtils.copyBean(project, BDetail.class);
-            according.setB(bDetail);
-        }else if (ProjectConstant.PROJECT_TYPE_STARTUP_PRACTICE.equals(project.getType())){
-            CDetail cDetail = BeanCopyUtils.copyBean(project, CDetail.class);
-            according.setC(cDetail);
-        }else{
-            log.error("未知的项目类型,请联系管理员,项目对象{"+project+"}");
-            throw new ServiceException("未知的项目类型,请联系管理员",500);
-        }
-        return according;
-    }
-    /**
-     * 项目转换成vo
-     * @param project 项目实体类
-     * @return 成员信息vo
-     */
-    public Personnels convertStudentApplyInfo(Project project){
-        //1.获取学生 和 老师
-        List<StudnetApplys> studnetApplys = studnetApplysService.list(Wrappers.<StudnetApplys>lambdaQuery()
-                .eq(StudnetApplys::getProjectId, project.getProjectId()));
-        List<TeacherApplys> teacherApplys = teacherApplysService.list(Wrappers.<TeacherApplys>lambdaQuery()
-                .eq(TeacherApplys::getProjectId, project));
-        //2.判断是不是有学生和老师
-        if(studnetApplys.size() == 0 || teacherApplys.size() == 0){
-            throw new ServiceException("该项目没有学生或老师报名,出现该情况请联系管理员",403);
-        }
-        //3.bean拷贝
-        List<Student> students = BeanCopyUtils.copyBeans(studnetApplys, Student.class);
-        List<Teacher> teachers = BeanCopyUtils.copyBeans(teacherApplys, Teacher.class);
-
-        return new Personnels(students,teachers);
-    }
-
-    /**
-     * 项目转换成vo
-     * @param project 项目实体类
-     * @return 基本情况vo
-     */
-    public Elementary convertElementaryInfo(Project project) {
-        Elementary elementary = BeanCopyUtils.copyBean(project, Elementary.class);
-        elementary.setBeginTime(DateUtil.formatDateTime(project.getBeginTime()))//立项时间
-                .setEndTime(DateUtil.formatDateTime(project.getEndTime()));//结束时间
-        return elementary;
-    }
-
-    @Override
-    public boolean isProjectOwnedByStudent(Long projectId) {
-        Long userId = SecurityUtils.getUserId();
-        if (projectId == null){
-            throw new ServiceException("项目id不能为空",400);
-        }
-        //1.判断项目是否存在
-        Project project = this.lambdaQuery().eq(Project::getProjectId, projectId)
-                .list().get(0);
-        if (project == null){
-            throw new ServiceException("该项目不存在！或已被删除",404);
-        }
-        //2.判断项目是否为学生创建
-        if (project.getUserId().equals(userId)){
-            return true;
-        }else {
-            return false;
-        }
-    }
-
-    @Override
-    public boolean isProjectOfTeacherStudents(Long projectId) {
-        Long userId = SecurityUtils.getUserId();
-
-        //1.判断项目是否存在
-        Project project = this.lambdaQuery().eq(Project::getProjectId, projectId)
-                .list().get(0);
-        if (project == null){
-            throw new ServiceException("该项目不存在！或已被删除",404);
-        }
-        List<TeacherApplys> list = teacherApplysService.list(Wrappers.<TeacherApplys>lambdaQuery().eq(TeacherApplys::getProjectId, projectId));
-        if ( list == null || list.size() == 0){
-            throw new ServiceException("当前项目没有老师报名,出现该情况请联系管理员",403);
-        }
-        //2.判断项目是否为自己学生的项目
-        long count = list.stream().filter(e -> e.getUserId().equals(userId)).count();
-        if(count>0){
-            return true;
-        }
-        return false;
-    }
-    @Override
-    public  boolean isProjectInSameCollege(Long projectId){
-        Long userId = SecurityUtils.getUserId();
-        //1.判断项目是否存在
-        Project project = this.lambdaQuery().eq(Project::getProjectId, projectId)
-                .list().get(0);
-        if (project == null){
-            throw new ServiceException("该项目不存在！或已被删除",404);
-        }
-        //2.判断项目是否为自己学院的项目
-        Long collegeGroupId = project.getCollegeGroupId();
-
-        List<CollegeData> list = collegeDataService.list(Wrappers.<CollegeData>lambdaQuery().eq(CollegeData::getUserId, userId).eq(CollegeData::getCollegeGroupId, collegeGroupId));
-        if ( list == null || list.size() == 0){
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public boolean canExpertReviewProject(Long projectId){
-        Long userId = SecurityUtils.getUserId();
-        //1.判断项目是否存在
-        Project project = this.lambdaQuery().eq(Project::getProjectId, projectId)
-                .list().get(0);
-        if (project == null){
-            throw new ServiceException("该项目不存在！或已被删除",404);
-        }
-        if(project.getSpecialistGroupId() == null){
-            throw new ServiceException("该项目没有专家组，无法审核！",403);
-        }
-        //2.判断项目是否为自己专家的项目
-        List<SpecialistData> list = specialistDataService.list(Wrappers.<SpecialistData>lambdaQuery()
-                .eq(SpecialistData::getUserId, userId)
-                .eq(SpecialistData::getSpecialistGroupId, project.getSpecialistGroupId()));
-        if ( list == null || list.size() == 0){
-            return false;
-        }
-        return true;
-    }
-
-
-
-    /**
-     * 校验当前用户是否有权限查看该项目
-     * @param id 项目id
-     * @param type 查询类型,1:学生 , 2:教师, 3:学院审核人, 4:专家, 5:管理员
-     * @return true:有权限 false:无权限
-     */
-    private boolean checkUserRole(Long id, Long type) {
-        //1.判断当前用户是否有当前当前角色
-        if(type==1){ //学生
-            if(!roleService.hasRole(ProjectConstant.ROLE_STUDENT)){
-                return false;
-            }
-        }else if(type==2){ //教师
-            if(!roleService.hasRole(ProjectConstant.ROLE_TEACHER)){
-                return false;
-            }
-        }else if(type==3){  //学院审核人
-            if(!roleService.hasRole(ProjectConstant.ROLE_COLLEGE)){
-                return false;
-            }
-        }else if(type==4) {//专家
-            if (!roleService.hasRole(RoleConstant.EXPERT)){
-                return false;
-            }
-        }else if(type==5){  //管理员
-            if (!roleService.hasRole(RoleConstant.ADMIN)){
-                return false;
-            }
-        }
-        //2.根据不同角色判断是否有权限查看该项目
-        if(type==1) { //学生 1.判断项目是不是自己的
-            return isProjectOwnedByStudent(id);
-        }else if(type==2) { //教师 2.判断项目是不是自己的学生的
-            return isProjectOfTeacherStudents(id);
-        }else if(type==3) { //学院审核人 3.判断这个项目是不是自己学院的
-            return isProjectInSameCollege(id);
-        }else if(type==4) { //专家 4.判断这个项目可不可以审核
-            return canExpertReviewProject(id);
-        }else if(type==5) { //管理员 直接返回
-            return true;
-        }
-        return false;
-    }
-
-
     /**
      * 获取学生报名表，根据学号或者姓名
      * @param text 学号/姓名
      * @return
      */
-    private List<StudnetApplys> getStudentApplyListByNameOrId(String text) {
+    private List<StudentApplyDto> getStudentApplyListByNameOrId(String text) {
         try{
             LambdaQueryWrapper<StudnetApplys> queueWrapper = Wrappers.<StudnetApplys>lambdaQuery()
                     .eq(StudnetApplys::getUserId,text)// eq可以对比整数类型和字符串。不需要转类型了
                     .or()
                     .eq(StudnetApplys::getName,text); //姓名
-            return studnetApplysMapper.selectList(queueWrapper);
+
+            // 查询结果拷贝
+            List<StudentApplyDto> studentApplyDtos = BeanCopyUtils.copyBeans(
+                    studnetApplysMapper.selectList(queueWrapper),
+                    StudentApplyDto.class
+            );
+            return studentApplyDtos;
         }catch (Exception e){
             throw new ServiceException("在查询用户名的过程中失败",502);
         }
@@ -638,13 +378,19 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * @param text 工号/姓名
      * @return
      */
-    private List<TeacherApplys> getTeacherApplyListByNameOrId(String text) {
+    private List<TeacherApplyDto> getTeacherApplyListByNameOrId(String text) {
         try{
             LambdaQueryWrapper<TeacherApplys> queueWrapper = Wrappers.<TeacherApplys>lambdaQuery()
                     .eq(TeacherApplys::getUserId,text)// eq可以对比整数类型和字符串。不需要转类型了
                     .or()
                     .eq(TeacherApplys::getName,text); //姓名
-            return teacherApplysMapper.selectList(queueWrapper);
+
+            // 查询结果拷贝
+            List<TeacherApplyDto> teacherApplyDtos = BeanCopyUtils.copyBeans(
+                    teacherApplysMapper.selectList(queueWrapper),
+                    TeacherApplyDto.class
+            );
+            return teacherApplyDtos;
         }catch (Exception e){
             throw new ServiceException("在查询用户名的过程中失败",502);
         }
@@ -1859,25 +1605,6 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 throw new ServiceException(result.toString(), 444);
             }
         });
-
-        //验证 学生学号是否和id对应,先根据id批量查询用户信息
-        userServiceImpl.listByIds(studentId).stream().forEach(user -> {
-            //转换用户ID和学号
-            Map<Long, String> map = applyForDTO.getStudents().stream()
-                    .collect(Collectors.toMap(ApplyForStudent::getUserId, ApplyForStudent::getUserName));
-
-            //判断用户发的学号是否正确
-            String userName = map.get(user.getUserId());//用户的请求学号
-            if(StrUtil.isBlank(user.getUserName())){
-                throw new ServiceException("当前用户的学号:"+userName+"不存在数据库中,请联系管理员",500);
-            }
-            if(!user.getUserName().equals(userName)){
-                throw new ServiceException("当前用户的学号:"+userName+"与数据库中不一致,当前用户的id:"+user.getUserId()+"不一致,请联系管理员",444);
-            }
-        });
-
-        //todo 校验名字是否和账号对应
-
     }
 
 
