@@ -13,9 +13,9 @@ import com.xk.config.*;
 import com.xk.constant.ProjectConstant;
 import com.xk.constant.RoleConstant;
 import com.xk.domain.dto.*;
-import com.xk.domain.dto.StudentProjectDto;
-import com.xk.domain.dto.StudentApplyDto;
 import com.xk.domain.dto.TeacherApplyDto;
+import com.xk.domain.vo.student.StudentApplyVo;
+import com.xk.domain.vo.student.StudentProjectVo;
 import com.xk.entity.*;
 import com.xk.mapper.ProjectMapper;
 import com.xk.mapper.StudnetApplysMapper;
@@ -243,9 +243,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 //                    StudentProjectDto.class
 //            );
 
-            PageDTO<StudentProjectDto> projectList = PageDTO.of(
+            PageDTO<StudentProjectVo> projectList = PageDTO.of(
                     page(page,queryWrapper),
-                    StudentProjectDto.class
+                    StudentProjectVo.class
             );
 
             return Response.success(projectList,"获取学生参与项目以及报名项目成功！");
@@ -341,7 +341,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             //  执行分页查询
 
             Page<Project> page_data = page(page,queryWrapper);
-            PageDTO<StudentProjectDto> projectList =  PageDTO.of(page_data, StudentProjectDto.class);
+            PageDTO<StudentProjectVo> projectList =  PageDTO.of(page_data, StudentProjectVo.class);
 
             return Response.success(projectList,"获取学生创建项目成功！");
         }catch (Exception e){
@@ -354,7 +354,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * @param text 学号/姓名
      * @return
      */
-    private List<StudentApplyDto> getStudentApplyListByNameOrId(String text) {
+    private List<StudentApplyVo> getStudentApplyListByNameOrId(String text) {
         try{
             LambdaQueryWrapper<StudnetApplys> queueWrapper = Wrappers.<StudnetApplys>lambdaQuery()
                     .eq(StudnetApplys::getUserId,text)// eq可以对比整数类型和字符串。不需要转类型了
@@ -362,9 +362,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                     .eq(StudnetApplys::getName,text); //姓名
 
             // 查询结果拷贝
-            List<StudentApplyDto> studentApplyDtos = BeanCopyUtils.copyBeans(
+            List<StudentApplyVo> studentApplyDtos = BeanCopyUtils.copyBeans(
                     studnetApplysMapper.selectList(queueWrapper),
-                    StudentApplyDto.class
+                    StudentApplyVo.class
             );
             return studentApplyDtos;
         }catch (Exception e){

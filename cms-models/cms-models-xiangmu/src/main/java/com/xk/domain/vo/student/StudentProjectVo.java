@@ -1,4 +1,4 @@
-package com.xk.domain.dto;
+package com.xk.domain.vo.student;
 
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import java.util.Date;
  * 学生页面项目列表显示
  */
 @Data
-public class StudentProjectDto {
+public class StudentProjectVo {
     //项目ID
     private Long projectId;
     //项目名称
