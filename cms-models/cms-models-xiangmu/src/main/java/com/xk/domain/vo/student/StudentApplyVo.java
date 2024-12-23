@@ -1,4 +1,4 @@
-package com.xk.domain.dto;
+package com.xk.domain.vo.student;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import lombok.Data;
  * 添加学生时
  */
 @Data
-public class StudentApplyDto {
+public class StudentApplyVo {
     //报名表id
     private Long studnetApplyId;
     //姓名
