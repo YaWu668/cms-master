@@ -41,7 +41,7 @@ public class SpecialistGroupServiceImpl extends ServiceImpl<SpecialistGroupMappe
                     return Response.success();
                 }
 
-                throw new ServiceException("专家组未启用",445);
+                throw new ServiceException("专家组未启用",444);
 
             default:
                 throw new ServiceException("字典错误", 444);
