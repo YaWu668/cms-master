@@ -7,10 +7,8 @@ import com.cms.common.log.enums.BusinessType;
 import com.xk.entity.SpecialistGroup;
 import com.xk.service.SpecialistGroupService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
 
 
 /**
@@ -24,10 +22,28 @@ public class AdminController {
     private final SpecialistGroupService specialistGroupService;
 
 
+    /**
+     * 添加专家组
+     * @param specialistGroup
+     * @return
+     */
     @PostMapping("/addannual/addGroup")
     // todo   @RequiresPermissions("xm:admin:insert")
     @Log(title = "添加专家组", businessType = BusinessType.INSERT)
     public Response addSpecialistGroup(@RequestBody SpecialistGroup specialistGroup){
         return specialistGroupService.insertSpecialistGroup(specialistGroup);
+    }
+
+
+    /**
+     * 修改专家组信息
+     * @param specialistGroup
+     * @return
+     */
+    @PutMapping("/search/updateGroup")
+    // todo   @RequiresPermissions("xm:admin:update")
+    @Log(title = "修改专家组信息", businessType = BusinessType.UPDATE)
+    public Response SpecialistGroup(@RequestBody SpecialistGroup specialistGroup){
+        return specialistGroupService.updateSpecialistGroup(specialistGroup);
     }
 }

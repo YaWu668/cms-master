@@ -15,4 +15,11 @@ public interface SpecialistGroupService extends IService<SpecialistGroup> {
      * @return
      */
     Response insertSpecialistGroup(SpecialistGroup specialistGroup);
+
+    /**
+     * 修改专家组信息
+     * @param specialistGroup
+     * @return
+     */
+    Response updateSpecialistGroup(SpecialistGroup specialistGroup);
 }
