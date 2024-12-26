@@ -13,7 +13,7 @@ spring:
   cloud:
     nacos:
       # 服务注册、配置拉取地址
-      server-addr: 10.8.0.99:8848
+      server-addr: 172.20.0.7:8848
       discovery:
         namespace: guoA
         group: cms-project

@@ -29,4 +29,22 @@ public class ProjectConstant {
     public static final long PROJECT_STATUS_PENDING_VALUE = 3;
     public static final long PROJECT_STATUS_PASS_VALUE = 4;
     public static final long PROJECT_STATUS_NOT_PASS_VALUE_2 = 5;
+
+    /**
+     * 角色标识符 1:学生(xm-student) , 2:教师(xm-teacher), 3:学院审核人(xm-college), 4:专家(xm-specialist), 5:管理员(xm-admin)
+     */
+    public static final String ROLE_STUDENT = "xm-student";
+    public static final String ROLE_TEACHER = "xm-teacher";
+    public static final String ROLE_COLLEGE = "xm-college";
+    public static final String ROLE_SPECIALIST = "xm-specialist";
+    public static final String ROLE_ADMIN = "xm-admin";
+
+    /**
+     * 项目类型: 1:创新训练项目 2:创业训练项目 3:创业实践项目
+     */
+    public static final Long PROJECT_TYPE_INNOVATION_TRAINING = 1L;
+    public static final Long PROJECT_TYPE_STARTUP_TRAINING = 2L;
+    public static final Long PROJECT_TYPE_STARTUP_PRACTICE = 3L;
+
+
 }

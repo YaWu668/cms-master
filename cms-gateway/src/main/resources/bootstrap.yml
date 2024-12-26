@@ -8,7 +8,7 @@ spring:
     active: guoA
   cloud:
     nacos:
-      server-addr: 10.8.0.99:8848
+      server-addr: 172.20.0.7:8848
       # 注册中心配置,作用: 1.服务发现 2.配置中心
       discovery:
         namespace: guoA #todo 开发时候,这里特殊根据自己配置的命名空间来进行填写
