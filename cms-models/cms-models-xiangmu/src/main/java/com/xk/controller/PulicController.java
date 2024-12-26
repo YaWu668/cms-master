@@ -3,10 +3,11 @@ package com.xk.controller;
 import com.cms.common.core.web.domain.Response;
 import com.cms.common.log.annotation.Log;
 import com.cms.common.log.enums.BusinessType;
-import com.cms.common.security.annotation.RequiresPermissions;
 import com.xk.domain.dto.ProjectAuditDto;
 import com.xk.domain.dto.collegeListDto;
+
 import com.xk.domain.dto.yearListDTO;
+import com.xk.domain.vo.detail.DetailProjectVo;
 import com.xk.service.CollegeGroupService;
 import com.xk.service.ProjectService;
 import com.xk.service.YearGroupService;
@@ -68,4 +69,17 @@ public class PulicController {
     public Response<List<collegeListDto>> collegeList(String name) {
         return collegeGroupService.collegeList(name);
     }
+
+    /**
+     *根据项目id查询项目详细信息
+     * @param id 项目id
+     * @param type 查询类型,1:学生 , 2:教师, 3:学院审核人, 4:专家, 5:管理员
+     * @return 项目详细信息
+     */
+    @GetMapping("/project/{id}")
+    @Log(title = "根据项目id查询项目详细信息", businessType = BusinessType.OTHER)
+    public Response<DetailProjectVo> getProjectById(@PathVariable("id") Long id,Long type) {
+        return projectService.getProjectById(id,type);
+    }
+
 }

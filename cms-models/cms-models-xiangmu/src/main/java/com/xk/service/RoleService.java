@@ -33,6 +33,12 @@ public interface RoleService extends IService<Role> {
      */
     Long getAdminId() ;
 
+    /**
+     * 根据传入的角色标识符,判断当前用户是否有该角色
+     * @param role 角色标识符
+     * @return 是否有该角色, true:有, false:没有
+     */
+     boolean hasRole( String role);
 
 }
 
