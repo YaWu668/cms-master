@@ -12,9 +12,12 @@ import com.xk.service.CollegeGroupService;
 import com.xk.service.ProjectService;
 import com.xk.service.YearGroupService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 
 
@@ -23,6 +26,7 @@ import java.util.List;
  */
 @RestController
 @RequiredArgsConstructor
+@Validated
 @RequestMapping("/public")
 public class PulicController {
     /**
@@ -76,10 +80,13 @@ public class PulicController {
      * @param type 查询类型,1:学生 , 2:教师, 3:学院审核人, 4:专家, 5:管理员
      * @return 项目详细信息
      */
-    @GetMapping("/project/{id}")
     @Log(title = "根据项目id查询项目详细信息", businessType = BusinessType.OTHER)
-    public Response<DetailProjectVo> getProjectById(@PathVariable("id") Long id,Long type) {
-        return projectService.getProjectById(id,type);
+    @GetMapping("/project/{id}/{type}")
+    public Response<DetailProjectVo> getProjectById(@Valid
+                                                    @PathVariable("id") @NotNull(message = "项目id为null") Long id,
+                                                    @PathVariable("type") @NotNull(message = "项目查询类型不能为null")
+                                                    @Pattern(regexp = "^[1-5]$", message = "项目查询类型只能为1-5") String type) {
+        return projectService.getProjectById(id, Long.valueOf(type));
     }
 
 }

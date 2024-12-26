@@ -65,3 +65,230 @@ java.io.IOException: 远程主机强迫关闭了一个现有的连接。
 15:33:29.268 [lettuce-eventExecutorLoop-1-5] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
 15:33:39.277 [lettuce-nioEventLoop-4-5] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
 15:33:39.361 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+17:56:08.624 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
+17:56:08.682 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 6.2.5.Final
+17:56:09.086 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+17:56:09.086 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+17:56:17.210 [main] WARN  c.a.c.n.c.NacosPropertySourceBuilder - [loadNacosData,87] - Ignore the empty nacos configuration and get it based on dataId[cms-auth] & group[cms-project]
+17:56:17.355 [main] WARN  c.a.c.n.c.NacosPropertySourceBuilder - [loadNacosData,87] - Ignore the empty nacos configuration and get it based on dataId[cms-auth.yml] & group[cms-project]
+17:56:17.572 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource {name='bootstrapProperties-cms-auth-guoA.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-auth.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-auth,cms-project'}]
+17:56:17.586 [main] INFO  c.c.a.CmsAuthApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "guoA"
+17:56:19.764 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [multipleStoresDetected,262] - Multiple Spring Data modules found, entering strict repository configuration mode
+17:56:19.770 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,132] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+17:56:19.823 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,201] - Finished Spring Data repository scanning in 15 ms. Found 0 Redis repository interfaces.
+17:56:20.431 [main] INFO  o.s.c.c.s.GenericScope - [setSerializationId,283] - BeanFactory id=a4555949-8ccc-38bf-952d-4b4c3548c9e8
+17:56:21.086 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'com.cms.common.redis.config.RedisConfig' of type [com.cms.common.redis.config.RedisConfig$$EnhancerBySpringCGLIB$$2401832a] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+17:56:21.770 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [initialize,108] - Tomcat initialized with port(s): 10241 (http)
+17:56:21.784 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Initializing ProtocolHandler ["http-nio-10241"]
+17:56:21.787 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
+17:56:21.787 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.83]
+17:56:22.040 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
+17:56:22.040 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - [prepareWebApplicationContext,292] - Root WebApplicationContext: initialization completed in 4430 ms
+17:56:22.907 [main] INFO  o.s.c.o.FeignClientFactoryBean - [getTarget,418] - For 'cms-system' URL not provided. Will try picking an instance via load-balancing.
+17:56:22.974 [main] INFO  o.s.c.o.FeignClientFactoryBean - [getTarget,418] - For 'cms-system' URL not provided. Will try picking an instance via load-balancing.
+17:56:23.226 [main] INFO  c.a.c.s.SentinelWebMvcConfigurer - [addInterceptors,52] - [Sentinel Starter] register SentinelWebInterceptor with urlPatterns: [/**].
+17:56:25.875 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
+17:56:30.123 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
+17:56:30.201 [main] WARN  o.s.c.l.c.LoadBalancerCacheAutoConfiguration$LoadBalancerCaffeineWarnLogger - [logWarning,83] - Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+17:56:30.213 [main] INFO  o.s.b.a.e.w.EndpointLinksResolver - [<init>,58] - Exposing 1 endpoint(s) beneath base path '/actuator'
+17:56:30.350 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Starting ProtocolHandler ["http-nio-10241"]
+17:56:30.369 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [start,220] - Tomcat started on port(s): 10241 (http) with context path ''
+17:56:30.393 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+17:56:30.393 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+17:56:31.191 [main] INFO  c.a.c.n.r.NacosServiceRegistry - [register,76] - nacos registry, cms-project cms-auth 192.168.159.1:10241 register finished
+17:56:33.556 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
+17:56:33.578 [main] INFO  c.c.a.CmsAuthApplication - [logStarted,61] - Started CmsAuthApplication in 27.664 seconds (JVM running for 29.591)
+17:56:33.604 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-auth.yml, group=cms-project
+17:56:33.606 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-auth, group=cms-project
+17:56:33.619 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-auth-guoA.yml, group=cms-project
+17:56:34.605 [RMI TCP Connection(5)-10.8.0.20] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+17:56:34.607 [RMI TCP Connection(5)-10.8.0.20] INFO  o.s.w.s.DispatcherServlet - [initServletBean,525] - Initializing Servlet 'dispatcherServlet'
+17:56:34.609 [RMI TCP Connection(5)-10.8.0.20] INFO  o.s.w.s.DispatcherServlet - [initServletBean,547] - Completed initialization in 1 ms
+18:17:54.470 [lettuce-nioEventLoop-4-1] INFO  i.l.c.p.CommandHandler - [log,217] - null Unexpected exception during request: java.io.IOException: 远程主机强迫关闭了一个现有的连接。
+java.io.IOException: 远程主机强迫关闭了一个现有的连接。
+	at sun.nio.ch.SocketDispatcher.read0(Native Method)
+	at sun.nio.ch.SocketDispatcher.read(SocketDispatcher.java:43)
+	at sun.nio.ch.IOUtil.readIntoNativeBuffer(IOUtil.java:223)
+	at sun.nio.ch.IOUtil.read(IOUtil.java:192)
+	at sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:379)
+	at io.netty.buffer.PooledByteBuf.setBytes(PooledByteBuf.java:254)
+	at io.netty.buffer.AbstractByteBuf.writeBytes(AbstractByteBuf.java:1132)
+	at io.netty.channel.socket.nio.NioSocketChannel.doReadBytes(NioSocketChannel.java:357)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:151)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.lang.Thread.run(Thread.java:750)
+18:17:54.722 [lettuce-eventExecutorLoop-1-2] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was /172.20.0.4:6379
+18:18:04.746 [lettuce-nioEventLoop-4-2] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:18:04.827 [lettuce-eventExecutorLoop-1-3] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:18:14.839 [lettuce-nioEventLoop-4-3] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:18:14.933 [lettuce-eventExecutorLoop-1-4] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:18:24.946 [lettuce-nioEventLoop-4-4] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:18:25.028 [lettuce-eventExecutorLoop-1-5] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:18:35.032 [lettuce-nioEventLoop-4-5] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:18:35.129 [lettuce-eventExecutorLoop-1-6] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:18:45.140 [lettuce-nioEventLoop-4-6] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:18:45.235 [lettuce-eventExecutorLoop-1-7] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:18:55.263 [lettuce-nioEventLoop-4-7] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:18:55.428 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:19:05.442 [lettuce-nioEventLoop-4-8] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:19:05.630 [lettuce-eventExecutorLoop-1-11] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:19:15.648 [lettuce-nioEventLoop-4-9] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:19:15.929 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:19:25.946 [lettuce-nioEventLoop-4-10] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:19:26.528 [lettuce-eventExecutorLoop-1-3] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:19:36.541 [lettuce-nioEventLoop-4-11] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:19:37.628 [lettuce-eventExecutorLoop-1-5] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:19:47.635 [lettuce-nioEventLoop-4-12] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:19:49.727 [lettuce-eventExecutorLoop-1-7] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:19:59.736 [lettuce-nioEventLoop-4-1] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:20:03.935 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:20:13.951 [lettuce-nioEventLoop-4-2] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:20:22.228 [lettuce-eventExecutorLoop-1-12] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:20:32.246 [lettuce-nioEventLoop-4-3] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:20:48.728 [lettuce-eventExecutorLoop-1-3] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:20:58.738 [lettuce-nioEventLoop-4-4] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:21:28.836 [lettuce-eventExecutorLoop-1-7] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:21:38.852 [lettuce-nioEventLoop-4-5] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:22:08.927 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:22:18.942 [lettuce-nioEventLoop-4-6] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:22:49.028 [lettuce-eventExecutorLoop-1-11] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:22:59.041 [lettuce-nioEventLoop-4-7] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:23:29.127 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:23:39.134 [lettuce-nioEventLoop-4-8] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:24:09.228 [lettuce-eventExecutorLoop-1-3] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:24:19.237 [lettuce-nioEventLoop-4-9] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:24:49.329 [lettuce-eventExecutorLoop-1-5] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:24:59.332 [lettuce-nioEventLoop-4-10] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:25:29.427 [lettuce-eventExecutorLoop-1-7] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:25:39.440 [lettuce-nioEventLoop-4-11] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:26:09.538 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:26:19.546 [lettuce-nioEventLoop-4-12] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:26:49.628 [lettuce-eventExecutorLoop-1-11] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:26:59.633 [lettuce-nioEventLoop-4-1] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:27:29.734 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:27:39.752 [lettuce-nioEventLoop-4-2] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:28:09.829 [lettuce-eventExecutorLoop-1-3] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:28:19.846 [lettuce-nioEventLoop-4-3] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:28:49.928 [lettuce-eventExecutorLoop-1-5] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:28:59.943 [lettuce-nioEventLoop-4-4] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:29:30.036 [lettuce-eventExecutorLoop-1-7] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:29:40.043 [lettuce-nioEventLoop-4-5] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:30:10.137 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:30:20.154 [lettuce-nioEventLoop-4-6] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:30:50.227 [lettuce-eventExecutorLoop-1-11] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:31:00.237 [lettuce-nioEventLoop-4-7] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:31:30.338 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:31:40.351 [lettuce-nioEventLoop-4-8] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:32:10.437 [lettuce-eventExecutorLoop-1-3] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:32:20.449 [lettuce-nioEventLoop-4-9] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:32:50.529 [lettuce-eventExecutorLoop-1-5] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:33:00.537 [lettuce-nioEventLoop-4-10] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:33:30.627 [lettuce-eventExecutorLoop-1-7] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:33:40.636 [lettuce-nioEventLoop-4-11] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:34:10.734 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:34:20.751 [lettuce-nioEventLoop-4-12] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:34:50.829 [lettuce-eventExecutorLoop-1-11] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:35:00.842 [lettuce-nioEventLoop-4-1] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:35:30.928 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:35:40.948 [lettuce-nioEventLoop-4-2] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:36:11.027 [lettuce-eventExecutorLoop-1-3] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:36:21.032 [lettuce-nioEventLoop-4-3] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:36:51.128 [lettuce-eventExecutorLoop-1-5] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:37:01.135 [lettuce-nioEventLoop-4-4] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:37:31.233 [lettuce-eventExecutorLoop-1-7] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:37:41.239 [lettuce-nioEventLoop-4-5] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:38:11.328 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:38:21.332 [lettuce-nioEventLoop-4-6] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:38:51.428 [lettuce-eventExecutorLoop-1-11] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:39:01.444 [lettuce-nioEventLoop-4-7] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:39:31.527 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:39:41.535 [lettuce-nioEventLoop-4-8] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:40:11.628 [lettuce-eventExecutorLoop-1-3] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:40:21.637 [lettuce-nioEventLoop-4-9] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:40:51.728 [lettuce-eventExecutorLoop-1-5] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:41:01.741 [lettuce-nioEventLoop-4-10] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:41:31.829 [lettuce-eventExecutorLoop-1-7] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:41:41.832 [lettuce-nioEventLoop-4-11] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:42:11.929 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:42:21.939 [lettuce-nioEventLoop-4-12] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:42:52.031 [lettuce-eventExecutorLoop-1-11] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:43:02.036 [lettuce-nioEventLoop-4-1] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:43:32.129 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:43:42.132 [lettuce-nioEventLoop-4-2] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:44:12.229 [lettuce-eventExecutorLoop-1-3] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:44:22.240 [lettuce-nioEventLoop-4-3] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:44:52.328 [lettuce-eventExecutorLoop-1-5] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:45:02.335 [lettuce-nioEventLoop-4-4] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:45:32.430 [lettuce-eventExecutorLoop-1-7] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:45:42.434 [lettuce-nioEventLoop-4-5] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:46:12.538 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:46:22.546 [lettuce-nioEventLoop-4-6] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:46:52.627 [lettuce-eventExecutorLoop-1-11] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:47:02.638 [lettuce-nioEventLoop-4-7] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:47:32.732 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:47:42.738 [lettuce-nioEventLoop-4-8] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:48:12.836 [lettuce-eventExecutorLoop-1-3] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:48:22.842 [lettuce-nioEventLoop-4-9] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:48:52.929 [lettuce-eventExecutorLoop-1-5] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:49:02.931 [lettuce-nioEventLoop-4-10] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:49:33.028 [lettuce-eventExecutorLoop-1-7] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:49:43.045 [lettuce-nioEventLoop-4-11] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:50:13.135 [lettuce-eventExecutorLoop-1-9] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:50:23.140 [lettuce-nioEventLoop-4-12] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:50:53.229 [lettuce-eventExecutorLoop-1-11] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:51:03.232 [lettuce-nioEventLoop-4-1] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:51:33.331 [lettuce-eventExecutorLoop-1-1] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:51:43.345 [lettuce-nioEventLoop-4-2] WARN  i.l.c.p.ConnectionWatchdog - [log,151] - Cannot reconnect to [172.20.0.4:6379]: connection timed out: /172.20.0.4:6379
+18:52:13.437 [lettuce-eventExecutorLoop-1-3] INFO  i.l.c.p.ConnectionWatchdog - [log,171] - Reconnecting, last destination was 172.20.0.4:6379
+18:52:13.758 [lettuce-nioEventLoop-4-3] INFO  i.l.c.p.ReconnectionHandler - [lambda$null$3,174] - Reconnected to 172.20.0.4:6379
+19:02:21.561 [Thread-20] WARN  c.a.n.c.n.NotifyCenter - [shutdown,136] - [NotifyCenter] Start destroying Publisher
+19:02:21.561 [Thread-20] WARN  c.a.n.c.n.NotifyCenter - [shutdown,153] - [NotifyCenter] Destruction of the end
+19:02:21.561 [Thread-8] WARN  c.a.n.c.h.HttpClientBeanHolder - [shutdown,102] - [HttpClientBeanHolder] Start destroying common HttpClient
+19:02:21.563 [Thread-8] WARN  c.a.n.c.h.HttpClientBeanHolder - [shutdown,111] - [HttpClientBeanHolder] Destruction of the end
+19:02:22.590 [SpringApplicationShutdownHook] INFO  c.a.c.n.r.NacosServiceRegistry - [deregister,95] - De-registering from Nacos Server now...
+19:02:22.706 [SpringApplicationShutdownHook] INFO  c.a.c.n.r.NacosServiceRegistry - [deregister,115] - De-registration finished.
+19:02:39.407 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
+19:02:39.511 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 6.2.5.Final
+19:02:40.090 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+19:02:40.091 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+19:02:47.857 [main] WARN  c.a.c.n.c.NacosPropertySourceBuilder - [loadNacosData,87] - Ignore the empty nacos configuration and get it based on dataId[cms-auth] & group[cms-project]
+19:02:47.995 [main] WARN  c.a.c.n.c.NacosPropertySourceBuilder - [loadNacosData,87] - Ignore the empty nacos configuration and get it based on dataId[cms-auth.yml] & group[cms-project]
+19:02:48.207 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource {name='bootstrapProperties-cms-auth-guoA.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-auth.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-auth,cms-project'}]
+19:02:48.222 [main] INFO  c.c.a.CmsAuthApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "guoA"
+19:02:49.815 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [multipleStoresDetected,262] - Multiple Spring Data modules found, entering strict repository configuration mode
+19:02:49.819 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,132] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+19:02:49.852 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,201] - Finished Spring Data repository scanning in 8 ms. Found 0 Redis repository interfaces.
+19:02:50.145 [main] INFO  o.s.c.c.s.GenericScope - [setSerializationId,283] - BeanFactory id=a4555949-8ccc-38bf-952d-4b4c3548c9e8
+19:02:50.494 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'com.cms.common.redis.config.RedisConfig' of type [com.cms.common.redis.config.RedisConfig$$EnhancerBySpringCGLIB$$4b49b9a7] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+19:02:50.886 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [initialize,108] - Tomcat initialized with port(s): 10241 (http)
+19:02:50.896 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Initializing ProtocolHandler ["http-nio-10241"]
+19:02:50.898 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
+19:02:50.898 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.83]
+19:02:51.098 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
+19:02:51.099 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - [prepareWebApplicationContext,292] - Root WebApplicationContext: initialization completed in 2849 ms
+19:02:51.903 [main] INFO  o.s.c.o.FeignClientFactoryBean - [getTarget,418] - For 'cms-system' URL not provided. Will try picking an instance via load-balancing.
+19:02:51.980 [main] INFO  o.s.c.o.FeignClientFactoryBean - [getTarget,418] - For 'cms-system' URL not provided. Will try picking an instance via load-balancing.
+19:02:52.196 [main] INFO  c.a.c.s.SentinelWebMvcConfigurer - [addInterceptors,52] - [Sentinel Starter] register SentinelWebInterceptor with urlPatterns: [/**].
+19:02:54.704 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
+19:02:58.481 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
+19:02:58.558 [main] WARN  o.s.c.l.c.LoadBalancerCacheAutoConfiguration$LoadBalancerCaffeineWarnLogger - [logWarning,83] - Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+19:02:58.571 [main] INFO  o.s.b.a.e.w.EndpointLinksResolver - [<init>,58] - Exposing 1 endpoint(s) beneath base path '/actuator'
+19:02:58.699 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Starting ProtocolHandler ["http-nio-10241"]
+19:02:58.715 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [start,220] - Tomcat started on port(s): 10241 (http) with context path ''
+19:02:58.735 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+19:02:58.735 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+19:02:59.522 [main] INFO  c.a.c.n.r.NacosServiceRegistry - [register,76] - nacos registry, cms-project cms-auth 192.168.159.1:10241 register finished
+19:03:01.556 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
+19:03:01.575 [main] INFO  c.c.a.CmsAuthApplication - [logStarted,61] - Started CmsAuthApplication in 24.8 seconds (JVM running for 26.641)
+19:03:01.598 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-auth.yml, group=cms-project
+19:03:01.599 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-auth, group=cms-project
+19:03:01.612 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-auth-guoA.yml, group=cms-project
+19:03:03.104 [RMI TCP Connection(3)-10.8.0.20] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+19:03:03.106 [RMI TCP Connection(3)-10.8.0.20] INFO  o.s.w.s.DispatcherServlet - [initServletBean,525] - Initializing Servlet 'dispatcherServlet'
+19:03:03.110 [RMI TCP Connection(3)-10.8.0.20] INFO  o.s.w.s.DispatcherServlet - [initServletBean,547] - Completed initialization in 3 ms
