@@ -9,26 +9,26 @@ spring:
     name: cms-system
   profiles:
     # 环境配置
-    active: guoA
+    active: guotest
   cloud:
     nacos:
       # 服务注册、配置拉取地址
-      server-addr: 10.8.0.99:8848
+      server-addr: 172.20.0.7:8848
       discovery:
-        namespace: guoA
+        namespace: guotest
         group: cms-project
         username: guoDev
         password: QuJi@21612002.
       config:
-        namespace: guoA
+        namespace: guotest
         group: cms-project
         # 配置文件格式
         file-extension: yml
         # 共享配置
         shared-configs:
-          - data-id: application-guoA.yml
+          - data-id: application-guotest.yml
             group: cms-project
-            namespace: guoA
+            namespace: guotest
         # nacos的用户名和密码
         username: guoDev
         password: QuJi@21612002.
