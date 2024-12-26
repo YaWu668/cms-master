@@ -388,8 +388,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         JSONArray array = JSONUtil.parseArray(project.getConcludeUrl());
         List<String> concludeUrl = JSONUtil.toList(array, String.class);
         //todo 申请文件改话,这里也要改
-        projectVo.setConcludeurl(concludeUrl)
-                .setMaterialsurl(project.getMaterialsUrl());
+        projectVo.setConcludeUrl(concludeUrl)
+                .setMaterialsUrl(project.getMaterialsUrl());
 
     }
 
@@ -462,7 +462,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         List<StudnetApplys> studnetApplys = studnetApplysService.list(Wrappers.<StudnetApplys>lambdaQuery()
                 .eq(StudnetApplys::getProjectId, project.getProjectId()));
         List<TeacherApplys> teacherApplys = teacherApplysService.list(Wrappers.<TeacherApplys>lambdaQuery()
-                .eq(TeacherApplys::getProjectId, project));
+                .eq(TeacherApplys::getProjectId, project.getProjectId()));
         //2.判断是不是有学生和老师
         if(studnetApplys.size() == 0 || teacherApplys.size() == 0){
             throw new ServiceException("该项目没有学生或老师报名,出现该情况请联系管理员",403);

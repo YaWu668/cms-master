@@ -5,19 +5,19 @@ spring:
     name: cms-auth
   profiles:
     # 环境配置
-    active: guotest
+    active: guoA
   cloud:
     nacos:
       # 服务注册、配置拉取地址
       server-addr: 172.20.0.7:8848
       discovery:
-        namespace: guotest # todo 开发时候,这里特殊根据自己配置的命名空间来进行填写
+        namespace: guoA # todo 开发时候,这里特殊根据自己配置的命名空间来进行填写
         group: cms-project
         # nacos的用户名和密码
         username: guoDev
         password: QuJi@21612002.
       config:
-        namespace: guotest
+        namespace: guoA
         group: cms-project
         # 配置文件格式
         file-extension: yml

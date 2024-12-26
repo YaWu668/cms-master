@@ -21,7 +21,7 @@ public class DetailProjectVo {
     /**
      * 结题文件
      */
-    private List<String> concludeurl;
+    private List<String> concludeUrl;
     /**
      * 基本情况
      */
@@ -33,7 +33,7 @@ public class DetailProjectVo {
     /**
      * 项目附加的URL地址, 提交只能提交压缩包
      */
-    private String materialsurl;
+    private String materialsUrl;
     /**
      * 成员和老师
      */
