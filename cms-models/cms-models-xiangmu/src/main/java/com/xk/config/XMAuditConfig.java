@@ -30,12 +30,16 @@ public class XMAuditConfig {
      */
     private final DictDataService dictDataService;
 
+
     /**
      * 不同类型的项目审核流程配置<br>
      * key: 项目类型（与字典数值对应）<br>
      * value: 审核流程列表
      */
     private Map<Long, List<AuditRole>> projectAuditTypes;
+
+
+
 
     /**
      *  数组元素对象的属性解释, order属性(审核顺序只能从1开始,并且order值递增为1) <br>
@@ -77,6 +81,9 @@ public class XMAuditConfig {
 
 
     }
+
+
+
 
     /**
      * 校验projectAuditTypes的value集合的的order是否从1开始,并且order值递增为1

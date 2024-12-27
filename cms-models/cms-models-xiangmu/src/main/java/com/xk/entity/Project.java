@@ -163,6 +163,4 @@ public class Project  {
     @TableLogic(value = "0", delval = "1")
     private Integer delFlag;
 
-
-
 }

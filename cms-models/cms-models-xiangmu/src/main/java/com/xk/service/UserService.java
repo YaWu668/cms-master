@@ -1,6 +1,7 @@
 package com.xk.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.xk.domain.vo.detail.Student;
 import com.xk.entity.User;
 
 
@@ -11,6 +12,7 @@ import com.xk.entity.User;
  * @since 2024-12-05 01:00:12
  */
 public interface UserService extends IService<User> {
+
 
 }
 

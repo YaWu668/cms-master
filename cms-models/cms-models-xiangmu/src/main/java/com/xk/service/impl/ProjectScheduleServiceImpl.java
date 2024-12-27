@@ -36,7 +36,7 @@ public class ProjectScheduleServiceImpl extends ServiceImpl<ProjectScheduleMappe
         LambdaQueryWrapper<ProjectSchedule> queryWrapper = new LambdaQueryWrapper<ProjectSchedule>()
                 .eq(ProjectSchedule::getProjectId, projectId);
         List<ProjectSchedule> list = this.list(queryWrapper);
-        if(list == null || list.size() > 0){
+        if(list == null || list.size() <= 0){
             throw new ServiceException("项目id:"+projectId+"的项目进度记录表(ProjectSchedule)表不存在,表示当前项目不存在,先初始化项目再初始化进度记录表",400);
         }
         return list;
