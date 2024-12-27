@@ -16,12 +16,10 @@ import com.cms.common.security.utils.SecurityUtils;
 import com.xk.config.*;
 import com.xk.constant.ProjectConstant;
 import com.xk.constant.RoleConstant;
-import com.xk.domain.dto.ApplyForDTO;
-import com.xk.domain.dto.ApplyForStudent;
-import com.xk.domain.dto.ApplyForTeacher;
-import com.xk.domain.dto.ProjectAuditDto;
+import com.xk.domain.dto.*;
 
 import com.xk.domain.vo.detail.*;
+import com.xk.domain.vo.student.StudentProjectVo;
 import com.xk.entity.*;
 import com.xk.mapper.ProjectMapper;
 import com.xk.mapper.StudnetApplysMapper;
@@ -224,6 +222,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * @return
      */
     @Override
+    @Transactional
     public Response getStudentProjectList(int currentPage,int pageSize) {
         //当前登录用户ID
         Long userId = SecurityUtils.getLoginUser().getUserid();
@@ -240,13 +239,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                             .or()
                             .eq(Project::getCreateBy,userId) // 创建字段的id是否为当前用户id
                     );
-
-
-
-
-            IPage<Project> projectList = page(page, queryWrapper);
-
-            return Response.success(projectList,"获取学生参与项目以及报名项目成功！");
+            // IPage<Project> projectList = page(page, queryWrapper);
+            Page<Project> projectPage = page(page,queryWrapper);
+            return Response.success(PageDTO.of(projectPage,StudentProjectVo.class),"获取学生参与项目以及报名项目成功！");
         }catch (Exception e){
             throw new ServiceException("查询用户当前参与项目失败",502);
         }
@@ -257,6 +252,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * @return
      */
     @Override
+    @Transactional
     public Response getStudentResponsibleProjectList() {
         //当前登录用户ID
         Long userId = SecurityUtils.getLoginUser().getUserid();
@@ -330,15 +326,19 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
         //创建分页对象
         Page<Project> page = new Page<>(currentPage, pageSize);
+
+
+
         try{
             LambdaQueryWrapper<Project> queryWrapper = Wrappers.<Project>lambdaQuery()
                     .eq(Project::getDelFlag,0)//是否删除
                     .eq(Project::getCreateBy,userId); // 项目创建者ID是否为当前登录用户ID
 
             //  执行分页查询
-            IPage<Project> projectList = page(page,queryWrapper);
+            Page<Project> projectList = page(page,queryWrapper);
+
             //List<Project> projectList = list(queryWrapper);
-            return Response.success(projectList,"获取学生创建项目成功！");
+            return Response.success(PageDTO.of(projectList,StudentProjectVo.class),"获取学生创建项目成功！");
         }catch (Exception e){
             throw new ServiceException("查询学生当前创建项目失败",502);
         }
@@ -427,6 +427,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         Expenditure expenditure = BeanCopyUtils.copyBean(project, Expenditure.class);
         return expenditure;
     }
+
+
 
 
 
@@ -568,6 +570,33 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return true;
     }
 
+    /**
+     * 获取当前绑定的项目中某个学生的项目列表
+     * @param currentPage 页码
+     * @param pageSize 单页大小
+     * @param StudentId 学生id
+     * @return
+     */
+    @Override
+    public Response getStudentProjectList(int currentPage, int pageSize, Long StudentId) {
+        // 当前登录用户
+        Long user_id = SecurityUtils.getLoginUser().getUserid();
+
+        // 创建分页对象
+        Page<Project> page = new Page<>(currentPage, pageSize);
+
+        LambdaQueryWrapper<Project> queryWrapper = Wrappers.<Project>lambdaQuery()
+                .eq(Project::getDelFlag,0)//是否删除
+                .and(wq -> wq
+                        .apply("JSON_CONTAINS(member_id, '["+user_id.toString()+"]')") //
+                );
+        Page<Project> projectPage = page(page,queryWrapper);
+
+
+
+
+        return Response.success(PageDTO.of(projectPage,StudentProjectVo.class),"获取学生项目成功");
+    }
 
 
     /**
