@@ -49,63 +49,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public PageDTO<UserListVo> getUserList(InquireUserDto inquireUserDto) {
         //查询全部用户的数据，如果有查询条件，则根据条件查询
         Page<User> page = inquireUserDto.toMpPageDefaultSortByCreateTimeDesc();
-
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        System.out.println(inquireUserDto.getUserName());
         queryWrapper
                 .like(StringUtils.isNotBlank(inquireUserDto.getUserName()), User::getUserName, inquireUserDto.getUserName())
                 .like(StringUtils.isNotBlank(inquireUserDto.getNickName()), User::getNickName, inquireUserDto.getNickName())
                 .eq(User::getStatus, 0);
-        IPage<User> resultPage = this.page(page, queryWrapper);
-
         // 获取查询结果
-        List<User> userList = resultPage.getRecords();
+        List<User> userList = this.list(queryWrapper);
+        System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         List<Long> userIdList = userList.stream()
                 .map(User::getUserId)
                 .collect(Collectors.toList());
+        System.out.println(userIdList);
+        List<Long> noStudentListIds =  userRoleService.isStudent(userIdList);
+        System.out.println("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
+        LambdaQueryWrapper<User> queryWrapper_user = new LambdaQueryWrapper<>();
+        System.out.println("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
+        queryWrapper_user
+                .in(User::getUserId, noStudentListIds);
+        this.page(page, queryWrapper_user);
+        System.out.println("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+        return PageDTO.of(page, UserListVo.class);
 
-        Map<Long, List<UserRole>> userRoleMap = userRoleService.getUserRolesByUserIds(userIdList);
-
-        // 检查所有 user 是否全为学生
-        boolean allRoleIdsAre102 = userRoleMap.values().stream()
-                .allMatch(roles -> roles.stream().allMatch(role -> role.getRoleId() == 102));
-
-        // 根据检查结果进行相应的处理
-        if (allRoleIdsAre102) {
-            // 所有 role_id 都是 102
-            List<UserListVo> emptyUserListVoList = Collections.emptyList();
-            throw new ServiceException("查询不存在老师",444);
-        } else {
-            // 存在 role_id 不是 102
-            // 优先排序老师
-            List<User> sortedUserList = userList.stream()
-                    .sorted((u1, u2) -> {
-                        List<UserRole> roles1 = userRoleMap.getOrDefault(u1.getUserId(), Collections.emptyList());
-                        List<UserRole> roles2 = userRoleMap.getOrDefault(u2.getUserId(), Collections.emptyList());
-
-                        boolean isTeacher1 = roles1.stream().anyMatch(role -> role.getRoleId() == 103);
-                        boolean isTeacher2 = roles2.stream().anyMatch(role -> role.getRoleId() == 103);
-
-                        if (isTeacher1 && !isTeacher2) {
-                            return -1; // u1 是老师，u2 不是老师
-                        } else if (!isTeacher1 && isTeacher2) {
-                            return 1; // u1 不是老师，u2 是老师
-                        } else {
-                            return 0; // 都是老师或都不是老师，按默认顺序
-                        }
-                    })
-                    .collect(Collectors.toList());
-
-            System.out.println("111111111111111111111111111111111"+sortedUserList);
-            // 转换为 UserListVo
-            List<UserListVo> userListVoList = sortedUserList.stream()
-                    .map(user -> BeanCopyUtils.copyBean(user, UserListVo.class))
-                    .collect(Collectors.toList());
-
-            return new PageDTO<>(page.getTotal(), page.getPages(), userListVoList);
         }
     }
 
-
-}
 

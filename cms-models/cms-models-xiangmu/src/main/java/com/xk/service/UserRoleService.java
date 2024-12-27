@@ -11,12 +11,8 @@ import java.util.Map;
  * 用户和角色关联表服务接口
  */
 public interface UserRoleService extends IService<UserRole> {
+    List<Long> isStudent(List<Long> userIdList);
 
 
-    /**
-     * id列表
-     * @param userIds
-     * @return
-     */
-    Map<Long, List<UserRole>> getUserRolesByUserIds(List<Long> userIds);
+//    Map<Long, List<UserRole>> getUserRolesByUserIds(List<Long> userIds);
 }
