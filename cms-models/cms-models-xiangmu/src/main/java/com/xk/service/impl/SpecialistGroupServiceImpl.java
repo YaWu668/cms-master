@@ -45,7 +45,7 @@ public class SpecialistGroupServiceImpl extends ServiceImpl<SpecialistGroupMappe
                     return Response.success();
                 }
 
-                throw new ServiceException("专家组未启用",445);
+                throw new ServiceException("专家组未启用",444);
 
             default:
                 throw new ServiceException("字典错误", 444);
@@ -75,6 +75,7 @@ public class SpecialistGroupServiceImpl extends ServiceImpl<SpecialistGroupMappe
         update(specialistGroup, updateWrapper);
     }
 
+    //校验除了自身外要更改的名字是否重复
     private void newIsNameNull(String name,Long id) {
         boolean outcome = lambdaQuery()
                 .ne(SpecialistGroup::getSpecialistGroupId, id)

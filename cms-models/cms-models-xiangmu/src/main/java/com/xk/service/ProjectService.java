@@ -10,6 +10,8 @@ import com.xk.domain.dto.ProjectAuditDto;
 import com.xk.domain.dto.ProjectSelectDto;
 import com.xk.domain.vo.detail.DetailProjectVo;
 import com.xk.domain.vo.project.ProjectListvo;
+
+import com.xk.domain.vo.detail.DetailProjectVo;
 import com.xk.entity.Project;
 
 import java.util.List;

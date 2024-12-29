@@ -1,6 +1,8 @@
 package com.xk.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.cms.common.core.web.domain.Response;
+import com.xk.domain.dto.AddSpecialistUserDTO;
 import com.xk.entity.SpecialistData;
 
 import java.util.List;
@@ -19,5 +21,11 @@ public interface SpecialistDataService extends IService<SpecialistData> {
      */
     List<Long> getSpecialistIdByUserId();
 
+    /**
+     * 添加专家组人员
+     * @param addSpecialistUserDTO
+     * @return
+     */
+    Response addSpecialistUser(AddSpecialistUserDTO addSpecialistUserDTO);
 }
 

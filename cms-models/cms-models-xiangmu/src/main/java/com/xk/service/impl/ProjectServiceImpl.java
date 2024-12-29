@@ -23,6 +23,12 @@ import com.xk.domain.vo.api.UserInfoVo;
 import com.xk.domain.vo.detail.*;
 import com.xk.domain.vo.project.ProjectListvo;
 import com.xk.domain.vo.student.StudentProjectVo;
+import com.xk.domain.dto.ApplyForDTO;
+import com.xk.domain.dto.ApplyForStudent;
+import com.xk.domain.dto.ApplyForTeacher;
+import com.xk.domain.dto.ProjectAuditDto;
+
+import com.xk.domain.vo.detail.*;
 import com.xk.entity.*;
 import com.xk.mapper.ProjectMapper;
 import com.xk.mapper.StudnetApplysMapper;
@@ -38,6 +44,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -232,7 +242,6 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * @return
      */
     @Override
-    @Transactional
     public Response getStudentProjectList(int currentPage,int pageSize) {
         //当前登录用户ID
         Long userId = SecurityUtils.getLoginUser().getUserid();
@@ -262,7 +271,6 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * @return
      */
     @Override
-    @Transactional
     public Response getStudentResponsibleProjectList() {
         //当前登录用户ID
         Long userId = SecurityUtils.getLoginUser().getUserid();
@@ -437,8 +445,6 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         Expenditure expenditure = BeanCopyUtils.copyBean(project, Expenditure.class);
         return expenditure;
     }
-
-
 
 
 
