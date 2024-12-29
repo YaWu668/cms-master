@@ -105,6 +105,16 @@ public interface ProjectService extends IService<Project> {
      */
     boolean canExpertReviewProject(Long projectId);
 
+
+    /**
+     * 获取名下的某个学生的项目列表
+     * @param currentPage 页码
+     * @param pageSize 单页大小
+     * @param StudentId 学生id
+     * @return 学生列表响应数据
+     */
+    Response getStudentProjectList(int currentPage,int pageSize, Long StudentId);
+
     /**
      *  项目列表,全角色
      * @param projectSelectDto
