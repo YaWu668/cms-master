@@ -21,5 +21,12 @@ public interface CollegeGroupService extends IService<CollegeGroup> {
      * @return
      */
     Response<List<collegeListDto>> collegeList(String name);
+
+    /**
+     * 根据id集查询学院组列表
+     * @param ids id集
+     * @return 学院组列表
+     */
+    List<CollegeGroup> selectByIds(List<Long> ids);
 }
 

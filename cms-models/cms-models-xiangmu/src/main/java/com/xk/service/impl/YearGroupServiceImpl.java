@@ -16,6 +16,7 @@ import com.xk.utils.BeanCopyUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -81,6 +82,16 @@ public class YearGroupServiceImpl extends ServiceImpl<YearGroupMapper, YearGroup
                 .like(name != null && name.length() > 0, YearGroup::getName, name)
                 .orderByDesc(YearGroup::getCreateTime);
         return this.list(yearGroupLambdaQueryWrapper);
+    }
+
+    @Override
+    public List<YearGroup> selectBatchyearGroupIds(List<Long> ids) {
+        List<Long> list = ids.stream()
+                .distinct()
+                .collect(Collectors.toList());
+        return this.lambdaQuery()
+                .in(YearGroup::getYearGroupId, list)
+                .list();
     }
 }
 

@@ -4,10 +4,15 @@ package com.xk.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cms.common.core.web.domain.Response;
 import com.xk.domain.dto.ApplyForDTO;
+import com.xk.domain.dto.PageDTO;
 import com.xk.domain.dto.ProjectAuditDto;
 
+import com.xk.domain.dto.ProjectSelectDto;
 import com.xk.domain.vo.detail.DetailProjectVo;
+import com.xk.domain.vo.project.ProjectListvo;
 import com.xk.entity.Project;
+
+import java.util.List;
 
 /**
  * 项目表(Project)表服务接口
@@ -99,5 +104,51 @@ public interface ProjectService extends IService<Project> {
      * @return
      */
     boolean canExpertReviewProject(Long projectId);
+
+    /**
+     *  项目列表,全角色
+     * @param projectSelectDto
+     * @return 项目列表(分页)
+     */
+    PageDTO<ProjectListvo> getProjectList(ProjectSelectDto projectSelectDto);
+
+    /**
+     * 查询学生(当前用户)项目列表(分页),<br>
+     * ps:这个被调用的方法,前缀条件需要自己判断
+     * @param projectSelectDto 查询条件
+     * @return 项目列表(分页)
+     */
+    PageDTO<ProjectListvo> getProjectListByStudent(ProjectSelectDto projectSelectDto);
+
+    /**
+     * 查询老师的学生项目列表(分页),<br>
+     * ps:这个被调用的方法,前缀条件需要自己判断
+     * @param projectSelectDto 查询条件
+     * @return 项目列表(分页)
+     */
+    PageDTO<ProjectListvo> getProjectListByTeacher(ProjectSelectDto projectSelectDto);
+
+    /**
+     * 查询学院(当前用户)项目列表(分页),<br>
+     * ps:这个被调用的方法,前缀条件需要自己判断
+     * @param projectSelectDto 查询条件
+     * @return 项目列表(分页)
+     */
+    PageDTO<ProjectListvo> getProjectListByCollege(ProjectSelectDto projectSelectDto);
+
+    /**
+     * 查询专家(当前用户)项目列表(分页),<br>
+     * ps:这个被调用的方法,前缀条件需要自己判断
+     * @param projectSelectDto 查询条件
+     * @return 项目列表(分页)
+     */
+    PageDTO<ProjectListvo> getProjectListBySpecialist(ProjectSelectDto projectSelectDto);
+
+    /**
+     * 查询项目(管理员可以查看全部)
+     * @param projectSelectDto 查询条件
+     * @return 项目列表
+     */
+    PageDTO<ProjectListvo> getProjectListByAdmin(ProjectSelectDto projectSelectDto);
 }
 

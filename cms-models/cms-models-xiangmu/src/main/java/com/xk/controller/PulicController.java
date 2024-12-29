@@ -3,15 +3,15 @@ package com.xk.controller;
 import com.cms.common.core.web.domain.Response;
 import com.cms.common.log.annotation.Log;
 import com.cms.common.log.enums.BusinessType;
-import com.xk.domain.dto.ProjectAuditDto;
-import com.xk.domain.dto.collegeListDto;
+import com.xk.domain.dto.*;
 
-import com.xk.domain.dto.yearListDTO;
 import com.xk.domain.vo.detail.DetailProjectVo;
+import com.xk.domain.vo.project.ProjectListvo;
 import com.xk.service.CollegeGroupService;
 import com.xk.service.ProjectService;
 import com.xk.service.YearGroupService;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -82,11 +82,25 @@ public class PulicController {
      */
     @Log(title = "根据项目id查询项目详细信息", businessType = BusinessType.OTHER)
     @GetMapping("/project/{id}/{type}")
+    @Validated
     public Response<DetailProjectVo> getProjectById(@Valid
                                                     @PathVariable("id") @NotNull(message = "项目id为null") Long id,
                                                     @PathVariable("type") @NotNull(message = "项目查询类型不能为null")
-                                                    @Pattern(regexp = "^[1-5]$", message = "项目查询类型只能为1-5") String type) {
-        return projectService.getProjectById(id, Long.valueOf(type));
+                                                    @Range(min = 1, max = 5, message = "项目查询类型范围1-5") Long type) {
+        return projectService.getProjectById(id, type);
     }
+
+
+    /**
+     * 获取项目列表,全角色通用
+     * @param projectSelectDto
+     * @return
+     */
+    @GetMapping("/list")
+    @Log(title = "获取项目列表(全角色)", businessType = BusinessType.OTHER)
+    public Response<PageDTO<ProjectListvo>> getProjectList(ProjectSelectDto projectSelectDto) {
+        return Response.success(projectService.getProjectList(projectSelectDto));
+    }
+
 
 }

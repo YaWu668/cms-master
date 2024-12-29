@@ -20,7 +20,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @NoArgsConstructor
 @TableName("xm_specialist_data")
 public class SpecialistData  {
-    //专家人员id@TableId
+    //专家人员id
+    @TableId
     private Long specialistDataId;
 
     //专家组的id

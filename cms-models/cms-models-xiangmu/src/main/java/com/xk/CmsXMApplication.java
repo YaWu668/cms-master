@@ -7,9 +7,14 @@ import com.cms.common.swagger.annotation.EnableCustomSwagger2;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @EnableCustomConfig
-@EnableRyFeignClients
+@EnableFeignClients(basePackages = {
+        "com.xk.client",
+        "com.cms.system.api"
+})
+
 @MapperScan("com.xk.mapper")
 @SpringBootApplication
 public class CmsXMApplication {

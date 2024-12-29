@@ -35,7 +35,14 @@ public class PageDTO<T> {
      */
     private List<T> list;
 
-
+    /**
+     * 返回空分页结果
+     * @return VO的分页对象
+     * @param <V> 目标VO类型
+     */
+    public static <V> PageDTO<V> empty() {
+        return new PageDTO<>(0L, 0L, Collections.emptyList());
+    }
     /**
      * 返回空分页结果
      * @param p MybatisPlus的分页结果
@@ -88,4 +95,5 @@ public class PageDTO<T> {
         // 3.封装返回
         return new PageDTO<>(p.getTotal(), p.getPages(), vos);
     }
+
 }

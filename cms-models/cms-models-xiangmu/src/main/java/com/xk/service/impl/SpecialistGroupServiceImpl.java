@@ -11,6 +11,10 @@ import com.xk.service.SpecialistGroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service("SpecialistGroupService")
 public class SpecialistGroupServiceImpl extends ServiceImpl<SpecialistGroupMapper, SpecialistGroup> implements SpecialistGroupService {
     @Override
@@ -48,6 +52,15 @@ public class SpecialistGroupServiceImpl extends ServiceImpl<SpecialistGroupMappe
         }
 
 
+    }
+
+    @Override
+    public List<SpecialistGroup> selectByIds(List<Long> ids) {
+        // 去重
+        List<Long> list = ids.stream().distinct().collect(Collectors.toList());
+        return lambdaQuery()
+                .in(SpecialistGroup::getSpecialistGroupId, list)
+                .list();
     }
 
     public void newUpdateSpecialistGroup(SpecialistGroup specialistGroup) {

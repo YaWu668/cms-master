@@ -3,6 +3,7 @@ package com.xk.entity;
 import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +19,7 @@ import lombok.NoArgsConstructor;
 @TableName("xm_specialist_group")
 public class SpecialistGroup {
     //专家组的id
+    @TableId
     private Long specialistGroupId;
 
     //专家组的名称

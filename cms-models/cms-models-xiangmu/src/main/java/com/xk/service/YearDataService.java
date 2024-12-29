@@ -19,5 +19,7 @@ public interface YearDataService extends IService<YearData> {
      * @return 年度数据
      */
     List<YearData> selectBatchyearGroupIds(List<Long> yearGroupIds);
+
+
 }
 

@@ -10,7 +10,7 @@ spring:
   profiles:
     # 环境配置
     active: guoA   # 开发环境使用:XMdev
-#   active: XMtest  #测试环境使用:XMtest
+  #   active: XMtest  #测试环境使用:XMtest
   cloud:
     nacos:
       # 服务注册、配置拉取地址
@@ -18,7 +18,7 @@ spring:
       # 注册中心配置,作用: 1.服务发现 2.配置中心
       discovery:
         namespace: guoA # todo 开发环境使用:XMdev  ****这里开发的空间每个人都不一样根据自己的分配的来设置***
-#         namespace: XMtest #测试环境使用:XMtest
+        #         namespace: XMtest #测试环境使用:XMtest
         group: cms-project
         username: guoDev
         password: QuJi@21612002.
@@ -32,14 +32,9 @@ spring:
         # 共享配置
         shared-configs:
           - data-id: applicationXM-guoA.yml # 开发环境使用:applicationXM-XMdev.yml
-#            data-id: applicationXM-XMtest.yml #测试环境使用:applicationXM-XMtest.yml
+            #            data-id: applicationXM-XMtest.yml #测试环境使用:applicationXM-XMtest.yml
             group: cms-project
             namespace: guoA # 开发环境使用:XMdev
-#            namespace: XMtest #测试环境使用:XMtest
+        #            namespace: XMtest #测试环境使用:XMtest
         username: guoDev
         password: QuJi@21612002.
-
-
-
-
-

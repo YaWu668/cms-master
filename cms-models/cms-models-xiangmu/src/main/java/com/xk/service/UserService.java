@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.xk.domain.vo.detail.Student;
 import com.xk.entity.User;
 
+import java.util.List;
+
 
 /**
  * 用户信息表(User)表服务接口
@@ -13,6 +15,12 @@ import com.xk.entity.User;
  */
 public interface UserService extends IService<User> {
 
+    /**
+     * 根据用户id集合查询用户信息
+     * @param userIds 用户id集合
+     * @return 用户信息集合
+     */
+    List<User> selectByUserIds(List<Long> userIds);
 
 }
 

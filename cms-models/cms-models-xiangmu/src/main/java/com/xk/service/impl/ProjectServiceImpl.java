@@ -13,15 +13,15 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cms.common.core.exception.ServiceException;
 import com.cms.common.core.web.domain.Response;
 import com.cms.common.security.utils.SecurityUtils;
+import com.xk.client.SysUserClient;
 import com.xk.config.*;
 import com.xk.constant.ProjectConstant;
 import com.xk.constant.RoleConstant;
-import com.xk.domain.dto.ApplyForDTO;
-import com.xk.domain.dto.ApplyForStudent;
-import com.xk.domain.dto.ApplyForTeacher;
-import com.xk.domain.dto.ProjectAuditDto;
+import com.xk.domain.dto.*;
 
+import com.xk.domain.vo.api.UserInfoVo;
 import com.xk.domain.vo.detail.*;
+import com.xk.domain.vo.project.ProjectListvo;
 import com.xk.entity.*;
 import com.xk.mapper.ProjectMapper;
 import com.xk.mapper.StudnetApplysMapper;
@@ -36,10 +36,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -130,6 +127,16 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     private final AuditOpinionService auditOpinionService;
     private final StudnetApplysMapper studnetApplysMapper;
     private final TeacherApplysMapper teacherApplysMapper;
+
+    /**
+     * 用户客户端
+     */
+    private final SysUserClient sysUserClient;
+
+    /**
+     * 专家组服务
+     */
+    private final SpecialistGroupService specialistGroupService;
 
     /**
      * 申请项目
@@ -568,6 +575,326 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return true;
     }
 
+    @Override
+    public PageDTO<ProjectListvo> getProjectList(ProjectSelectDto projectSelectDto) {
+        //1.判断用户输入角色标识符,是否正确,字典其他数据校验
+        if( !projectSelectDto.isRole()){
+            throw new ServiceException("用户输入角色标识符不正确",400);
+        }
+        ivalidateProjectSelectDtoConfig(projectSelectDto);
+        //2.用户信息
+        UserInfoVo data = sysUserClient.getUserInfo().getData();
+        //3.获取用户角色列表
+        Set<String> roles = data.getRoles(
+        );
+        //4.判断用户是否有输入角色,根据角色来查询
+        PageDTO<ProjectListvo> pageDTO = null;
+        if(roles.contains(ProjectConstant.ROLE_STUDENT) && projectSelectDto.getRole().equals(ProjectConstant.ROLE_STUDENT)){
+            //4.1 学生只能返回自己或者自己参加的
+            pageDTO = this.getProjectListByStudent(projectSelectDto);
+        }else if(roles.contains(ProjectConstant.ROLE_TEACHER) && projectSelectDto.getRole().equals(ProjectConstant.ROLE_TEACHER)){
+            //4.2老师只能返回自己学学生的
+            pageDTO = this.getProjectListByTeacher(projectSelectDto);
+        }else if(roles.contains(ProjectConstant.ROLE_COLLEGE) && projectSelectDto.getRole().equals(ProjectConstant.ROLE_COLLEGE) ){
+            //4.3 学院只能返回自己学院的,
+            pageDTO = this.getProjectListByCollege(projectSelectDto);
+        }else if(roles.contains(ProjectConstant.ROLE_SPECIALIST) && projectSelectDto.getRole().equals(ProjectConstant.ROLE_SPECIALIST)){
+            //4.4专家组只能返回自己专家组的
+            pageDTO = this.getProjectListBySpecialist(projectSelectDto);
+        }else if(roles.contains(ProjectConstant.ROLE_ADMIN) && projectSelectDto.getRole().equals(ProjectConstant.ROLE_ADMIN)){
+            //4.5管理员可以查看所有
+            pageDTO = this.getProjectListByAdmin(projectSelectDto);
+        }else {
+            throw new ServiceException("用户没有访问权限",400);
+        }
+        //非空处理
+        if (pageDTO == null) {
+            pageDTO = PageDTO.empty();
+        }
+        return pageDTO;
+    }
+
+    /**
+     * 项目列表的字典类型校验
+     * @param projectSelectDto
+     */
+    private void ivalidateProjectSelectDtoConfig(ProjectSelectDto projectSelectDto) {
+        if(projectSelectDto.getProjectRank() != null //项目级别 1:国家
+                && !checkDictData(projectSelectDto.getProjectRank(),"xm_project_rank")){
+            throw new ServiceException("项目级别字典值不存在",400);
+        }
+        if(projectSelectDto.getState() != null //项目状态 0:未审核  1:审核中
+            && !checkDictData(projectSelectDto.getState(),"xm_project_state")){
+            throw new ServiceException("项目状态字典值不存在",400);
+        }
+        if(projectSelectDto.getSubjectCategory() != null //学科类别 1:工科
+            && !checkDictData(projectSelectDto.getSubjectCategory(),"xm_item_subject_category")){
+            throw new ServiceException("学科类别字典值不存在",400);
+        }
+        if(projectSelectDto.getType() != null //项目类型 1:创新训练项目
+            && !checkDictData(projectSelectDto.getType(),"xm_item_type")){
+            throw new ServiceException("项目类型字典值不存在",400);
+        }
+        if(projectSelectDto.getYearGroupId() != null
+                && yearGroupService.getById(projectSelectDto.getYearGroupId()) == null){
+            throw new ServiceException("年度id不存在",400);
+        }
+    }
+
+    @Override
+    public PageDTO<ProjectListvo> getProjectListByStudent(ProjectSelectDto projectSelectDto) {
+        //1.获取学生获取自己报名的项目id
+        List<Long> userApplyListId = studnetApplysService.getUserApplyListId();
+        //2.根据项目id查询项目和多条件分页搜索
+        Page<Project> page = projectSelectDto.toMpPageDefaultSortByCreateTimeDesc();
+        // 3. 构造查询条件
+        LambdaQueryWrapper<Project> queryWrapper = getProjectLambdaQueryWrapper(projectSelectDto, userApplyListId,null, null,false);//学生
+        this.page(page, queryWrapper);
+        //4.转变为vo
+        PageDTO<ProjectListvo> pageDTO = pageResultToVo(page);
+        return pageDTO;
+    }
+
+    /**
+     * 设置学院名称
+     * @param collegeGroupIds 学院组的id
+     * @param projectListvo vo集合
+     */
+    private void projectListVoSetCollegeGroupName(List<Long> collegeGroupIds, List<ProjectListvo> projectListvo) {
+        //1.根据学院id获取学院集合
+        List<CollegeGroup> collegeGroupList = collegeGroupService.selectByIds(
+                collegeGroupIds
+                        .stream()
+                        .distinct()
+                        .collect(Collectors.toList())
+        );
+        //2.给每个vo进行匹配一个学院名称
+        projectListvo
+                .stream()
+                .forEach(projectvo->{
+                    //2.根据学院id匹配,只需要一个即可
+                    collegeGroupList.stream()
+                            .filter(collegeGroup -> collegeGroup.getCollegeGroupId().equals(projectvo.getCollegeGroupId()))
+                            .limit(1)
+                            .forEach(collegeGroup -> {
+                                projectvo.setCollegeGroupName(collegeGroup.getName());
+                            });
+                });
+    }
+
+    @Override
+    public PageDTO<ProjectListvo> getProjectListByTeacher(ProjectSelectDto projectSelectDto) {
+        //1.查询老师报名想项目列表,就知道老师学生的项目列表(实际老师参加的项目)
+        List<Long> listId = teacherApplysService.getUserApplyListId();
+        //2.根据项目id查询项目和多条件分页搜索
+        Page<Project> page = projectSelectDto.toMpPageDefaultSortByCreateTimeDesc();
+        // 3. 构造查询条件
+        LambdaQueryWrapper<Project> queryWrapper = getProjectLambdaQueryWrapper(projectSelectDto, listId,null, null,false);//老师
+        this.page(page, queryWrapper);
+        //4.转变为vo
+        PageDTO<ProjectListvo> pageDTO = pageResultToVo(page);
+        return pageDTO;
+    }
+
+    private PageDTO<ProjectListvo> pageResultToVo(Page<Project> page) {
+        ArrayList<Long> userIds = new ArrayList<>();//存储查询出来的用户id
+        ArrayList<Long> specialistIds = new ArrayList<>();//专家组id
+        ArrayList<Long> collegeGroupIds = new ArrayList<>();//学院组id
+        ArrayList<Long> yearGroupId = new ArrayList<>(); //年度id
+        //拷贝常用字段
+        PageDTO<ProjectListvo> pageDTO = PageDTO.of(page, project -> {
+            ProjectListvo projectVo = BeanCopyUtils.copyBean(project, ProjectListvo.class);
+            userIds.add(project.getUserId());//用户id
+            specialistIds.add(project.getSpecialistGroupId());//专家组id
+            collegeGroupIds.add(project.getCollegeGroupId()); //学院组id
+            yearGroupId.add(project.getYearGroupId());
+            return projectVo;
+        });
+
+        //1.获取用户信息,写入vo
+        List<ProjectListvo> projectListvo = pageDTO.getList();
+        //2.写入用户名
+        projectListVoSetNickName(userIds, projectListvo);
+        //3.设置学院名称
+        projectListVoSetCollegeGroupName(collegeGroupIds, projectListvo);
+        //4.设置专家组名称
+        projectListVoSetSpecialistGroupName(specialistIds, projectListvo);
+        //5写入年度名称
+        projectListVoSetYearGroupName(yearGroupId, projectListvo);
+        return pageDTO;
+    }
+
+    private void projectListVoSetYearGroupName(ArrayList<Long> yearGroupId, List<ProjectListvo> projectListvo) {
+        //1.根据年度id获取年度集合
+        List<YearGroup> yearGroups = yearGroupService.selectBatchyearGroupIds(yearGroupId);
+
+        //2.给每个vo进行匹配一个年度名称
+        projectListvo
+                .stream()
+                .forEach(projectVo->{
+                    yearGroups.stream()
+                            .filter(yearGroup -> yearGroup.getYearGroupId().equals(projectVo.getYearGroupId()))
+                            .limit(1)
+                            .forEach(yearGroup -> {
+                                projectVo.setYearGroupName(yearGroup.getName());
+                            });
+                });
+
+    }
+
+    @Override
+    public PageDTO<ProjectListvo> getProjectListByCollege(ProjectSelectDto projectSelectDto) {
+        //1.获取当前用户的学院id
+        List<Long> collegeIdByUserId = collegeDataService.getCollegeIdByUserId();
+        //2.构造条件
+        Page<Project> page = projectSelectDto.toMpPageDefaultSortByCreateTimeDesc();
+        LambdaQueryWrapper<Project> queryWrapper = getProjectLambdaQueryWrapper(projectSelectDto, null, collegeIdByUserId, null, false);//学院
+        this.page(page, queryWrapper);
+        //4.转变为vo
+        PageDTO<ProjectListvo> pageDTO = pageResultToVo(page);
+        return pageDTO;
+    }
+
+    @Override
+    public PageDTO<ProjectListvo> getProjectListBySpecialist(ProjectSelectDto projectSelectDto) {
+        //1.获取当前用户的专家组id
+        List<Long> specialistIdByUserId = specialistDataService.getSpecialistIdByUserId();
+        //2.构建条件
+        Page<Project> page = projectSelectDto.toMpPageDefaultSortByCreateTimeDesc();
+        LambdaQueryWrapper<Project> queryWrapper = getProjectLambdaQueryWrapper(projectSelectDto, null, null, specialistIdByUserId, false);
+        this.page(page, queryWrapper);
+        PageDTO<ProjectListvo> pageDTO = pageResultToVo(page);
+        return pageDTO;
+    }
+
+    @Override
+    public PageDTO<ProjectListvo> getProjectListByAdmin(ProjectSelectDto projectSelectDto) {
+        //1.管理员可以查看全部
+        Page<Project> page = projectSelectDto.toMpPageDefaultSortByCreateTimeDesc();
+        LambdaQueryWrapper<Project> queryWrapper = getProjectLambdaQueryWrapper(projectSelectDto, null, null, null, true);
+        this.page(page, queryWrapper);
+        PageDTO<ProjectListvo> pageDTO = pageResultToVo(page);
+        return pageDTO;
+    }
+
+
+    /**
+     *  项目查询构建条件,全角色通用,
+     *  还有 userProjectListId, CollegeGroupIds, specialistGroupIds,这个三个参数只能三选一传入一个
+     * @param projectSelectDto 多条件
+     * @param userProjectListId 老师和学生进行使用,传入和自己相关的项目id
+     * @param CollegeGroupIds 学院审核员进行使用,传入用户自己的学院id
+     * @param specialistGroupIds 专家进行使用的,传入自己的专家组
+     * @param isAdmin 管理员进行使用的,不需要传入 userProjectListId, CollegeGroupIds, specialistGroupIds
+     * @return
+     */
+    private static LambdaQueryWrapper<Project> getProjectLambdaQueryWrapper(ProjectSelectDto projectSelectDto,
+                                                                            List<Long> userProjectListId,
+                                                                            List<Long> CollegeGroupIds,
+                                                                            List<Long> specialistGroupIds,
+                                                                            boolean isAdmin) {
+        LambdaQueryWrapper<Project> queryWrapper = new LambdaQueryWrapper<>();
+
+        // 判断三个集合是否三选一
+        boolean hasUserProjectListId = userProjectListId != null && !userProjectListId.isEmpty();
+        boolean hasCollegeGroupIds = CollegeGroupIds != null && !CollegeGroupIds.isEmpty();
+        boolean hasSpecialistGroupIds = specialistGroupIds != null && !specialistGroupIds.isEmpty();
+
+        int count = (hasUserProjectListId ? 1 : 0) + (hasCollegeGroupIds ? 1 : 0) + (hasSpecialistGroupIds ? 1 : 0);
+
+        //1.不是管理员
+        if(!isAdmin){
+            if (count != 1) {
+                throw new ServiceException("userProjectListId, CollegeGroupIds, specialistGroupIds只能三选一,请联系管理员",500);
+            }
+            // 根据传入的集合设置查询条件
+            if (hasUserProjectListId) {
+                queryWrapper.in(Project::getProjectId, userProjectListId);
+            } else if (hasCollegeGroupIds) {
+                queryWrapper.in(Project::getCollegeGroupId, CollegeGroupIds);
+            } else if (hasSpecialistGroupIds) {
+                queryWrapper.in(Project::getSpecialistGroupId, specialistGroupIds);
+            }
+        }else {
+            if(count != 0){
+                throw new ServiceException("isAdmin为true时,userProjectListId, CollegeGroupIds, specialistGroupIds不能同时传入,请联系管理员",500);
+            }
+        }
+
+
+        //4.多条件构建
+        queryWrapper
+                //项目名称 模糊
+                .like(StrUtil.isNotBlank(projectSelectDto.getName()), Project::getName, projectSelectDto.getName())
+                //项目级别
+                .eq(projectSelectDto.getProjectRank()!=null, Project::getProjectRank, projectSelectDto.getProjectRank())
+                //项目状态
+                .eq(projectSelectDto.getState()!=null, Project::getState, projectSelectDto.getState())
+                //学科类别
+                .eq(projectSelectDto.getSubjectCategory()!=null, Project::getSubjectCategory, projectSelectDto.getSubjectCategory())
+                //项目类型
+                .eq(projectSelectDto.getType() != null, Project::getType, projectSelectDto.getType())
+                //负责人的id
+                .eq(projectSelectDto.getUserId() != null, Project::getUserId, projectSelectDto.getUserId())
+                // 年度组 ID
+                .eq(projectSelectDto.getYearGroupId() != null, Project::getYearGroupId, projectSelectDto.getYearGroupId())
+                // 指导老师和企业老师 JSON 包含查询
+                .apply(projectSelectDto.getTeacherId() != null,
+                        "JSON_CONTAINS(teacher_id, {0}) OR JSON_CONTAINS(firm_teacher_id, {0})",
+                        projectSelectDto.getTeacherId());
+        return queryWrapper;
+    }
+
+    /**
+     * 设置项目列表(vo)的专家组名称
+     * @param specialistIds 专家组id
+     * @param projectListvo 项目列表(vo)
+     */
+    private void projectListVoSetSpecialistGroupName(ArrayList<Long> specialistIds, List<ProjectListvo> projectListvo) {
+        //1. 根据专家组id获取专家组集合
+        List<SpecialistGroup> specialistGroupList = specialistGroupService
+                .selectByIds(specialistIds
+                        .stream()
+                        .distinct()
+                        .collect(Collectors.toList()));
+        //2. 给每个vo进行匹配一个专家组名称
+        projectListvo.stream()
+                .forEach(projecVo->{
+                    // 2. 根据专家组id匹配,只需要一个即可
+                    specialistGroupList.stream()
+                            .filter(specialistGroup -> specialistGroup.getSpecialistGroupId().equals(projecVo.getSpecialistGroupId()))
+                            .limit(1)
+                            .forEach(specialistGroup -> {
+                                projecVo.setSpecialistGroupName(specialistGroup.getName());
+                            });
+                });
+    }
+
+    /**
+     * 设置项目列表(vo)的昵称
+     * @param userIds 用户id
+     * @param projectListvo 项目列表(vo)
+     */
+    private void projectListVoSetNickName(ArrayList<Long> userIds, List<ProjectListvo> projectListvo) {
+        //1. 根据用户id获取用户集合
+        List<User> users = userServiceImpl
+                .selectByUserIds(userIds
+                        .stream()
+                        .distinct()
+                        .collect(Collectors.toList()));
+       //2. 给每个vo进行匹配一个昵称
+        projectListvo.stream()
+                .forEach(projectVo->{
+                    //根据用户id进行匹配,只需要一个即可
+                    users.stream()
+                            .filter(user -> user.getUserId().equals(projectVo.getUserId()))
+                            .limit(1)
+                            .forEach(user -> {
+                                projectVo.setNickName(user.getNickName());
+                            });
+
+                });
+    }
 
 
     /**

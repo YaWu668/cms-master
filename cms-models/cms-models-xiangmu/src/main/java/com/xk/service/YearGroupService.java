@@ -27,5 +27,13 @@ public interface YearGroupService extends IService<YearGroup> {
      * @return 当前有效的年度组
      */
     List<YearGroup> getActiveYearGroups(String name);
+
+
+    /**
+     * 根据年度组id集合获取年度集合
+     * @param ids 年度组id
+     * @return
+     */
+    List<YearGroup> selectBatchyearGroupIds(List<Long> ids);
 }
 

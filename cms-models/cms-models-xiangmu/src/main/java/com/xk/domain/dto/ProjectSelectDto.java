@@ -1,0 +1,61 @@
+package com.xk.domain.dto;
+
+
+import com.xk.constant.ProjectConstant;
+import com.xk.domain.query.PageQuery;
+
+/**
+ * 项目列表请求通用
+ */
+@lombok.Data
+public class ProjectSelectDto extends PageQuery {
+    /**
+     * 项目名字搜索
+     */
+    private String name;
+    /**
+     * 项目基本 1:国家级 --字典
+     */
+    private Long projectRank;
+    /**
+     * 角色标识符,通过输入的判断是,用户
+     */
+    private String role;
+    /**
+     * 项目状态值 ---字典
+     */
+    private Long state;
+    /**
+     * 学科类别 1:工科 2:文科  --字典
+     */
+    private Long subjectCategory;
+    /**
+     * 老师的id
+     */
+    private Long teacherId;
+    /**
+     * 项目类型 ---字典
+     */
+    private Long type;
+    /**
+     * 负责人的id
+     */
+    private Long userId;
+    /**
+     * 年度id
+     */
+    private Long yearGroupId;
+
+
+    /**
+     * 判断用户输入的角色标识符是否正确
+     */
+    public boolean isRole() {
+        return role.equals(ProjectConstant.ROLE_ADMIN) ||
+                role.equals(ProjectConstant.ROLE_SPECIALIST) ||
+                role.equals(ProjectConstant.ROLE_COLLEGE) ||
+                role.equals(ProjectConstant.ROLE_TEACHER) ||
+                role.equals(ProjectConstant.ROLE_STUDENT);
+    }
+
+}
