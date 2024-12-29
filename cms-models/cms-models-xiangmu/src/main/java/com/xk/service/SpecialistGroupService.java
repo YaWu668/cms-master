@@ -3,6 +3,7 @@ package com.xk.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cms.common.core.web.domain.Response;
+import com.xk.domain.dto.AddSpecialistUserDTO;
 import com.xk.entity.SpecialistGroup;
 
 /**
@@ -22,4 +23,6 @@ public interface SpecialistGroupService extends IService<SpecialistGroup> {
      * @return
      */
     Response updateSpecialistGroup(SpecialistGroup specialistGroup);
+
+
 }

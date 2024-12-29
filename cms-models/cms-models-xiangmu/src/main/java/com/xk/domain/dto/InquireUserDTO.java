@@ -9,7 +9,7 @@ import lombok.Data;
  * @date 2022/12/28 16:01
  */
 @Data
-public class InquireUserDto  extends PageQuery {
+public class InquireUserDTO extends PageQuery {
 
     //用户账号, (学生就学号, 老师就是工号)
     private String userName;

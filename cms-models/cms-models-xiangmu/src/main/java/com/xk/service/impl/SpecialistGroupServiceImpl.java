@@ -62,6 +62,7 @@ public class SpecialistGroupServiceImpl extends ServiceImpl<SpecialistGroupMappe
         update(specialistGroup, updateWrapper);
     }
 
+    //校验除了自身外要更改的名字是否重复
     private void newIsNameNull(String name,Long id) {
         boolean outcome = lambdaQuery()
                 .ne(SpecialistGroup::getSpecialistGroupId, id)

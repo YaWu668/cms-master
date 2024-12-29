@@ -2,6 +2,7 @@ package com.xk.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.xk.entity.User;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -13,6 +14,8 @@ import java.util.List;
  * @author yawu
  * @since 2024-12-05 01:00:12
  */
+
+@Mapper
 public interface UserMapper extends BaseMapper<User> {
 
 
