@@ -3,15 +3,14 @@ package com.xk.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cms.common.core.web.domain.Response;
-import com.xk.domain.dto.ApplyForDTO;
-import com.xk.domain.dto.PageDTO;
-import com.xk.domain.dto.ProjectAuditDto;
+import com.xk.domain.dto.*;
 
-import com.xk.domain.dto.ProjectSelectDto;
 import com.xk.domain.vo.detail.DetailProjectVo;
 import com.xk.domain.vo.project.ProjectListvo;
 
 import com.xk.domain.vo.detail.DetailProjectVo;
+import com.xk.domain.vo.student.StudentProjectVo;
+import com.xk.domain.vo.student.StudentVo;
 import com.xk.entity.Project;
 
 import java.util.List;
@@ -110,12 +109,10 @@ public interface ProjectService extends IService<Project> {
 
     /**
      * 获取名下的某个学生的项目列表
-     * @param currentPage 页码
-     * @param pageSize 单页大小
-     * @param StudentId 学生id
+     * @Param studentProjectDto
      * @return 学生列表响应数据
      */
-    Response getStudentProjectList(int currentPage,int pageSize, Long StudentId);
+    PageDTO<StudentProjectVo> getStudentProjectList(StudentProjectDto studentProjectDto);
 
     /**
      *  项目列表,全角色
@@ -162,5 +159,12 @@ public interface ProjectService extends IService<Project> {
      * @return 项目列表
      */
     PageDTO<ProjectListvo> getProjectListByAdmin(ProjectSelectDto projectSelectDto);
+
+    /**
+     * 教师获取自己绑定的学生的项目列表
+     * @param teacherSearchStuentDto
+     * @return
+     */
+    PageDTO<StudentVo> getStudentBindStudent(TeacherSearchStuentDto teacherSearchStuentDto);
 }
 

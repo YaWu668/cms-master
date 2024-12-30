@@ -48,7 +48,4 @@ public class TeacherApplys  {
     private String updateBy;
     //更新时间
     private Date updateTime;
-
-
-
 }

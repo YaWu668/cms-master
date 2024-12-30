@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.cms.common.core.exception.ServiceException;
 import com.cms.common.core.web.domain.Response;
 import com.xk.domain.dto.YearDataDto;
 import com.xk.domain.dto.yearListDTO;
+import com.xk.domain.vo.group.YearGroupVo;
 import com.xk.entity.YearData;
 import com.xk.entity.YearGroup;
 import com.xk.mapper.YearGroupMapper;
@@ -96,6 +98,21 @@ public class YearGroupServiceImpl extends ServiceImpl<YearGroupMapper, YearGroup
         return this.lambdaQuery()
                 .in(YearGroup::getYearGroupId, list)
                 .list();
+    }
+
+    @Override
+    public Response<YearGroupVo> selectByIdYearGroup(Long yearGroupId) {
+        if(yearGroupId == null){
+            throw  new ServiceException("年度组id不能为空",400);
+        }
+        List<YearGroup> list = this.lambdaQuery()
+                .eq(YearGroup::getYearGroupId, yearGroupId)
+                .list();
+        if(list == null || list.size() == 0){
+            throw new ServiceException("年度组不存在",400);
+        }
+        YearGroupVo yearGroupVo = BeanCopyUtils.copyBean(list.get(0), YearGroupVo.class);
+        return Response.success(yearGroupVo);
     }
 }
 

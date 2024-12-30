@@ -29,6 +29,7 @@ import com.xk.domain.dto.ApplyForTeacher;
 import com.xk.domain.dto.ProjectAuditDto;
 
 import com.xk.domain.vo.detail.*;
+import com.xk.domain.vo.student.StudentVo;
 import com.xk.entity.*;
 import com.xk.mapper.ProjectMapper;
 import com.xk.mapper.StudnetApplysMapper;
@@ -69,7 +70,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     /**
      * 用户服务
      */
-    private final UserServiceImpl userServiceImpl;
+    private final UserService userService;
     /**
      * 学院组服务
      */
@@ -586,33 +587,53 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return true;
     }
 
-    /**
-     * 获取当前绑定的项目中某个学生的项目列表
-     * @param currentPage 页码
-     * @param pageSize 单页大小
-     * @param StudentId 学生id
-     * @return
-     */
     @Override
-    public Response getStudentProjectList(int currentPage, int pageSize, Long StudentId) {
-        // 当前登录用户
-        Long user_id = SecurityUtils.getLoginUser().getUserid();
+    public PageDTO<StudentProjectVo> getStudentProjectList(StudentProjectDto studentProjectDto) {
+        //todo 赶时间,查多张表,可以值查一个张项目表,有空看,全角色项目列表(这么查json语句)
+        if(studentProjectDto.getStudentId() == null){
+            throw new ServiceException("学生id不能为空",400);
+        }
+        //1.获取自己id
+        Long userId = SecurityUtils.getUserId();
+        //2.去查自己参加的项目
+        List<TeacherApplys> teacherApplys = teacherApplysService.lambdaQuery()
+                .eq(TeacherApplys::getUserId, userId)
+                .list();
+        //3.再去查这个学生参加的项目
+        List<StudnetApplys> studnetApplys = studnetApplysService.lambdaQuery()
+                .eq(StudnetApplys::getUserId, userId)
+                .list();
+        //4.两个项目的交集,项目id集合
+        // 4.1提取两个集合的 projectId
+        Set<Long> teacherProjectIds = teacherApplys.stream()
+                .map(TeacherApplys::getProjectId)
+                .collect(Collectors.toSet());
 
-        // 创建分页对象
-        Page<Project> page = new Page<>(currentPage, pageSize);
+        Set<Long> studentProjectIds = studnetApplys.stream()
+                .map(StudnetApplys::getProjectId)
+                .collect(Collectors.toSet());
+        //4.2 交集
+        teacherProjectIds.retainAll(studentProjectIds);
 
-        LambdaQueryWrapper<Project> queryWrapper = Wrappers.<Project>lambdaQuery()
-                .eq(Project::getDelFlag,0)//是否删除
-                .and(wq -> wq
-                        .apply("JSON_CONTAINS(member_id, '["+user_id.toString()+"]')") //
-                );
-        Page<Project> projectPage = page(page,queryWrapper);
+        //4.3非空返回空集
+        if (teacherProjectIds.isEmpty()){
+            return PageDTO.empty();
+        }
+        //5.根据项目id去分页查询,这里去查项目表,已经去除(被逻辑删除的表)
+        Page<Project> page = studentProjectDto.toMpPageDefaultSortByCreateTimeDesc();
+        //构建条件
+        LambdaQueryWrapper<Project> queryWrapper = new LambdaQueryWrapper<Project>()
+                .in(Project::getProjectId, teacherProjectIds);
+        this.page(page,queryWrapper);
 
-
-
-
-        return Response.success(PageDTO.of(projectPage,StudentProjectVo.class),"获取学生项目成功");
+        return PageDTO.of(page,project -> {
+            StudentProjectVo studentProjectVo = BeanCopyUtils.copyBean(project, StudentProjectVo.class);
+            User byId = userService.getById(project.getUserId());
+            studentProjectVo.setNickName(byId.getNickName());
+            return studentProjectVo;
+        });
     }
+
     @Override
     public PageDTO<ProjectListvo> getProjectList(ProjectSelectDto projectSelectDto) {
         //1.判断用户输入角色标识符,是否正确,字典其他数据校验
@@ -815,6 +836,47 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return pageDTO;
     }
 
+    @Override
+    public PageDTO<StudentVo> getStudentBindStudent(TeacherSearchStuentDto teacherSearchStuentDto) {
+        //1.先获取老师参加的项目id
+        List<TeacherApplys> teacherApplys = teacherApplysService.lambdaQuery()
+                .eq(TeacherApplys::getUserId, SecurityUtils.getUserId())
+                .list();
+        List<Long> projectIds = teacherApplys.stream()
+                .map(teacherApply -> teacherApply.getProjectId())
+                .collect(Collectors.toList());
+        //1.1 去重已经删除项目(逻辑删除不会删除报名表)
+        List<Long> projectIdList = this.lambdaQuery()
+                .in(Project::getProjectId, projectIds)
+                .list()
+                .stream()
+                .map(project -> project.getProjectId())
+                .collect(Collectors.toList());
+        if (projectIdList.isEmpty()){
+            return PageDTO.empty();
+        }
+        //2.根据项目id去查询学生报名表获取学生id
+        List<StudnetApplys> studnetApplysList = studnetApplysService.lambdaQuery()
+                .in(StudnetApplys::getProjectId, projectIdList)
+                .list();
+        if (studnetApplysList.isEmpty()){
+            return PageDTO.empty();
+        }
+        //转为和老师关联的学生的id
+        List<Long> studnetIdList = studnetApplysList.stream()
+                .map(studnetApplys -> studnetApplys.getUserId())
+                .collect(Collectors.toList());//
+        //3.根据学生id的进行条件构造搜索和分页
+        Page<User> page = teacherSearchStuentDto.toMpPageDefaultSortByCreateTimeDesc();
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<User>()
+                .in(User::getUserId, studnetIdList)
+                .like(StrUtil.isNotBlank(teacherSearchStuentDto.getUserName()), User::getUserName, teacherSearchStuentDto.getUserName())
+                .like(StrUtil.isNotBlank(teacherSearchStuentDto.getNickName()), User::getNickName, teacherSearchStuentDto.getNickName());
+        userService.page(page,queryWrapper);
+
+        return PageDTO.of(page,StudentVo.class);
+    }
+
 
     /**
      *  项目查询构建条件,全角色通用,
@@ -916,7 +978,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      */
     private void projectListVoSetNickName(ArrayList<Long> userIds, List<ProjectListvo> projectListvo) {
         //1. 根据用户id获取用户集合
-        List<User> users = userServiceImpl
+        List<User> users = userService
                 .selectByUserIds(userIds
                         .stream()
                         .distinct()
@@ -2227,7 +2289,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         });
 
         //验证 学生学号是否和id对应,先根据id批量查询用户信息
-        userServiceImpl.listByIds(studentId).stream().forEach(user -> {
+        userService.listByIds(studentId).stream().forEach(user -> {
             //转换用户ID和学号
             Map<Long, String> map = applyForDTO.getStudents().stream()
                     .collect(Collectors.toMap(ApplyForStudent::getUserId, ApplyForStudent::getUserName));
@@ -2253,7 +2315,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * @return true(存在)/false(不存在)
      */
     public boolean isUserExist(Long userId){
-        return 1L == userServiceImpl.count(Wrappers.<User>lambdaQuery().eq(User::getUserId,userId));
+        return 1L == userService.count(Wrappers.<User>lambdaQuery().eq(User::getUserId,userId));
     }
 
     /**

@@ -2,8 +2,10 @@ package com.xk.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.cms.common.core.exception.ServiceException;
 import com.cms.common.core.web.domain.Response;
 import com.xk.domain.dto.collegeListDto;
+import com.xk.domain.vo.group.CollegeGroupVo;
 import com.xk.entity.CollegeGroup;
 import com.xk.mapper.CollegeGroupMapper;
 import com.xk.service.CollegeGroupService;
@@ -51,6 +53,21 @@ public class CollegeGroupServiceImpl extends ServiceImpl<CollegeGroupMapper, Col
                 .in(CollegeGroup::getCollegeGroupId, list)
                 .list();
         return groupList;
+    }
+
+    @Override
+    public Response<CollegeGroupVo> selectByIdCollegeGroup(Long collegeGroupId) {
+        if(collegeGroupId == null){
+            throw new ServiceException("学院组id不能为null",400);
+        }
+        List<CollegeGroup> list = this.lambdaQuery()
+                .eq(CollegeGroup::getCollegeGroupId, collegeGroupId)
+                .list();
+        if (list == null || list.size() == 0){
+            throw new ServiceException("学院组不存在",400);
+        }
+        CollegeGroupVo collegeGroupVo = BeanCopyUtils.copyBean(list.get(0), CollegeGroupVo.class);
+        return Response.success(collegeGroupVo);
     }
 }
 

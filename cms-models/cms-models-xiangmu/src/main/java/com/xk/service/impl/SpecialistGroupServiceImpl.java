@@ -5,10 +5,12 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cms.common.core.exception.ServiceException;
 import com.cms.common.core.web.domain.Response;
+import com.xk.domain.vo.group.SpecialistGroupVo;
 import com.xk.entity.SpecialistGroup;
 import com.xk.mapper.SpecialistGroupMapper;
 import com.xk.service.SpecialistGroupService;
 
+import com.xk.utils.BeanCopyUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -65,6 +67,21 @@ public class SpecialistGroupServiceImpl extends ServiceImpl<SpecialistGroupMappe
         return lambdaQuery()
                 .in(SpecialistGroup::getSpecialistGroupId, list)
                 .list();
+    }
+
+    @Override
+    public Response<SpecialistGroupVo> selectByIdSpecialistGroup(Long specialistGroupId) {
+        if(specialistGroupId == null){
+            throw new ServiceException("专家组id不能为null", 400);
+        }
+        List<SpecialistGroup> list = this.lambdaQuery()
+                .eq(SpecialistGroup::getSpecialistGroupId, specialistGroupId)
+                .list();
+        if (list == null || list.isEmpty()){
+            throw new ServiceException("专家组不存在", 400);
+        }
+        SpecialistGroupVo specialistGroupVo = BeanCopyUtils.copyBean(list.get(0), SpecialistGroupVo.class);
+        return Response.success(specialistGroupVo);
     }
 
     public void newUpdateSpecialistGroup(SpecialistGroup specialistGroup) {

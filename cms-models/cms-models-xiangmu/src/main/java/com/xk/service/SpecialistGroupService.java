@@ -4,6 +4,7 @@ package com.xk.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cms.common.core.web.domain.Response;
 import com.xk.domain.dto.AddSpecialistUserDTO;
+import com.xk.domain.vo.group.SpecialistGroupVo;
 import com.xk.entity.SpecialistGroup;
 
 import java.util.List;
@@ -33,5 +34,10 @@ public interface SpecialistGroupService extends IService<SpecialistGroup> {
      */
     List<SpecialistGroup> selectByIds(List<Long> ids);
 
-
+    /**
+     * 根据id查询专家组信息
+     * @param specialistGroupId 专家组id
+     * @return vo类
+     */
+    Response<SpecialistGroupVo> selectByIdSpecialistGroup(Long specialistGroupId);
 }

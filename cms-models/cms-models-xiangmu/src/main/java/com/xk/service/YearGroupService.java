@@ -3,6 +3,7 @@ package com.xk.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cms.common.core.web.domain.Response;
 import com.xk.domain.dto.yearListDTO;
+import com.xk.domain.vo.group.YearGroupVo;
 import com.xk.entity.YearGroup;
 
 import java.util.List;
@@ -35,5 +36,11 @@ public interface YearGroupService extends IService<YearGroup> {
      * @return
      */
     List<YearGroup> selectBatchyearGroupIds(List<Long> ids);
+    /**
+     * 根据id查询年度组
+     * @param yearGroupId 年度组id
+     * @return 年度组vo类
+     */
+    Response<YearGroupVo> selectByIdYearGroup(Long yearGroupId);
 }
 

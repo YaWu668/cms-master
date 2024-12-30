@@ -7,6 +7,9 @@ import com.xk.domain.dto.*;
 
 import com.xk.domain.vo.SearchPersonListVo;
 import com.xk.domain.vo.detail.DetailProjectVo;
+import com.xk.domain.vo.group.CollegeGroupVo;
+import com.xk.domain.vo.group.SpecialistGroupVo;
+import com.xk.domain.vo.group.YearGroupVo;
 import com.xk.domain.vo.project.ProjectListvo;
 import com.xk.domain.dto.ProjectAuditDto;
 import com.xk.domain.dto.collegeListDto;
@@ -43,6 +46,10 @@ public class PulicController {
      * 年度组服务
      */
     private final YearGroupService yearGroupService;
+    /**
+     * 专家组服务
+     */
+    private final SpecialistGroupService specialistGroupService;
 
     /**
      * 学院服务
@@ -131,6 +138,38 @@ public class PulicController {
         //根据用户id进行条件查询
         PageDTO<SearchPersonListVo> pageDTO = userService.searchPerson(projectPersonDto, userIds);
         return Response.success(pageDTO);
+    }
+
+    /**
+     * 根据id查询学院组
+     * @param collegeGroupId 学院组id
+     * @return 学院vo类
+     */
+    @GetMapping("/select/collegeGroup")
+    @Log(title = "根据id查询学院组", businessType = BusinessType.OTHER)
+    public Response<CollegeGroupVo> selectByIdCollegeGroup(Long collegeGroupId) {
+        return collegeGroupService.selectByIdCollegeGroup(collegeGroupId);
+    }
+
+    /**
+     * 根据id查询专家组
+     * @param specialistGroupId
+     * @return 专家组vo类
+     */
+    @GetMapping("/select/specialistGroup")
+    @Log(title = "根据id查询专家组", businessType = BusinessType.OTHER)
+    public Response<SpecialistGroupVo> selectByIdSpecialistGroup(Long specialistGroupId){
+        return specialistGroupService.selectByIdSpecialistGroup(specialistGroupId);
+    }
+    /**
+     * 根据id查询年度组
+     * @param yearGroupId 年度组id
+     * @return 年度组vo类
+     */
+    @GetMapping("/select/yearGroup")
+    @Log(title = "根据id查询年度组", businessType = BusinessType.OTHER)
+    public Response<YearGroupVo> selectByIdYearGroup(Long yearGroupId){
+        return yearGroupService.selectByIdYearGroup(yearGroupId);
     }
 
 }

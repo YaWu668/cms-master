@@ -12,13 +12,14 @@ import com.cms.common.core.web.domain.Response;
 import com.cms.common.security.utils.SecurityUtils;
 import com.xk.domain.dto.ApplyForStudent;
 import com.xk.domain.dto.PageDTO;
-import com.xk.domain.vo.student.StudentApplyVo;
+import com.xk.domain.dto.TeacherSearchStuentDto;
+
 import com.xk.entity.Project;
 import com.cms.common.security.utils.SecurityUtils;
 import com.cms.common.core.web.domain.Response;
 import com.cms.common.security.utils.SecurityUtils;
 import com.xk.domain.dto.PageDTO;
-import com.xk.domain.vo.student.StudentApplyVo;
+
 import com.xk.entity.StudnetApplys;
 import com.xk.mapper.StudnetApplysMapper;
 import com.xk.service.StudnetApplysService;
@@ -61,8 +62,8 @@ public class StudnetApplysServiceImpl extends ServiceImpl<StudnetApplysMapper, S
     }
 
 
-    @Override
-    public Response getBindStudent(int currentPage, int pageSize, String StudentId, String StudentName, String StudentSchool) {
+   /* @Override
+    public Response getBindStudent(TeacherSearchStuentDto teacherSearchStuentDto) {
         //当前登录用户ID
         Long userId = SecurityUtils.getLoginUser().getUserid();
 
@@ -95,7 +96,7 @@ public class StudnetApplysServiceImpl extends ServiceImpl<StudnetApplysMapper, S
 
 
         return Response.success(PageDTO.of(studentPage, StudentApplyVo.class),"获取成功");
-    }
+    }*/
 
 }
 
