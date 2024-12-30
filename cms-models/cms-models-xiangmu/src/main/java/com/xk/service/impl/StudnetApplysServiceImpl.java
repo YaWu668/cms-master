@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapp
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.cms.common.core.exception.ServiceException;
 import com.cms.common.core.web.domain.Response;
 import com.cms.common.security.utils.SecurityUtils;
 import com.xk.domain.dto.ApplyForStudent;
@@ -69,6 +70,9 @@ public class StudnetApplysServiceImpl extends ServiceImpl<StudnetApplysMapper, S
         Page<StudnetApplys> page = new Page<>(currentPage, pageSize);
         //获取该教师绑定的所有学生id
         List<Long> StudentId_list = studnetApplysMapper.getMyBindStudentId(userId);
+        if (StudentId_list == null || StudentId_list.size() == 0) {
+            throw new ServiceException("教师未绑定到任何项目，请联系管理员",502);
+        }
         //构造查询语句
         LambdaQueryWrapper<StudnetApplys> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.in(StudnetApplys::getUserId, StudentId_list);
