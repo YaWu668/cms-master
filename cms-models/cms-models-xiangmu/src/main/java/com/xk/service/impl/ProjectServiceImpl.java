@@ -2277,7 +2277,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         });
 
         //验证 学生学号是否和id对应,先根据id批量查询用户信息
-        userServiceImpl.listByIds(studentId).stream().forEach(user -> {
+        userService.listByIds(studentId).stream().forEach(user -> {
             //转换用户ID和学号
             Map<Long, String> map = applyForDTO.getStudents().stream()
                     .collect(Collectors.toMap(ApplyForStudent::getUserId, ApplyForStudent::getUserName));
@@ -2303,7 +2303,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * @return true(存在)/false(不存在)
      */
     public boolean isUserExist(Long userId){
-        return 1L == userServiceImpl.count(Wrappers.<User>lambdaQuery().eq(User::getUserId,userId));
+        return 1L == userService.count(Wrappers.<User>lambdaQuery().eq(User::getUserId,userId));
     }
 
     /**
