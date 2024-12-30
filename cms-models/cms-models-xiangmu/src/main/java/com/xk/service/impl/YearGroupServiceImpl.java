@@ -89,6 +89,10 @@ public class YearGroupServiceImpl extends ServiceImpl<YearGroupMapper, YearGroup
         List<Long> list = ids.stream()
                 .distinct()
                 .collect(Collectors.toList());
+        // 检查列表是否为空
+        if (list.isEmpty()) {
+            return Collections.emptyList(); // 返回空结果
+        }
         return this.lambdaQuery()
                 .in(YearGroup::getYearGroupId, list)
                 .list();

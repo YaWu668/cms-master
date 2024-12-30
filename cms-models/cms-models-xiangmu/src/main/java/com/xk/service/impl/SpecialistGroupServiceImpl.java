@@ -58,6 +58,10 @@ public class SpecialistGroupServiceImpl extends ServiceImpl<SpecialistGroupMappe
     public List<SpecialistGroup> selectByIds(List<Long> ids) {
         // 去重
         List<Long> list = ids.stream().distinct().collect(Collectors.toList());
+        // 检查列表是否为空
+        if (list.isEmpty()) {
+            return Collections.emptyList(); // 返回空结果
+        }
         return lambdaQuery()
                 .in(SpecialistGroup::getSpecialistGroupId, list)
                 .list();

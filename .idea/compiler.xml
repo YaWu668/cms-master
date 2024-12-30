@@ -27,30 +27,34 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="bisai" target="1.8" />
-      <module name="cms-api" target="1.8" />
-      <module name="cms-api-system" target="1.8" />
-      <module name="cms-auth" target="1.8" />
-      <module name="cms-common" target="1.8" />
-      <module name="cms-common-config" target="1.8" />
-      <module name="cms-common-core" target="1.8" />
-      <module name="cms-common-datascope" target="1.8" />
-      <module name="cms-common-log" target="1.8" />
       <module name="cms-common-minio" target="1.8" />
-      <module name="cms-common-redis" target="1.8" />
-      <module name="cms-common-security" target="1.8" />
-      <module name="cms-common-sensitive" target="1.8" />
-      <module name="cms-common-swagger" target="1.8" />
-      <module name="cms-gateway" target="1.8" />
-      <module name="cms-models" target="1.8" />
-      <module name="cms-models-bisai" target="1.8" />
-      <module name="cms-models-file" target="1.8" />
-      <module name="cms-models-system" target="1.8" />
-      <module name="cms-models-xiangmu" target="1.8" />
-      <module name="cms-models-zhengshu" target="1.8" />
-      <module name="cms-parent" target="1.8" />
       <module name="crs-models-xiangmu" target="1.8" />
       <module name="sensitive" target="1.8" />
       <module name="xiangmu" target="1.8" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="cms-api" options="-bootclasspath D:\dev\jdks\jdk1.8.0_202/jre/lib/rt.jar" />
+      <module name="cms-api-system" options="-bootclasspath D:\dev\jdks\jdk1.8.0_202/jre/lib/rt.jar" />
+      <module name="cms-auth" options="-bootclasspath D:\dev\jdks\jdk1.8.0_202/jre/lib/rt.jar" />
+      <module name="cms-common" options="-bootclasspath D:\dev\jdks\jdk1.8.0_202/jre/lib/rt.jar" />
+      <module name="cms-common-config" options="-bootclasspath D:\dev\jdks\jdk1.8.0_202/jre/lib/rt.jar" />
+      <module name="cms-common-core" options="-bootclasspath D:\dev\jdks\jdk1.8.0_202/jre/lib/rt.jar" />
+      <module name="cms-common-datascope" options="-bootclasspath D:\dev\jdks\jdk1.8.0_202/jre/lib/rt.jar" />
+      <module name="cms-common-log" options="-bootclasspath D:\dev\jdks\jdk1.8.0_202/jre/lib/rt.jar" />
+      <module name="cms-common-redis" options="-bootclasspath D:\dev\jdks\jdk1.8.0_202/jre/lib/rt.jar" />
+      <module name="cms-common-security" options="-bootclasspath D:\dev\jdks\jdk1.8.0_202/jre/lib/rt.jar" />
+      <module name="cms-common-sensitive" options="-bootclasspath D:\dev\jdks\jdk1.8.0_202/jre/lib/rt.jar" />
+      <module name="cms-common-swagger" options="-bootclasspath D:\dev\jdks\jdk1.8.0_202/jre/lib/rt.jar" />
+      <module name="cms-gateway" options="-bootclasspath D:\dev\jdks\jdk1.8.0_202/jre/lib/rt.jar" />
+      <module name="cms-models" options="-bootclasspath D:\dev\jdks\jdk1.8.0_202/jre/lib/rt.jar" />
+      <module name="cms-models-bisai" options="-bootclasspath D:\dev\jdks\jdk1.8.0_202/jre/lib/rt.jar" />
+      <module name="cms-models-file" options="-bootclasspath D:\dev\jdks\jdk1.8.0_202/jre/lib/rt.jar" />
+      <module name="cms-models-system" options="-bootclasspath D:\dev\jdks\jdk1.8.0_202/jre/lib/rt.jar" />
+      <module name="cms-models-xiangmu" options="-bootclasspath D:\dev\jdks\jdk1.8.0_202/jre/lib/rt.jar" />
+      <module name="cms-models-zhengshu" options="-bootclasspath D:\dev\jdks\jdk1.8.0_202/jre/lib/rt.jar" />
+      <module name="cms-parent" options="-bootclasspath D:\dev\jdks\jdk1.8.0_202/jre/lib/rt.jar" />
+    </option>
   </component>
 </project>

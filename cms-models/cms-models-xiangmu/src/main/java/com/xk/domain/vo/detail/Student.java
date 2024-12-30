@@ -19,7 +19,7 @@ public class Student {
     /**
      * 是否负责人 , 0为不是, 1是(只能存在一个)
      */
-    private Long isPrincipal;
+    private Integer isPrincipal;
     /**
      * 分工
      */

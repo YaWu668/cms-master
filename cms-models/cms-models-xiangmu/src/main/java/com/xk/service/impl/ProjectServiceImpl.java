@@ -363,13 +363,13 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     }
 
     @Override
-    public Response<DetailProjectVo> getProjectById(Long id,Long type) {
-        //1判断项目是否存在
+    public Response<DetailProjectVo> getProjectById(Long id,String type) {
+        // 1. 判断项目是否存在
         List<Project> list = this.lambdaQuery().eq(Project::getProjectId, id).list();
-        Project project = list.get(0);
-        if(list.size() == 0){
-            throw new ServiceException("该项目不存在！或已被删除",404);
+        if (list == null || list.isEmpty()) { // 检查返回的 list 是否为空
+            throw new ServiceException("该项目不存在！或已被删除", 404);
         }
+        Project project = list.get(0);
         //1.权限校验
         if(!checkUserRole(id,type)){
             throw new ServiceException("当前用户没有权限查看该项目",403);
@@ -658,7 +658,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      */
     private void ivalidateProjectSelectDtoConfig(ProjectSelectDto projectSelectDto) {
         if(projectSelectDto.getProjectRank() != null //项目级别 1:国家
-                && !checkDictData(projectSelectDto.getProjectRank(),"xm_project_rank")){
+                && !checkDictData(projectSelectDto.getProjectRank(),"xm_item_rank")){
             throw new ServiceException("项目级别字典值不存在",400);
         }
         if(projectSelectDto.getState() != null //项目状态 0:未审核  1:审核中
@@ -877,9 +877,10 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 // 年度组 ID
                 .eq(projectSelectDto.getYearGroupId() != null, Project::getYearGroupId, projectSelectDto.getYearGroupId())
                 // 指导老师和企业老师 JSON 包含查询
-                .apply(projectSelectDto.getTeacherId() != null,
-                        "JSON_CONTAINS(teacher_id, {0}) OR JSON_CONTAINS(firm_teacher_id, {0})",
-                        projectSelectDto.getTeacherId());
+                .and(projectSelectDto.getTeacherId() != null,wrapper -> wrapper
+                        .apply("JSON_CONTAINS(teacher_id, JSON_ARRAY({0}))", projectSelectDto.getTeacherId())
+                        .or()
+                        .apply("JSON_CONTAINS(firm_teacher_id, JSON_ARRAY({0}))", projectSelectDto.getTeacherId()));
         return queryWrapper;
     }
 
@@ -941,39 +942,39 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * @param type 查询类型,1:学生 , 2:教师, 3:学院审核人, 4:专家, 5:管理员
      * @return true:有权限 false:无权限
      */
-    private boolean checkUserRole(Long id, Long type) {
+    private boolean checkUserRole(Long id, String type) {
         //1.判断当前用户是否有当前当前角色
-        if(type==1){ //学生
+        if(type.equals(ProjectConstant.ROLE_STUDENT)){ //学生
             if(!roleService.hasRole(ProjectConstant.ROLE_STUDENT)){
                 return false;
             }
-        }else if(type==2){ //教师
+        }else if(type.equals(ProjectConstant.ROLE_TEACHER)){ //教师
             if(!roleService.hasRole(ProjectConstant.ROLE_TEACHER)){
                 return false;
             }
-        }else if(type==3){  //学院审核人
+        }else if(type.equals(ProjectConstant.ROLE_COLLEGE)){  //学院审核人
             if(!roleService.hasRole(ProjectConstant.ROLE_COLLEGE)){
                 return false;
             }
-        }else if(type==4) {//专家
+        }else if(type.equals(ProjectConstant.ROLE_SPECIALIST)) {//专家
             if (!roleService.hasRole(RoleConstant.EXPERT)){
                 return false;
             }
-        }else if(type==5){  //管理员
+        }else if(type.equals(ProjectConstant.ROLE_ADMIN)){  //管理员
             if (!roleService.hasRole(RoleConstant.ADMIN)){
                 return false;
             }
         }
         //2.根据不同角色判断是否有权限查看该项目
-        if(type==1) { //学生 1.判断项目是不是自己的
+        if(type.equals(ProjectConstant.ROLE_STUDENT)) { //学生 1.判断项目是不是自己的
             return isProjectOwnedByStudent(id);
-        }else if(type==2) { //教师 2.判断项目是不是自己的学生的
+        }else if(type.equals(ProjectConstant.ROLE_TEACHER)) { //教师 2.判断项目是不是自己的学生的
             return isProjectOfTeacherStudents(id);
-        }else if(type==3) { //学院审核人 3.判断这个项目是不是自己学院的
+        }else if(type.equals(ProjectConstant.ROLE_COLLEGE)) { //学院审核人 3.判断这个项目是不是自己学院的
             return isProjectInSameCollege(id);
-        }else if(type==4) { //专家 4.判断这个项目可不可以审核
+        }else if(type.equals(ProjectConstant.ROLE_SPECIALIST)) { //专家 4.判断这个项目可不可以审核
             return canExpertReviewProject(id);
-        }else if(type==5) { //管理员 直接返回
+        }else if(type.equals(ProjectConstant.ROLE_ADMIN)) { //管理员 直接返回
             return true;
         }
         return false;

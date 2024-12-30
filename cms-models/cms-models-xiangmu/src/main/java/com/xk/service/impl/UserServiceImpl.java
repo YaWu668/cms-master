@@ -42,6 +42,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public List<User> selectByUserIds(List<Long> userIds) {
         // 去重
         List<Long> list = userIds.stream().distinct().collect(Collectors.toList());
+        // 检查列表是否为空
+        if (list.isEmpty()) {
+            return Collections.emptyList(); // 返回空结果
+        }
         // 查询
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<User>()
                 .in(User::getUserId, list);

@@ -87,13 +87,9 @@ public class PulicController {
      * @return 项目详细信息
      */
     @Log(title = "根据项目id查询项目详细信息", businessType = BusinessType.OTHER)
-    @GetMapping("/project/{id}/{type}")
-    @Validated
-    public Response<DetailProjectVo> getProjectById(@Valid
-                                                    @PathVariable("id") @NotNull(message = "项目id为null") Long id,
-                                                    @PathVariable("type") @NotNull(message = "项目查询类型不能为null")
-                                                    @Range(min = 1, max = 5, message = "项目查询类型范围1-5") Long type) {
-        return projectService.getProjectById(id, type);
+    @GetMapping("/detail")
+    public Response<DetailProjectVo> getProjectById(@Valid @ModelAttribute   ProjectIdDto projectIdDto) {
+        return projectService.getProjectById(projectIdDto.getId(), projectIdDto.getType());
     }
 
 

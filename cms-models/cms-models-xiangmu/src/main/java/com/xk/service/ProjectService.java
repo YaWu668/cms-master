@@ -75,7 +75,7 @@ public interface ProjectService extends IService<Project> {
      * @param type 查询类型,1:学生 , 2:教师, 3:学院审核人, 4:专家, 5:管理员
      * @return 项目详细信息
      */
-    Response<DetailProjectVo> getProjectById(Long id,Long type);
+    Response<DetailProjectVo> getProjectById(Long id,String type);
 
 
 
