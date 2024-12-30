@@ -1,6 +1,8 @@
 package com.xk.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.xk.domain.dto.ProjectPersonDto;
+import com.xk.domain.vo.SearchPersonListVo;
 import com.xk.domain.vo.detail.Student;
 import com.xk.domain.dto.InquireUserDTO;
 import com.xk.domain.dto.PageDTO;
@@ -31,5 +33,7 @@ public interface UserService extends IService<User> {
      * @return
      */
     PageDTO<UserListVo> getUserList(InquireUserDTO inquireUserDto);
+
+    PageDTO<SearchPersonListVo> searchPerson(ProjectPersonDto projectPersonDto,List<Long> userIds);
 }
 

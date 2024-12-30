@@ -3,6 +3,8 @@ package com.xk.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xk.entity.Role;
 
+import java.util.List;
+
 
 /**
  * 角色信息表(Role)表服务接口
@@ -39,6 +41,8 @@ public interface RoleService extends IService<Role> {
      * @return 是否有该角色, true:有, false:没有
      */
      boolean hasRole( String role);
+
+     List<Role> getStudentOrNoStudnet(Boolean isStudnet);
 
 }
 

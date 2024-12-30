@@ -1,6 +1,7 @@
 package com.xk.entity;
 
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +16,9 @@ import lombok.NoArgsConstructor;
 @TableName("sys_user_role")
 public class UserRole {
     //用户id
-    Long userId;
+
+    private Long userId;
     //角色id
-    Long roleId;
+
+    private Long roleId;
 }

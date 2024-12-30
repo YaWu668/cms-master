@@ -4,12 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xk.entity.Role;
 import com.xk.entity.User;
 import com.xk.entity.UserRole;
 import com.xk.mapper.UserMapper;
 import com.xk.mapper.UserRoleMapper;
 import com.xk.service.UserRoleService;
 import com.xk.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +23,15 @@ import java.util.stream.Collectors;
  * 用户和角色关联表实现类
  */
 @Service
+@RequiredArgsConstructor
 public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> implements UserRoleService {
 
-    @Resource
-    private  UserRoleMapper userRoleMapper;
+    /**
+     * 用户和角色关联表
+     */
+    private final UserRoleMapper userRoleMapper;
 
+    @Override
     public List<Long> isNoStudent(List<Long> userIdList) {
         List<Long> isNoStudentIds = new ArrayList<>();
         Map<Long, List<UserRole>> userRoleMap = getUserRolesByUserIds(userIdList);
@@ -44,6 +50,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
     }
 
     // 根据 userIdList 获取 UserRole 列表
+
     public Map<Long, List<UserRole>> getUserRolesByUserIds(List<Long> userIdList) {
 
         if (userIdList == null || userIdList.isEmpty()) {
@@ -53,5 +60,26 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
         return userRoles.stream().collect(Collectors.groupingBy(UserRole::getUserId));
     }
 
+    @Override
+    public List<Long> getUserIdsByRoleList(List<Role> roleList) {
+        //角色集合转为角色id集合
+        if (roleList.isEmpty()){
+            return Collections.emptyList();
+        }
+        List<Long> list = roleList.stream()
+                .map(role -> role.getRoleId())
+                .distinct()
+                .collect(Collectors.toList());
+
+        List<Long> userIds = this.lambdaQuery()
+                .in(UserRole::getRoleId, list)
+                .list()
+                .stream()
+                .map(UserRole::getUserId)
+                .distinct()
+                .collect(Collectors.toList());
+        //返回结果
+        return userIds.size()==0?Collections.emptyList():userIds;
+    }
 }
 

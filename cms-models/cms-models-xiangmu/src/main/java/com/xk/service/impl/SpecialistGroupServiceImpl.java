@@ -1,6 +1,6 @@
 package com.xk.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cms.common.core.exception.ServiceException;
@@ -8,7 +8,7 @@ import com.cms.common.core.web.domain.Response;
 import com.xk.entity.SpecialistGroup;
 import com.xk.mapper.SpecialistGroupMapper;
 import com.xk.service.SpecialistGroupService;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
