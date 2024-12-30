@@ -6,7 +6,6 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -28,7 +27,6 @@ import com.xk.domain.dto.ApplyForStudent;
 import com.xk.domain.dto.ApplyForTeacher;
 import com.xk.domain.dto.ProjectAuditDto;
 
-import com.xk.domain.vo.detail.*;
 import com.xk.entity.*;
 import com.xk.mapper.ProjectMapper;
 import com.xk.mapper.StudnetApplysMapper;
@@ -266,25 +264,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         }
     }
 
-    /**
-     * 获取学生负责项目
-     * @return
-     */
-    @Override
-    public Response getStudentResponsibleProjectList() {
-        //当前登录用户ID
-        Long userId = SecurityUtils.getLoginUser().getUserid();
 
-        try{
-            LambdaQueryWrapper<Project> queryWrapper = Wrappers.<Project>lambdaQuery()
-                    .eq(Project::getDelFlag,0)//是否删除
-                    .eq(Project::getUserId,userId); // 项目负责人ID是否为当前登录用户ID
-            List<Project> projectList = list(queryWrapper);
-            return Response.success(projectList,"获取学生负责项目成功！");
-        }catch (Exception e){
-            throw new ServiceException("查询学生当前负责项目失败",502);
-        }
-    }
 
     /**
      * 删除项目
@@ -590,29 +570,45 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * 获取当前绑定的项目中某个学生的项目列表
      * @param currentPage 页码
      * @param pageSize 单页大小
-     * @param StudentId 学生id
-     * @return
+     * @param studentId 学生id
+     * @return Page<StudentProjectVo>
      */
     @Override
-    public Response getStudentProjectList(int currentPage, int pageSize, Long StudentId) {
+    public Response<PageDTO<StudentProjectVo>> getStudentProjectList(int currentPage, int pageSize, Long studentId) {
         // 当前登录用户
         Long user_id = SecurityUtils.getLoginUser().getUserid();
+        //2.用户信息
+        UserInfoVo data = sysUserClient.getUserInfo().getData();
+        //3.获取用户角色列表
+        Set<String> roles = data.getRoles(
+        );
+        // todo 怎么没有企业教师这个身份
+        if (!roles.contains(ProjectConstant.ROLE_TEACHER)){
+            throw new ServiceException("当前角色身份不允许操作",401);
+        }
 
         // 创建分页对象
         Page<Project> page = new Page<>(currentPage, pageSize);
 
         LambdaQueryWrapper<Project> queryWrapper = Wrappers.<Project>lambdaQuery()
                 .eq(Project::getDelFlag,0)//是否删除
+                .apply("JSON_CONTAINS(member_id, '["+ studentId.toString()+"]')") //该学生的项目
                 .and(wq -> wq
-                        .apply("JSON_CONTAINS(member_id, '["+user_id.toString()+"]')") //
+                        .apply("JSON_CONTAINS(teacher_id, '["+user_id.toString()+"]')") //包含该教师
+                        .or()
+                        .apply("JSON_CONTAINS(firm_teacher_id, '["+ user_id +"]')")//或者企业老师
                 );
+
         Page<Project> projectPage = page(page,queryWrapper);
 
-
-
+        //是否为有数据
+        if (projectPage.getSize() == 0){
+            throw new ServiceException("未找到包含该学生的项目",404);
+        }
 
         return Response.success(PageDTO.of(projectPage,StudentProjectVo.class),"获取学生项目成功");
     }
+
     @Override
     public PageDTO<ProjectListvo> getProjectList(ProjectSelectDto projectSelectDto) {
         //1.判断用户输入角色标识符,是否正确,字典其他数据校验

@@ -11,10 +11,8 @@ import com.xk.domain.dto.ProjectSelectDto;
 import com.xk.domain.vo.detail.DetailProjectVo;
 import com.xk.domain.vo.project.ProjectListvo;
 
-import com.xk.domain.vo.detail.DetailProjectVo;
+import com.xk.domain.vo.student.StudentProjectVo;
 import com.xk.entity.Project;
-
-import java.util.List;
 
 /**
  * 项目表(Project)表服务接口
@@ -37,20 +35,16 @@ public interface ProjectService extends IService<Project> {
     Response projectAudit(ProjectAuditDto projectAuditDto);
 
     /**
-     * 获取学生参与的项目
-     * @return
+     * 获取学生参与的项目列表
+     * @param currentPage 页码
+     * @param pageSize 单页大小
+     * @return StudentProjectVo
      */
-    Response getStudentProjectList(int currentPage,int pageSize);
-
-    /**
-     * 获取学生负责项目
-     * @return
-     */
-    Response getStudentResponsibleProjectList();
+    Response<StudentProjectVo> getStudentProjectList(int currentPage,int pageSize);
 
     /**
      * 项目负责人删除学生项目,只删除未通过的
-     * @param projectId
+     * @param projectId 学生id
      * @return
      */
     Response delectStudentProjectById(Long projectId);
@@ -61,13 +55,15 @@ public interface ProjectService extends IService<Project> {
      * @param name 学号/名字/工号
      * @return
      */
-    Response getUserApply(int role, String name);
+    Response<StudentProjectVo> getUserApply(int role, String name);
 
     /**
-     * 获取自己创建的的项目
+     * 获取自己创建的项目
+     * @param currentPage
+     * @param pageSize
      * @return
      */
-    Response getMyCrectProject(int currentPage,int pageSize);
+    Response<PageDTO<StudentProjectVo>> getMyCrectProject(int currentPage, int pageSize);
 
     /**
      *根据项目id查询项目详细信息
@@ -112,10 +108,10 @@ public interface ProjectService extends IService<Project> {
      * 获取名下的某个学生的项目列表
      * @param currentPage 页码
      * @param pageSize 单页大小
-     * @param StudentId 学生id
+     * @param studentId 学生id
      * @return 学生列表响应数据
      */
-    Response getStudentProjectList(int currentPage,int pageSize, Long StudentId);
+    Response<PageDTO<StudentProjectVo>> getStudentProjectList(int currentPage,int pageSize, Long studentId);
 
     /**
      *  项目列表,全角色
