@@ -590,7 +590,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 .list();
         //3.再去查这个学生参加的项目
         List<StudnetApplys> studnetApplys = studnetApplysService.lambdaQuery()
-                .eq(StudnetApplys::getUserId, userId)
+                .eq(StudnetApplys::getUserId, studentProjectDto.getStudentId())
                 .list();
         //4.两个项目的交集,项目id集合
         // 4.1提取两个集合的 projectId
