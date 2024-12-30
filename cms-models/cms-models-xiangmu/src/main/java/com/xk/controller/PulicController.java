@@ -5,6 +5,7 @@ import com.cms.common.log.annotation.Log;
 import com.cms.common.log.enums.BusinessType;
 import com.xk.domain.dto.*;
 
+import com.xk.domain.vo.SearchPersonListVo;
 import com.xk.domain.vo.detail.DetailProjectVo;
 import com.xk.domain.vo.project.ProjectListvo;
 import com.xk.domain.dto.ProjectAuditDto;
@@ -12,9 +13,8 @@ import com.xk.domain.dto.collegeListDto;
 
 import com.xk.domain.dto.yearListDTO;
 import com.xk.domain.vo.detail.DetailProjectVo;
-import com.xk.service.CollegeGroupService;
-import com.xk.service.ProjectService;
-import com.xk.service.YearGroupService;
+import com.xk.entity.Role;
+import com.xk.service.*;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.validation.annotation.Validated;
@@ -48,6 +48,18 @@ public class PulicController {
      * 学院服务
      */
     private final CollegeGroupService collegeGroupService;
+    /**
+     * 角色服务
+     */
+    private final RoleService roleService;
+    /**
+     * 用户角色服务
+     */
+    private final UserRoleService  userRoleService;
+    /**
+     * 用户服务
+     */
+    private final UserService userService;
     /**
      * 项目审核
      * @return
@@ -87,13 +99,9 @@ public class PulicController {
      * @return 项目详细信息
      */
     @Log(title = "根据项目id查询项目详细信息", businessType = BusinessType.OTHER)
-    @GetMapping("/project/{id}/{type}")
-    @Validated
-    public Response<DetailProjectVo> getProjectById(@Valid
-                                                    @PathVariable("id") @NotNull(message = "项目id为null") Long id,
-                                                    @PathVariable("type") @NotNull(message = "项目查询类型不能为null")
-                                                    @Range(min = 1, max = 5, message = "项目查询类型范围1-5") Long type) {
-        return projectService.getProjectById(id, type);
+    @GetMapping("/detail")
+    public Response<DetailProjectVo> getProjectById(@Valid @ModelAttribute   ProjectIdDto projectIdDto) {
+        return projectService.getProjectById(projectIdDto.getId(), projectIdDto.getType());
     }
 
 
@@ -108,5 +116,21 @@ public class PulicController {
         return Response.success(projectService.getProjectList(projectSelectDto));
     }
 
+    /**
+     * 条件获取(搜索用户)
+     * @param projectPersonDto
+     * @return
+     */
+    @GetMapping("/search/person")
+    @Log(title = "搜索人员", businessType = BusinessType.OTHER)
+    public Response<PageDTO<SearchPersonListVo>> searchPerson(ProjectPersonDto projectPersonDto){
+        //获取对应角色集合
+        List<Role> studentOrNoStudnet = roleService.getStudentOrNoStudnet(projectPersonDto.getIsStudent());
+        //根据角色集合转换为用户id集合
+        List<Long> userIds = userRoleService.getUserIdsByRoleList(studentOrNoStudnet);
+        //根据用户id进行条件查询
+        PageDTO<SearchPersonListVo> pageDTO = userService.searchPerson(projectPersonDto, userIds);
+        return Response.success(pageDTO);
+    }
 
 }

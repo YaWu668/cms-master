@@ -42,6 +42,10 @@ public class CollegeGroupServiceImpl extends ServiceImpl<CollegeGroupMapper, Col
         List<Long> list = ids.stream()
                 .distinct()
                 .collect(Collectors.toList());
+        // 检查列表是否为空
+        if (list.isEmpty()) {
+            return Collections.emptyList(); // 返回空结果
+        }
         //2.构建条件
         List<CollegeGroup> groupList = this.lambdaQuery()
                 .in(CollegeGroup::getCollegeGroupId, list)

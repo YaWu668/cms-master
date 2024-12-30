@@ -11,6 +11,9 @@ import com.xk.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * 角色信息表(Role)表服务实现类
  *
@@ -68,6 +71,25 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<Role> getStudentOrNoStudnet(Boolean isStudnet) {
+        if(isStudnet == null){
+            throw new ServiceException("isStudnet参数不能为空",444);
+        }
+        if (isStudnet){ //返回学生角色
+            return lambdaQuery()
+                    .in(Role::getRoleKey, RoleConstant.STUDENT)
+                    .list();
+        }else { //返回非学生角色
+            return lambdaQuery()
+                    .in(Role::getRoleKey, RoleConstant.TEACHER
+                                        , RoleConstant.COLLEGE
+                                        , RoleConstant.EXPERT
+                                        , RoleConstant.ADMIN)
+                    .list();
+        }
     }
 }
 

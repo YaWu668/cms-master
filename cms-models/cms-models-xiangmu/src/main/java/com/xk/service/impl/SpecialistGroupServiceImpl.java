@@ -1,6 +1,6 @@
 package com.xk.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cms.common.core.exception.ServiceException;
@@ -8,7 +8,7 @@ import com.cms.common.core.web.domain.Response;
 import com.xk.entity.SpecialistGroup;
 import com.xk.mapper.SpecialistGroupMapper;
 import com.xk.service.SpecialistGroupService;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -58,6 +58,10 @@ public class SpecialistGroupServiceImpl extends ServiceImpl<SpecialistGroupMappe
     public List<SpecialistGroup> selectByIds(List<Long> ids) {
         // 去重
         List<Long> list = ids.stream().distinct().collect(Collectors.toList());
+        // 检查列表是否为空
+        if (list.isEmpty()) {
+            return Collections.emptyList(); // 返回空结果
+        }
         return lambdaQuery()
                 .in(SpecialistGroup::getSpecialistGroupId, list)
                 .list();

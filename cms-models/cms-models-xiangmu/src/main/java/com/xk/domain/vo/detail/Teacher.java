@@ -10,7 +10,7 @@ public class Teacher {
     /**
      * 是否指导老师(0代表是指导老师, 1代表是企业老师)
      */
-    private Long isTeacher;
+    private Integer isTeacher;
     /**
      * 邮箱
      */
