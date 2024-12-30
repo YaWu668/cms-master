@@ -36,20 +36,16 @@ public interface ProjectService extends IService<Project> {
     Response projectAudit(ProjectAuditDto projectAuditDto);
 
     /**
-     * 获取学生参与的项目
-     * @return
+     * 获取学生参与的项目列表
+     * @param currentPage 页码
+     * @param pageSize 单页大小
+     * @return StudentProjectVo
      */
-    Response getStudentProjectList(int currentPage,int pageSize);
-
-    /**
-     * 获取学生负责项目
-     * @return
-     */
-    Response getStudentResponsibleProjectList();
+    Response<StudentProjectVo> getStudentProjectList(int currentPage,int pageSize);
 
     /**
      * 项目负责人删除学生项目,只删除未通过的
-     * @param projectId
+     * @param projectId 学生id
      * @return
      */
     Response delectStudentProjectById(Long projectId);
@@ -60,13 +56,15 @@ public interface ProjectService extends IService<Project> {
      * @param name 学号/名字/工号
      * @return
      */
-    Response getUserApply(int role, String name);
+    Response<StudentProjectVo> getUserApply(int role, String name);
 
     /**
-     * 获取自己创建的的项目
+     * 获取自己创建的项目
+     * @param currentPage
+     * @param pageSize
      * @return
      */
-    Response getMyCrectProject(int currentPage,int pageSize);
+    Response<PageDTO<StudentProjectVo>> getMyCrectProject(int currentPage, int pageSize);
 
     /**
      *根据项目id查询项目详细信息

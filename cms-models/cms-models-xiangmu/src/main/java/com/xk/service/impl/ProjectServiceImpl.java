@@ -267,25 +267,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         }
     }
 
-    /**
-     * 获取学生负责项目
-     * @return
-     */
-    @Override
-    public Response getStudentResponsibleProjectList() {
-        //当前登录用户ID
-        Long userId = SecurityUtils.getLoginUser().getUserid();
 
-        try{
-            LambdaQueryWrapper<Project> queryWrapper = Wrappers.<Project>lambdaQuery()
-                    .eq(Project::getDelFlag,0)//是否删除
-                    .eq(Project::getUserId,userId); // 项目负责人ID是否为当前登录用户ID
-            List<Project> projectList = list(queryWrapper);
-            return Response.success(projectList,"获取学生负责项目成功！");
-        }catch (Exception e){
-            throw new ServiceException("查询学生当前负责项目失败",502);
-        }
-    }
 
     /**
      * 删除项目
@@ -587,6 +569,13 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return true;
     }
 
+    /**
+     * 获取当前绑定的项目中某个学生的项目列表
+     * @param currentPage 页码
+     * @param pageSize 单页大小
+     * @param studentId 学生id
+     * @return Page<StudentProjectVo>
+     */
     @Override
     public PageDTO<StudentProjectVo> getStudentProjectList(StudentProjectDto studentProjectDto) {
         //todo 赶时间,查多张表,可以值查一个张项目表,有空看,全角色项目列表(这么查json语句)
@@ -633,7 +622,6 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             return studentProjectVo;
         });
     }
-
     @Override
     public PageDTO<ProjectListvo> getProjectList(ProjectSelectDto projectSelectDto) {
         //1.判断用户输入角色标识符,是否正确,字典其他数据校验
@@ -2289,7 +2277,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         });
 
         //验证 学生学号是否和id对应,先根据id批量查询用户信息
-        userService.listByIds(studentId).stream().forEach(user -> {
+        userServiceImpl.listByIds(studentId).stream().forEach(user -> {
             //转换用户ID和学号
             Map<Long, String> map = applyForDTO.getStudents().stream()
                     .collect(Collectors.toMap(ApplyForStudent::getUserId, ApplyForStudent::getUserName));
@@ -2315,7 +2303,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * @return true(存在)/false(不存在)
      */
     public boolean isUserExist(Long userId){
-        return 1L == userService.count(Wrappers.<User>lambdaQuery().eq(User::getUserId,userId));
+        return 1L == userServiceImpl.count(Wrappers.<User>lambdaQuery().eq(User::getUserId,userId));
     }
 
     /**
