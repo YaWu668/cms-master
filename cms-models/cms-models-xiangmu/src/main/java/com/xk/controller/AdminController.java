@@ -6,6 +6,7 @@ import com.cms.common.log.annotation.Log;
 import com.cms.common.log.enums.BusinessType;
 import com.xk.domain.dto.*;
 import com.xk.domain.vo.admin.UserListVo;
+import com.xk.domain.vo.group.CollegeDetailedLisVo;
 import com.xk.domain.vo.group.YearDetailedLisVo;
 import com.xk.entity.SpecialistGroup;
 import com.xk.entity.YearGroup;
@@ -43,6 +44,10 @@ public class AdminController {
      * 年度数据的服务
      */
     private final YearDataService yearDataService;
+    /**
+     * 学院的服务
+     */
+    private final CollegeGroupService collegeGroupService;
 
     /**
      * 添加专家组
@@ -92,6 +97,8 @@ public class AdminController {
         return specialistDataService.addSpecialistUser(addSpecialistUserDTO);
     }
 
+
+//-------------------------------------------------------
     /**
      * 查询年度详细列表
      * @param yearDetailedListDto 查询条件
@@ -140,6 +147,19 @@ public class AdminController {
     @Log(title = "删除年度数据", businessType = BusinessType.DELETE)
     public Response deleteYearData(@PathVariable("id") Long id){
         return yearDataService.deleteYearData(id);
+    }
+
+    //--------------
+
+    /**
+     * 获取学院详细信息列表
+     * @param collegeDto 学院名模糊查询
+     * @return
+     */
+    @GetMapping("/getCollegedetailedList")
+    @Log(title = "获取学院详细信息列表", businessType = BusinessType.OTHER)
+    public Response<PageDTO<CollegeDetailedLisVo>> getCollegedetailedList(CollegeDto collegeDto){
+        return Response.success(collegeGroupService.getCollegedetailedList(collegeDto));
     }
 }
 

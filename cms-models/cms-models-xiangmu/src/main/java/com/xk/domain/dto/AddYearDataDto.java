@@ -28,13 +28,15 @@ public class AddYearDataDto {
     /**
      * 年度开始时间 格式 yyyy-MM-dd HH:mm:ss
      */
-    @JsonIgnore
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @NotNull(message = "年度开始时间不能为空")
     private Date begin;
     /**
      * 年度结束时间
      */
-    @JsonIgnore
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @NotNull(message = "年度结束时间不能为空")
     private Date end;
 }

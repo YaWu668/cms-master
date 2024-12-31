@@ -21,7 +21,9 @@ import com.xk.service.YearDataService;
 import com.xk.service.YearGroupService;
 import com.xk.utils.BeanCopyUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -36,14 +38,12 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class YearGroupServiceImpl extends ServiceImpl<YearGroupMapper, YearGroup> implements YearGroupService {
+
     /**
      * 年度数据的service
      */
-    private final YearDataService yearDataService;
-    /**
-     * 年度组mapper
-     */
-    private final YearGroupMapper yearGroupMapper;
+    private final  YearDataService yearDataService;
+
     @Override
     public Response<List<yearListDTO> > yearList(String name) {
         //1.获取全部年度组没有屏蔽的年度数据
@@ -152,14 +152,17 @@ public class YearGroupServiceImpl extends ServiceImpl<YearGroupMapper, YearGroup
     }
 
     @Override
+    @Transactional
     public Response addYearGroup(AddYearGroup addYearGroup) {
         YearGroup yearGroup = BeanCopyUtils.copyBean(addYearGroup, YearGroup.class);
+        //1.检查年度组名称是否已存在
         List<YearGroup> list = this.lambdaQuery()
                 .eq(YearGroup::getName, yearGroup.getName())
                 .list();
         if(list != null && list.size() > 0){
             return Response.error("年度组名称已存在");
         }
+        //2.保存年度组
         if(this.save(yearGroup)){
             return Response.success();
         }
@@ -167,14 +170,23 @@ public class YearGroupServiceImpl extends ServiceImpl<YearGroupMapper, YearGroup
     }
 
     @Override
+    @Transactional
     public Response updateYearGroup(UpdateYearGroup updateYearGroup) {
         YearGroup yearGroup = BeanCopyUtils.copyBean(updateYearGroup, YearGroup.class);
+        //1.检查年度组名称是否已存在
         List<YearGroup> list = this.lambdaQuery()
-                .eq(YearGroup::getName, yearGroup.getName())
+                .eq(YearGroup::getYearGroupId, yearGroup.getYearGroupId())
                 .list();
-        if(list != null && list.size() > 0){
-            return Response.error("年度组名称已存在");
+        if(list != null && list.size() == 0){
+            return Response.error("年度组不存在");
         }
+        long count = list.stream()
+                .filter(e -> e.getName().equals(yearGroup.getName()))
+                .count();
+        if(count > 0){
+            throw new ServiceException("年度组名称已存在",400);
+        }
+        //2.修改年度组
         if(this.updateById(yearGroup)){
             return Response.success();
         }

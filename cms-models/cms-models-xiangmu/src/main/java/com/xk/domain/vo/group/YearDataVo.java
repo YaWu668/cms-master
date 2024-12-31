@@ -7,6 +7,9 @@ import lombok.Data;
 
 import java.util.Date;
 
+/**
+ * 年度数据vo
+ */
 @Data
 public class YearDataVo {
     /**

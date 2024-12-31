@@ -21,55 +21,52 @@ public class CustomMetaObjectHandler implements MetaObjectHandler {
 
     @Override
     public void insertFill(MetaObject metaObject) {
-        Long userId = null;
+        String userName = null;
         try {
-            userId = SecurityUtils.getUserId();
+            userName = SecurityUtils.getUsername();
         } catch (Exception e) {
             log.error("正常异常------这个异常是注册账号时候解析token失败,获取不到 use  rid 失败异常");
             e.printStackTrace();
-            userId = -1L;//表示是自己创建
+            userName = "定时任务";//表示是自己创建
         }
 
         if (TaskContext.isTaskContext()) {
             // 定时任务的插入逻辑
             this.setFieldValByName("createTime", new Date(), metaObject);
-            this.setFieldValByName("createBy",-1L , metaObject);
+            this.setFieldValByName("createBy",userName , metaObject);
             this.setFieldValByName("updateTime", new Date(), metaObject);
-            this.setFieldValByName("updateBy", -1L, metaObject);
+            this.setFieldValByName("updateBy", userName, metaObject);
             log.info("定时任务的插入逻辑");
         } else {
             // 正常插入逻辑
             this.setFieldValByName("createTime", new Date(), metaObject);
-            this.setFieldValByName("createBy",userId , metaObject);
+            this.setFieldValByName("createBy",userName , metaObject);
             this.setFieldValByName("updateTime", new Date(), metaObject);
-            this.setFieldValByName("updateBy", userId, metaObject);
+            this.setFieldValByName("updateBy", userName, metaObject);
         }
 
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        Long userId = null;
+        String userName = null;
         try {
-            userId = SecurityUtils.getUserId();
+            userName = SecurityUtils.getUsername();
         } catch (Exception e) {
             log.error("正常异常------这个异常是注册账号时候解析token失败,获取不到 use  rid 失败异常");
             e.printStackTrace();
-            userId = -1L;//表示是自己创建
+            userName = "定时任务";//表示是自己创建
         }
+
         if (TaskContext.isTaskContext()) {
             // 定时任务的插入逻辑
-            this.setFieldValByName("createTime", new Date(), metaObject);
-            this.setFieldValByName("createBy",-1L , metaObject);
             this.setFieldValByName("updateTime", new Date(), metaObject);
-            this.setFieldValByName("updateBy", -1L, metaObject);
+            this.setFieldValByName("updateBy", userName, metaObject);
             log.info("定时任务的插入逻辑");
         } else {
             // 正常插入逻辑
-            this.setFieldValByName("createTime", new Date(), metaObject);
-            this.setFieldValByName("createBy",userId , metaObject);
             this.setFieldValByName("updateTime", new Date(), metaObject);
-            this.setFieldValByName("updateBy", userId, metaObject);
+            this.setFieldValByName("updateBy", userName, metaObject);
         }
     }
 }
