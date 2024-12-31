@@ -670,9 +670,14 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 && !checkDictData(projectSelectDto.getProjectRank(),"xm_item_rank")){
             throw new ServiceException("项目级别字典值不存在",400);
         }
-        if(projectSelectDto.getState() != null //项目状态 0:未审核  1:审核中
-            && !checkDictData(projectSelectDto.getState(),"xm_project_state")){
-            throw new ServiceException("项目状态字典值不存在",400);
+        if(projectSelectDto.getStates() != null //项目状态 0:未审核  1:审核中
+            && !projectSelectDto.getStates().isEmpty()){
+            projectSelectDto.getStates().stream()
+                    .forEach(state -> {
+                        if(!checkDictData(state,"xm_project_state")){
+                            throw new ServiceException("states数组当中的:"+state+",项目状态字典值不存在",400);
+                        }
+                    });
         }
         if(projectSelectDto.getSubjectCategory() != null //学科类别 1:工科
             && !checkDictData(projectSelectDto.getSubjectCategory(),"xm_item_subject_category")){
@@ -917,7 +922,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 //项目级别
                 .eq(projectSelectDto.getProjectRank()!=null, Project::getProjectRank, projectSelectDto.getProjectRank())
                 //项目状态
-                .eq(projectSelectDto.getState()!=null, Project::getState, projectSelectDto.getState())
+                .in(projectSelectDto.getStates()!=null && !projectSelectDto.getStates().isEmpty(), Project::getState, projectSelectDto.getStates())
                 //学科类别
                 .eq(projectSelectDto.getSubjectCategory()!=null, Project::getSubjectCategory, projectSelectDto.getSubjectCategory())
                 //项目类型

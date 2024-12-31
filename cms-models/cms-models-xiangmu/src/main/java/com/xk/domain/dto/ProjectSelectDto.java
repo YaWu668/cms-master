@@ -4,6 +4,8 @@ package com.xk.domain.dto;
 import com.xk.constant.ProjectConstant;
 import com.xk.domain.query.PageQuery;
 
+import java.util.List;
+
 /**
  * 项目列表请求通用
  */
@@ -24,7 +26,7 @@ public class ProjectSelectDto extends PageQuery {
     /**
      * 项目状态值 ---字典
      */
-    private Long state;
+    private List<Long> states;
     /**
      * 学科类别 1:工科 2:文科  --字典
      */
