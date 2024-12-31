@@ -2,13 +2,12 @@ package com.xk.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cms.common.core.web.domain.Response;
-import com.xk.domain.dto.PageDTO;
-import com.xk.domain.dto.YearDetailedListDto;
-import com.xk.domain.dto.yearListDTO;
+import com.xk.domain.dto.*;
 import com.xk.domain.vo.group.YearDetailedLisVo;
 import com.xk.domain.vo.group.YearGroupVo;
 import com.xk.entity.YearGroup;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -51,6 +50,15 @@ public interface YearGroupService extends IService<YearGroup> {
      * @return 全部年度组的详细数据
      */
     PageDTO<YearDetailedLisVo> getYearDetailedList(YearDetailedListDto yearDetailedListDto);
-
+    /**
+     * 添加年度组
+     * @param addYearGroup 年度组
+     * @return
+     */
+    Response addYearGroup(@Valid AddYearGroup addYearGroup);
+    /**
+     * 根据年度组Id进行修改后年度组,年度组禁用的话,<br>学生申请项目无法绑定禁用的
+     */
+    Response updateYearGroup(@Valid UpdateYearGroup updateYearGroup);
 }
 

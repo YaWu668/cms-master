@@ -10,10 +10,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cms.common.core.exception.ServiceException;
 import com.cms.common.core.web.domain.Response;
 
-import com.xk.domain.dto.PageDTO;
-import com.xk.domain.dto.YearDataDto;
-import com.xk.domain.dto.YearDetailedListDto;
-import com.xk.domain.dto.yearListDTO;
+import com.xk.domain.dto.*;
 import com.xk.domain.vo.group.YearDataVo;
 import com.xk.domain.vo.group.YearDetailedLisVo;
 import com.xk.domain.vo.group.YearGroupVo;
@@ -152,6 +149,36 @@ public class YearGroupServiceImpl extends ServiceImpl<YearGroupMapper, YearGroup
         });
         //4.返回结果
         return  pageDTO;
+    }
+
+    @Override
+    public Response addYearGroup(AddYearGroup addYearGroup) {
+        YearGroup yearGroup = BeanCopyUtils.copyBean(addYearGroup, YearGroup.class);
+        List<YearGroup> list = this.lambdaQuery()
+                .eq(YearGroup::getName, yearGroup.getName())
+                .list();
+        if(list != null && list.size() > 0){
+            return Response.error("年度组名称已存在");
+        }
+        if(this.save(yearGroup)){
+            return Response.success();
+        }
+        return Response.error();
+    }
+
+    @Override
+    public Response updateYearGroup(UpdateYearGroup updateYearGroup) {
+        YearGroup yearGroup = BeanCopyUtils.copyBean(updateYearGroup, YearGroup.class);
+        List<YearGroup> list = this.lambdaQuery()
+                .eq(YearGroup::getName, yearGroup.getName())
+                .list();
+        if(list != null && list.size() > 0){
+            return Response.error("年度组名称已存在");
+        }
+        if(this.updateById(yearGroup)){
+            return Response.success();
+        }
+        return Response.error();
     }
 }
 
