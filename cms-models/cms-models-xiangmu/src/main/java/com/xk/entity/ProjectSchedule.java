@@ -20,7 +20,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @NoArgsConstructor
 @TableName("xm_project_schedule")
 @lombok.experimental.Accessors(chain = true)
-public class ProjectSchedule  {
+public class ProjectSchedule extends  BaseEntity {
     //项目进度id
     @TableId
     private Long projectScheduleId;
@@ -33,15 +33,5 @@ public class ProjectSchedule  {
     private Long userId;
     //内容,就记录项目当前状态内容
     private String content;
-    //创建者
-    private String createBy;
-    //创建时间
-    private Date createTime;
-    //更新者
-    private String updateBy;
-    //更新时间
-    private Date updateTime;
-
-
 
 }

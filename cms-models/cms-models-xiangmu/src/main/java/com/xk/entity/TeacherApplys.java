@@ -19,7 +19,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("xm_teacher_applys")
-public class TeacherApplys  {
+public class TeacherApplys extends BaseEntity  {
     //老师报名表的ID
     @TableId
     private Long teacherApplyId;
@@ -40,12 +40,4 @@ public class TeacherApplys  {
     private String mailbox;
     //是否指导老师(0代表是指导老师, 1代表是企业老师)
     private Integer isTeacher;
-    //创建者
-    private String createBy;
-    //创建时间
-    private Date createTime;
-    //更新者
-    private String updateBy;
-    //更新时间
-    private Date updateTime;
 }

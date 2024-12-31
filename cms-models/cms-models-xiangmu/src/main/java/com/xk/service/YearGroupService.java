@@ -2,7 +2,10 @@ package com.xk.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cms.common.core.web.domain.Response;
+import com.xk.domain.dto.PageDTO;
+import com.xk.domain.dto.YearDetailedListDto;
 import com.xk.domain.dto.yearListDTO;
+import com.xk.domain.vo.group.YearDetailedLisVo;
 import com.xk.domain.vo.group.YearGroupVo;
 import com.xk.entity.YearGroup;
 
@@ -42,5 +45,12 @@ public interface YearGroupService extends IService<YearGroup> {
      * @return 年度组vo类
      */
     Response<YearGroupVo> selectByIdYearGroup(Long yearGroupId);
+    /**
+     * 查询年度详细列表
+     * @param yearDetailedListDto 查询条件
+     * @return 全部年度组的详细数据
+     */
+    PageDTO<YearDetailedLisVo> getYearDetailedList(YearDetailedListDto yearDetailedListDto);
+
 }
 

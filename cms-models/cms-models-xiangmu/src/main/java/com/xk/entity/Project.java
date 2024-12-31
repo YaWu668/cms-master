@@ -21,7 +21,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @NoArgsConstructor
 @TableName("xm_project")
 @lombok.experimental.Accessors(chain = true)
-public class Project  {
+public class Project extends  BaseEntity  {
     //项目ID
     @TableId
     private Long projectId;
@@ -151,14 +151,6 @@ public class Project  {
     private String concludeUrl;
     //当前项目审核状态进度, 看nacos配置角色审核项目顺序, 从1开始, 1代表需要序号为角色进行审核, 如果当前序号为0代表审核完毕
     private Long auditStatus;
-    //创建者
-    private String createBy;
-    //创建时间
-    private Date createTime;
-    //更新者
-    private String updateBy;
-    //更新时间
-    private Date updateTime;
     //删除标志（0代表未删除，1代表已删除）
     @TableLogic(value = "0", delval = "1")
     private Integer delFlag;

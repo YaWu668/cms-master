@@ -21,7 +21,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("sys_user")
-public class User  {
+public class User  extends BaseEntity {
     //用户ID
     @TableId
     private Long userId;
@@ -61,14 +61,6 @@ public class User  {
     private String loginIp;
     //最后登录时间
     private Date loginDate;
-    //创建者
-    private String createBy;
-    //创建时间
-    private Date createTime;
-    //更新者
-    private String updateBy;
-    //更新时间
-    private Date updateTime;
     //备注
     private String remark;
     //部门ID

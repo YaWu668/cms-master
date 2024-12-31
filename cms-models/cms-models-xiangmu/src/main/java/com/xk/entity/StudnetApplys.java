@@ -19,7 +19,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("xm_studnet_applys")
-public class StudnetApplys  {
+public class StudnetApplys  extends BaseEntity {
     //学生报名表的ID
     @TableId
     private Long studnetApplyId;
@@ -52,12 +52,4 @@ public class StudnetApplys  {
     private String job;
     //是否负责人 , 0为不是, 1是
     private Integer isPrincipal;
-    //创建者
-    private String createBy;
-    //创建时间
-    private Date createTime;
-    //更新者
-    private String updateBy;
-    //更新时间
-    private Date updateTime;
 }

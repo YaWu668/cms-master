@@ -7,14 +7,14 @@ import com.cms.common.log.enums.BusinessType;
 import com.xk.domain.dto.AddSpecialistUserDTO;
 import com.xk.domain.dto.InquireUserDTO;
 import com.xk.domain.dto.PageDTO;
+import com.xk.domain.dto.YearDetailedListDto;
 import com.xk.domain.vo.admin.UserListVo;
+import com.xk.domain.vo.group.YearDetailedLisVo;
 import com.xk.entity.SpecialistGroup;
-import com.xk.service.SpecialistDataService;
-import com.xk.service.SpecialistGroupService;
-import com.xk.service.UserService;
+import com.xk.entity.YearGroup;
+import com.xk.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
 
 /**
  * 管理员控制器
@@ -23,12 +23,24 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/admin")
 public class AdminController {
-
+    /**
+     * 专家组的服务
+     */
     private final SpecialistGroupService specialistGroupService;
-
+    /**
+     * 用户服务
+     */
     private final UserService userService;
-
+    /**
+     * 专家人组的服务
+     */
     private final SpecialistDataService specialistDataService;
+
+    /**
+     * 年度组的服务
+     */
+    private final YearGroupService yearGroupService;
+
     /**
      * 添加专家组
      * @param specialistGroup
@@ -55,16 +67,17 @@ public class AdminController {
     }
 
     /**
+     * (废案)
      * 分页查询全部用户信息
      * @param inquireUserDto
      * @return
      */
-    @GetMapping("/getAllUser")
+    /*@GetMapping("/getAllUser")
     // todo   @RequiresPermissions("xm:admin:select")
     @Log(title = "分页查询全部用户信息", businessType = BusinessType.OTHER)
     public Response<PageDTO<UserListVo>> getUserList(InquireUserDTO inquireUserDto){
         return Response.success(userService.getUserList(inquireUserDto));
-    }
+    }*/
 
     /**
      * 添加专家组人员
@@ -75,4 +88,16 @@ public class AdminController {
     public Response addSpecialistUser(@RequestBody AddSpecialistUserDTO addSpecialistUserDTO){
         return specialistDataService.addSpecialistUser(addSpecialistUserDTO);
     }
+
+    /**
+     * 查询年度详细列表
+     * @param yearDetailedListDto 查询条件
+     * @return 全部年度组的详细数据
+     */
+    @GetMapping("/getYearDetailedList")
+    @Log(title = "查询年度详细列表", businessType = BusinessType.OTHER)
+    public Response<PageDTO<YearDetailedLisVo>> getYearDetailedList(YearDetailedListDto yearDetailedListDto){
+        return Response.success(yearGroupService.getYearDetailedList(yearDetailedListDto));
+    }
 }
+

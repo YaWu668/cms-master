@@ -56,7 +56,7 @@ public class StudnetApplysServiceImpl extends ServiceImpl<StudnetApplysMapper, S
         List<StudnetApplys> list = this.list(wrapper);
         //3.返回项目id
         return list.stream()
-                .map(StudnetApplys::getUserId)
+                .map(StudnetApplys::getProjectId)
                 .distinct()
                 .collect(Collectors.toList());
     }

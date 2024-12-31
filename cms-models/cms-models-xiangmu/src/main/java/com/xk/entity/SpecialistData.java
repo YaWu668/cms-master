@@ -19,7 +19,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("xm_specialist_data")
-public class SpecialistData  {
+public class SpecialistData  extends BaseEntity {
     //专家人员id
     @TableId
     private Long specialistDataId;
@@ -32,15 +32,6 @@ public class SpecialistData  {
     private String userName;
     //专家的手机号
     private String phonenumber;
-    //创建者
-    private String createBy;
-    //创建时间
-    private Date createTime;
-    //更新者
-    private String updateBy;
-    //更新时间
-    private Date updateTime;
-
 
 
 }

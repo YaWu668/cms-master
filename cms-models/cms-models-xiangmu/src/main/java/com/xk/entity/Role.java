@@ -21,7 +21,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("sys_role")
-public class Role  {
+public class Role  extends BaseEntity {
     //角色ID
     @TableId
     private Long roleId;
@@ -43,14 +43,7 @@ public class Role  {
     //删除标志（0代表存在 2代表删除）
     @TableLogic(value = "0", delval = "2")
     private String delFlag;
-    //创建者
-    private String createBy;
-    //创建时间
-    private Date createTime;
-    //更新者
-    private String updateBy;
-    //更新时间
-    private Date updateTime;
+
     //备注
     private String remark;
 

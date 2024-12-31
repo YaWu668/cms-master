@@ -19,7 +19,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("xm_college_data")
-public class CollegeData  {
+public class CollegeData  extends  BaseEntity {
     //学院人员id
     @TableId
     private Long collegeDataId;
@@ -32,15 +32,5 @@ public class CollegeData  {
     private String userName;
     //学院人员手机号
     private String phonenumber;
-    //创建者
-    private String createBy;
-    //创建时间
-    private Date createTime;
-    //更新者
-    private String updateBy;
-    //更新时间
-    private Date updateTime;
-
-
 
 }

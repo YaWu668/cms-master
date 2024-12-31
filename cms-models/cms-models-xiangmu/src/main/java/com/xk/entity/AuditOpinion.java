@@ -22,7 +22,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @TableName("xm_audit_opinion")
 @Accessors(chain = true)
-public class AuditOpinion  {
+public class AuditOpinion extends  BaseEntity  {
     //审核意见的ID
     @TableId
     private Long auditOpinionId;
@@ -39,13 +39,5 @@ public class AuditOpinion  {
     private Long auditState;
     //审核意见
     private String auditOpinion;
-    //创建者
-    private String createBy;
-    //创建时间
-    private Date createTime;
-    //更新者
-    private String updateBy;
-    //更新时间
-    private Date updateTime;
 
 }

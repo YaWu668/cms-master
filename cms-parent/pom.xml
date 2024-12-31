@@ -61,7 +61,6 @@
                 <artifactId>easyexcel</artifactId>
                 <version>${easyexcel.version}</version>
             </dependency>
-
             <!-- SpringFramework的依赖配置-->
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -70,7 +69,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
             <!-- SpringCloud 微服务 -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
@@ -79,7 +77,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
             <!-- SpringCloud Alibaba 微服务 -->
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>

@@ -19,7 +19,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("sys_dict_type")
-public class DictType  {
+public class DictType extends  BaseEntity  {
     //字典主键
     @TableId
     private Long dictId;
@@ -30,14 +30,6 @@ public class DictType  {
     private String dictType;
     //状态（0正常 1停用）
     private String status;
-    //创建者
-    private String createBy;
-    //创建时间
-    private Date createTime;
-    //更新者
-    private String updateBy;
-    //更新时间
-    private Date updateTime;
     //备注
     private String remark;
 

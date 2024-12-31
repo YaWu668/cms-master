@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("xm_specialist_group")
-public class SpecialistGroup {
+public class SpecialistGroup  extends BaseEntity{
     //专家组的id
     @TableId
     private Long specialistGroupId;
@@ -31,15 +31,4 @@ public class SpecialistGroup {
     //备注
     private String remark;
 
-    //创建者
-    private String createBy;
-
-    //创建时间
-    private Date createTime;
-
-    //更新者
-    private String updateBy;
-
-    //更新时间
-    private Date updateTime;
 }

@@ -6,8 +6,9 @@ import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
+
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cms.common.core.exception.ServiceException;
@@ -172,6 +173,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         checkStuentAndTeacher(applyForDTO);
         //校验附加4之外都需要企业老师支持
         teachersSupport(applyForDTO);
+        //todo 特别设置三组是否启用
         //TODO 验证学院组id是否存在并且是否启用
         isCollegeGroupExistAndEnable(applyForDTO.getCollegeGroupId());
         //检查报名的学生的学院组是否存在并且是否启用
@@ -675,7 +677,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             projectSelectDto.getStates().stream()
                     .forEach(state -> {
                         if(!checkDictData(state,"xm_project_state")){
-                            throw new ServiceException("states数组当中的:"+state+",项目状态字典值不存在",400);
+                            throw new ServiceException("states数组当中的"+state+"项目状态字典值不存在",400);
                         }
                     });
         }

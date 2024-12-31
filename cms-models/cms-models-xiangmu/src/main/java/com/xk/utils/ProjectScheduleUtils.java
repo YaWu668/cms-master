@@ -14,9 +14,9 @@ public class ProjectScheduleUtils {
     public static void main(String[] args) {
         // 创建测试数据
         List<ProjectSchedule> projectSchedules = new ArrayList<>();
-        projectSchedules.add(new ProjectSchedule(1L, 101L, -1L, 1L, "初始状态", "user1", new Date(), null, null));
-        projectSchedules.add(new ProjectSchedule(2L, 101L, 1L, 2L, "审核中", "user2", new Date(), null, null));
-        projectSchedules.add(new ProjectSchedule(3L, 101L, 2L, 3L, "已完成", "user3", new Date(), null, null));
+        projectSchedules.add(new ProjectSchedule(1L, 101L, -1L, 1L, "初始状态"));
+        projectSchedules.add(new ProjectSchedule(2L, 101L, 1L, 2L, "审核中"));
+        projectSchedules.add(new ProjectSchedule(3L, 101L, 2L, 3L, "已完成"));
 
         // 测试获取最后一个节点的方法
 //        ProjectSchedule lastSchedule = ProjectScheduleUtils.getLastByProjectId(101L, projectSchedules);

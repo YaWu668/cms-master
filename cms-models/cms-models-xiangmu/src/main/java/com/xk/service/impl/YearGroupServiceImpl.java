@@ -1,13 +1,21 @@
 package com.xk.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cms.common.core.exception.ServiceException;
 import com.cms.common.core.web.domain.Response;
+
+import com.xk.domain.dto.PageDTO;
 import com.xk.domain.dto.YearDataDto;
+import com.xk.domain.dto.YearDetailedListDto;
 import com.xk.domain.dto.yearListDTO;
+import com.xk.domain.vo.group.YearDataVo;
+import com.xk.domain.vo.group.YearDetailedLisVo;
 import com.xk.domain.vo.group.YearGroupVo;
 import com.xk.entity.YearData;
 import com.xk.entity.YearGroup;
@@ -35,6 +43,10 @@ public class YearGroupServiceImpl extends ServiceImpl<YearGroupMapper, YearGroup
      * 年度数据的service
      */
     private final YearDataService yearDataService;
+    /**
+     * 年度组mapper
+     */
+    private final YearGroupMapper yearGroupMapper;
     @Override
     public Response<List<yearListDTO> > yearList(String name) {
         //1.获取全部年度组没有屏蔽的年度数据
@@ -113,6 +125,33 @@ public class YearGroupServiceImpl extends ServiceImpl<YearGroupMapper, YearGroup
         }
         YearGroupVo yearGroupVo = BeanCopyUtils.copyBean(list.get(0), YearGroupVo.class);
         return Response.success(yearGroupVo);
+    }
+
+    @Override
+    public PageDTO<YearDetailedLisVo> getYearDetailedList(YearDetailedListDto yearDetailedListDto) {
+        //1.分页模糊查询年度组
+        Page<YearGroup> page = yearDetailedListDto.toMpPageDefaultSortByCreateTimeDesc();
+        LambdaQueryWrapper<YearGroup> wrapper = new LambdaQueryWrapper<YearGroup>()
+                .like(StrUtil.isNotBlank(yearDetailedListDto.getName()), YearGroup::getName, yearDetailedListDto.getName());
+        this.page(page, wrapper);
+        PageDTO<YearDetailedLisVo> pageDTO = PageDTO.of(page, YearDetailedLisVo.class);
+        //2.查询年度组数组
+        List<Long> yearIds = pageDTO.getList().stream().map(yearDetailedVo -> yearDetailedVo.getYearGroupId()).collect(Collectors.toList());
+        List<YearData> yearDataList = yearDataService.lambdaQuery()
+                .in(yearIds != null && !yearIds.isEmpty(), YearData::getYearGroupId, yearIds)
+                .list();
+
+        //3.给年度组写入年度数据
+        List<YearDetailedLisVo> lisVos = pageDTO.getList();
+        lisVos.stream().forEach(vo->{
+            List<YearData> dataList = yearDataList.stream()
+                    .filter(yearData -> yearData.getYearGroupId().equals(vo.getYearGroupId()))
+                    .collect(Collectors.toList());
+            List<YearDataVo> dataVos = BeanCopyUtils.copyBeans(dataList, YearDataVo.class);
+            vo.setYearDataList(dataVos);
+        });
+        //4.返回结果
+        return  pageDTO;
     }
 }
 
