@@ -132,11 +132,8 @@ public class PulicController {
     @Log(title = "搜索人员", businessType = BusinessType.OTHER)
     public Response<PageDTO<SearchPersonListVo>> searchPerson(ProjectPersonDto projectPersonDto){
         //获取对应角色集合
-        List<Role> studentOrNoStudnet = roleService.getStudentOrNoStudnet(projectPersonDto.getIsStudent());
-        //根据角色集合转换为用户id集合
-        List<Long> userIds = userRoleService.getUserIdsByRoleList(studentOrNoStudnet);
         //根据用户id进行条件查询
-        PageDTO<SearchPersonListVo> pageDTO = userService.searchPerson(projectPersonDto, userIds);
+        PageDTO<SearchPersonListVo> pageDTO = userService.getUsersByRolesAndKeyword(projectPersonDto);
         return Response.success(pageDTO);
     }
 

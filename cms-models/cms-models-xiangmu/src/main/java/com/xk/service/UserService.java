@@ -34,6 +34,8 @@ public interface UserService extends IService<User> {
      */
     PageDTO<UserListVo> getUserList(InquireUserDTO inquireUserDto);
 
-    PageDTO<SearchPersonListVo> searchPerson(ProjectPersonDto projectPersonDto,List<Long> userIds);
+//    PageDTO<SearchPersonListVo> searchPerson(ProjectPersonDto projectPersonDto,List<Long> userIds);
+
+    PageDTO<SearchPersonListVo> getUsersByRolesAndKeyword( ProjectPersonDto projectPersonDto);
 }
 

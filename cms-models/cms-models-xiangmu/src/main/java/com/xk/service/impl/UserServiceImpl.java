@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.cms.system.api.domain.pojo.SysUser;
+import com.xk.constant.RoleConstant;
 import com.xk.domain.dto.ProjectPersonDto;
 import com.xk.domain.vo.SearchPersonListVo;
 import com.xk.domain.vo.detail.Student;
@@ -20,6 +22,7 @@ import com.xk.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -72,7 +75,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return PageDTO.of(page, UserListVo.class);
     }
 
-    @Override
+    /*@Override
     public PageDTO<SearchPersonListVo> searchPerson(ProjectPersonDto projectPersonDto,List<Long> userIds) {
         //非空判断
         if (userIds.isEmpty()){
@@ -88,7 +91,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         this.page(page, queryWrapper);
 
         return PageDTO.of(page,SearchPersonListVo.class);
-    }
+    }*/
 
     //获取符合条件的id集合
     public List<Long> getUserIds(InquireUserDTO inquireUserDto) {
@@ -103,6 +106,48 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         } else {
             return userIds.stream().map(User::getUserId).collect(Collectors.toList());
         }
+    }
+
+
+    @Override
+    public PageDTO<SearchPersonListVo> getUsersByRolesAndKeyword( ProjectPersonDto projectPersonDto) {
+        ArrayList<String> roleKey = new ArrayList<>();
+        //1.判断是不是学生
+        if(projectPersonDto.getIsStudent()==null){
+            throw new ServiceException("isStudent不能为null",444);
+        }
+        if(projectPersonDto.getIsStudent()){
+            roleKey.add(RoleConstant.STUDENT);
+        }else {
+            roleKey.add(RoleConstant.TEACHER);
+            roleKey.add(RoleConstant.COLLEGE);
+            roleKey.add(RoleConstant.EXPERT);
+            roleKey.add(RoleConstant.ADMIN);
+        }
+
+        // 构造 LambdaQueryWrapper
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper
+                .inSql(User::getUserId,
+                "SELECT ur.user_id " +
+                        "FROM sys_user_role ur " +
+                        "JOIN sys_role r ON ur.role_id = r.role_id " +
+                        "WHERE r.role_key IN (" +
+                        roleKey.stream()
+                                .map(role -> "'" + role + "'")
+                                .collect(Collectors.joining(",")) +
+                        ")" +
+                        "AND r.del_flag = '0'"
+        )
+                .and(StrUtil.isNotBlank(projectPersonDto.getParameter()),wrapper ->
+                wrapper.like(User::getUserName, projectPersonDto.getParameter())
+                        .or()
+                        .like(User::getNickName, projectPersonDto.getParameter())
+        );
+        //1.分页
+        Page<User> page = projectPersonDto.toMpPageDefaultSortByCreateTimeDesc();
+        this.page(page, queryWrapper);
+        return PageDTO.of(page,SearchPersonListVo.class);
     }
 }
 
