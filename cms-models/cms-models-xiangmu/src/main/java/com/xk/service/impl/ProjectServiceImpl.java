@@ -590,10 +590,22 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         List<TeacherApplys> teacherApplys = teacherApplysService.lambdaQuery()
                 .eq(TeacherApplys::getUserId, userId)
                 .list();
+        if(teacherApplys == null || teacherApplys.size() == 0){
+            return PageDTO.empty();
+        }
         //3.再去查这个学生参加的项目
         List<StudnetApplys> studnetApplys = studnetApplysService.lambdaQuery()
                 .eq(StudnetApplys::getUserId, studentProjectDto.getStudentId())
                 .list();
+        if(studnetApplys == null || studnetApplys.size() == 0){
+            StringBuffer msg = new StringBuffer();
+            msg.append("\n老师参加的项目名称:");
+            teacherApplys.forEach(e->{
+                msg.append(e.getName()).append(",");
+            });
+
+            throw new ServiceException("数据发生异常请联系管理员,老师参加了项目,不存在学生"+msg,500);
+        }
         //4.两个项目的交集,项目id集合
         // 4.1提取两个集合的 projectId
         Set<Long> teacherProjectIds = teacherApplys.stream()
