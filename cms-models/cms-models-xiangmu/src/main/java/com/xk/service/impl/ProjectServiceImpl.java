@@ -711,6 +711,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     public PageDTO<ProjectListvo> getProjectListByStudent(ProjectSelectDto projectSelectDto) {
         //1.获取学生获取自己报名的项目id
         List<Long> userApplyListId = studnetApplysService.getUserApplyListId();
+        if(userApplyListId.isEmpty()){
+            return PageDTO.empty();
+        }
         //2.根据项目id查询项目和多条件分页搜索
         Page<Project> page = projectSelectDto.toMpPageDefaultSortByCreateTimeDesc();
         // 3. 构造查询条件
@@ -752,6 +755,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     public PageDTO<ProjectListvo> getProjectListByTeacher(ProjectSelectDto projectSelectDto) {
         //1.查询老师报名想项目列表,就知道老师学生的项目列表(实际老师参加的项目)
         List<Long> listId = teacherApplysService.getUserApplyListId();
+        if(listId.isEmpty()){
+            return PageDTO.empty();
+        }
         //2.根据项目id查询项目和多条件分页搜索
         Page<Project> page = projectSelectDto.toMpPageDefaultSortByCreateTimeDesc();
         // 3. 构造查询条件
@@ -812,6 +818,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     public PageDTO<ProjectListvo> getProjectListByCollege(ProjectSelectDto projectSelectDto) {
         //1.获取当前用户的学院id
         List<Long> collegeIdByUserId = collegeDataService.getCollegeIdByUserId();
+        if(collegeIdByUserId.isEmpty()){
+            return PageDTO.empty();
+        }
         //2.构造条件
         Page<Project> page = projectSelectDto.toMpPageDefaultSortByCreateTimeDesc();
         LambdaQueryWrapper<Project> queryWrapper = getProjectLambdaQueryWrapper(projectSelectDto, null, collegeIdByUserId, null, false);//学院
@@ -825,6 +834,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     public PageDTO<ProjectListvo> getProjectListBySpecialist(ProjectSelectDto projectSelectDto) {
         //1.获取当前用户的专家组id
         List<Long> specialistIdByUserId = specialistDataService.getSpecialistIdByUserId();
+        if(specialistIdByUserId.isEmpty()){
+            return PageDTO.empty();
+        }
         //2.构建条件
         Page<Project> page = projectSelectDto.toMpPageDefaultSortByCreateTimeDesc();
         LambdaQueryWrapper<Project> queryWrapper = getProjectLambdaQueryWrapper(projectSelectDto, null, null, specialistIdByUserId, false);
@@ -911,7 +923,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
         //1.不是管理员
         if(!isAdmin){
-            if (count != 1) {
+            if (count != 1 && count != 0) {
                 throw new ServiceException("userProjectListId, CollegeGroupIds, specialistGroupIds只能三选一,请联系管理员",500);
             }
             // 根据传入的集合设置查询条件
