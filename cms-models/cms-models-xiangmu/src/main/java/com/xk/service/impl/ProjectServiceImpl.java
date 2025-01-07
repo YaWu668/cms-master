@@ -1316,7 +1316,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         handleNormalAuditcopyBean(projectAuditDto, nodeByIndex, roleId, SecurityUtils.getUserId());//拷贝审核记录信息
         if(projectAuditDto.getAuditState() != 0){//不通就会记录
             //审核表
-            if(auditOpinionService.updateById(nodeByIndex)){
+            if(!auditOpinionService.updateById(nodeByIndex)){
                 throw new ServiceException("审核表修改失败,请检查",500);
             }
         }
@@ -1329,7 +1329,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                         ProjectConstant.PROJECT_STATUS_IN_PROGRESS_VALUE://变为项目进行中
                         ProjectConstant.PROJECT_STATUS_NOT_PASS_VALUE);//0代表审核不通过
         //5.修改项目表
-        if(updateById(project)){
+        if(!this.updateById(project)){
             throw new ServiceException("项目表状态修改失败,请检查",500);
         }
         //6.项目进度表插入一条记录,记录状态
@@ -1363,7 +1363,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         //覆盖原本的审核记录
         handleNormalAuditcopyBean(projectAuditDto, nodeByIndex, roleId, SecurityUtils.getUserId());
         //更新审核表
-        if(auditOpinionService.updateById(nodeByIndex)){
+        if(!auditOpinionService.updateById(nodeByIndex)){
             throw new ServiceException("审核表修改失败,请检查",500);
         }
         //4.项目表修改审核状态为审核通过,项目进度表修改值为0
@@ -1375,7 +1375,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                         ProjectConstant.PROJECT_STATUS_IN_PROGRESS_VALUE://变为项目进行中
                         ProjectConstant.PROJECT_STATUS_NOT_PASS_VALUE);//0代表审核不通过
         //5.修改项目表
-        if(updateById(project)){
+        if(!this.updateById(project)){
             throw new ServiceException("项目表状态修改失败,请检查",500);
         }
         //6.项目进度表插入一条记录,记录状态
@@ -1416,7 +1416,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 .setRoleId(roleId)
                 .setRootId(lastByProjectId.getAuditOpinionId());
         //3.新增审核记录
-        if(auditOpinionService.save(auditOpinion)){
+        if(!auditOpinionService.save(auditOpinion)){
             throw new ServiceException("审核表新增失败,请检查",500);
         }
         //4.项目表修改审核状态为审核通过,项目进度表修改值为0
@@ -1428,7 +1428,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                         ProjectConstant.PROJECT_STATUS_IN_PROGRESS_VALUE://变为项目进行中
                         ProjectConstant.PROJECT_STATUS_NOT_PASS_VALUE);//0代表审核不通过
         //5.修改项目表
-        if(updateById(project)){
+        if(!this.updateById(project)){
             throw new ServiceException("项目表状态修改失败,请检查",500);
         }
         //6.项目进度表插入一条记录,记录状态
@@ -1466,7 +1466,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                .setRoleId(roleId)
                 .setRootId(lastByProjectId.getAuditOpinionId());
         //3.修改审核表
-        if(auditOpinionService.save(auditOpinion)){
+        if(!auditOpinionService.save(auditOpinion)){
             throw new ServiceException("审核表新增失败,请检查",500);
         }
         //5.项目表修改审核状态
@@ -1477,7 +1477,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 .setState(projectAuditDto.getAuditState()==0? //审核通过设置为状态值不变,审核不通过设置为0
                         project.getState()://不变
                         ProjectConstant.PROJECT_STATUS_NOT_PASS_VALUE);//0代表审核不通过
-        if(updateById(project)){
+        if(!updateById(project)){
             throw new ServiceException("项目表状态修改失败,请检查",500);
         }
 
@@ -1506,7 +1506,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         //3审核信息拷贝
         handleNormalAuditcopyBean(projectAuditDto, nodeByIndex, roleId, SecurityUtils.getUserId());
         //4,修改审核表
-        if(auditOpinionService.updateById(nodeByIndex)){
+        if(!auditOpinionService.updateById(nodeByIndex)){
             throw new ServiceException("审核表修改失败,请检查",500);
         }
         //5.项目表修改审核状态
@@ -1517,7 +1517,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 .setState(projectAuditDto.getAuditState()==0? //审核通过设置为状态值不变,审核不通过设置为0
                         project.getState()://不变
                         ProjectConstant.PROJECT_STATUS_NOT_PASS_VALUE);//0代表审核不通过
-        if(updateById(project)){
+        if(!this.updateById(project)){
             throw new ServiceException("项目表状态修改失败,请检查",500);
         }
         //6.审核不通过,需要记录到项目进度表
