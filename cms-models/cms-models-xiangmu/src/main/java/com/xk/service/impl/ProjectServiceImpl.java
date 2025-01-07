@@ -222,7 +222,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     @Transactional
     public Response projectAudit(ProjectAuditDto projectAuditDto) {
         //1.判断当前项目是否存在,并返回项目的bean对象,不存在抛出异常
-        Project project = getProject(projectAuditDto.getProjectid());
+        Project project = getProject(projectAuditDto.getProjectId());
         //2.情况二,当前项目已经审核完毕,不需要再次审核,直接抛出异常
         projectAlreadyAudit(project);
         //3.根据项目的审核状态,去查热更新配置类,返回当前项目的审核角色的id
@@ -1556,7 +1556,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         auditOpinion.setUserId(SecurityUtils.getUserId())
                 .setRoleId(roleId)
                 .setRootId(-1L);
-        if(auditOpinionService.save(auditOpinion)){
+        if(!auditOpinionService.save(auditOpinion)){
             throw new ServiceException("审核表插入失败,请检查",500);
         }
         //2.项目表
@@ -1569,7 +1569,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 .setState(projectAuditDto.getAuditState()==0? //审核通过设置为状态值不变,审核不通过设置为0
                         project.getState()://不变
                         ProjectConstant.PROJECT_STATUS_NOT_PASS_VALUE);//0代表审核不通过
-        if(updateById(project)){
+        if(!updateById(project)){
             throw new ServiceException("项目表状态修改失败,请检查",500);
         }
         //6.审核不通过,需要记录到项目进度表

@@ -2,6 +2,7 @@ package com.xk.domain.dto;
 
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -21,12 +22,12 @@ public class ProjectAuditDto {
      */
     @NotNull(message = "审核状态不能为空")
     @Min(value = 0, message = "审核状态只能为0或1")
-    @Min(value = 1, message = "审核状态只能为0或1")
+    @Max(value = 1, message = "审核状态只能为0或1")
     private Long auditState;
     /**
      * 项目的id
      */
     @NotNull(message = "项目的id不能为空")
     @Min(value = 1, message = "项目的id只能为正整数")
-    private Long projectid;
+    private Long projectId;
 }
