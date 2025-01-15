@@ -40,8 +40,5 @@ public class CollegeDetailedLisVo {
      * 更新人的账号
      */
     private String updateBy;
-    /**
-     * 学院组的人员
-     */
-    private List<CollegeDataVo> collegeDataVoList;
+
 }

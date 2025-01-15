@@ -42,7 +42,16 @@ public interface RoleService extends IService<Role> {
      */
      boolean hasRole( String role);
 
+    /**
+     * 返回学生或非学生角色
+     * @param isStudnet 是否学生
+     * @return 角色信息
+     */
      List<Role> getStudentOrNoStudnet(Boolean isStudnet);
 
+    /**
+     *
+     */
+//    boolean setCollgeOrSpecialistRole(Role );
 }
 

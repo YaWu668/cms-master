@@ -2,6 +2,7 @@ package com.xk.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.xk.entity.CollegeData;
+import org.apache.ibatis.annotations.Select;
 
 
 /**
@@ -12,5 +13,12 @@ import com.xk.entity.CollegeData;
  */
 public interface CollegeDataMapper extends BaseMapper<CollegeData> {
 
+    /**
+     * 根据学院组id查询是否学院组是否启用了
+     * @param collegeGroupId 学院组id
+     * @return 学院组是否启用了
+     */
+    @Select("SELECT DISTINCT count(college_group_id) FROM xm_college_group WHERE `status` = '0' AND college_group_id = #{collegeGroupId}")
+    int isCollegeGroupStatus(Long collegeGroupId);
 }
 

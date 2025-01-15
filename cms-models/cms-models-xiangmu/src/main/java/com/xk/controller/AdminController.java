@@ -6,6 +6,7 @@ import com.cms.common.log.annotation.Log;
 import com.cms.common.log.enums.BusinessType;
 import com.xk.domain.dto.*;
 import com.xk.domain.vo.admin.UserListVo;
+import com.xk.domain.vo.group.CollegeDataVo;
 import com.xk.domain.vo.group.CollegeDetailedLisVo;
 import com.xk.domain.vo.group.YearDetailedLisVo;
 import com.xk.entity.SpecialistGroup;
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 管理员控制器
@@ -48,6 +50,10 @@ public class AdminController {
      * 学院的服务
      */
     private final CollegeGroupService collegeGroupService;
+    /**
+     * 学院数据的服务
+     */
+    private final CollegeDataService collegeDataService;
 
     /**
      * 添加专家组
@@ -160,6 +166,40 @@ public class AdminController {
     @Log(title = "获取学院详细信息列表", businessType = BusinessType.OTHER)
     public Response<PageDTO<CollegeDetailedLisVo>> getCollegedetailedList(CollegeDto collegeDto){
         return Response.success(collegeGroupService.getCollegedetailedList(collegeDto));
+    }
+
+    /**
+     * 根据学院id,查询人员信息
+     * @param id 学院id
+     * @return 学院人员
+     */
+    @GetMapping("/getCollegeUser/{id}")
+    @Log(title = "根据学院id,查询人员信息", businessType = BusinessType.OTHER)
+    public Response<List<CollegeDataVo>> getCollegeUser(@PathVariable("id") Long id){
+        return Response.success(collegeGroupService.getCollegeUser(id));
+    }
+
+
+    /**
+     *学院id添加人员
+     */
+    @PostMapping("/addCollegeUser")
+    @Log(title = "学院id添加人员", businessType = BusinessType.INSERT)
+    public Response addCollegeUser(@RequestBody AddCollegeUserDto addCollegeUserDto){
+        //根据学院id添加人员
+        boolean r = collegeDataService.addCollegeUser(addCollegeUserDto);
+        return r ? Response.success() : Response.error();
+    }
+
+    /**
+     * 根据学院id和用户id,删除学院人员
+     */
+    @DeleteMapping("/deleteCollegeUser/")
+    @Log(title = "根据学院id和用户id,删除学院人员", businessType = BusinessType.DELETE)
+    public Response deleteCollegeUser(@RequestBody AddCollegeUserDto addCollegeUserDto){
+        //根据学院id和用户id,删除学院人员
+        boolean r = collegeDataService.deleteCollegeUser(addCollegeUserDto.getCollegeGroupId(), addCollegeUserDto.getUserId());
+        return r ? Response.success() : Response.error();
     }
 }
 

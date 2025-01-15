@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 
 /**
  * 角色信息表(Role)表数据库访问层
@@ -25,5 +27,22 @@ public interface RoleMapper extends BaseMapper<Role> {
      */
     @Select("SELECT COUNT(*) FROM sys_user_role WHERE user_id = #{userId} AND role_id = #{roleId}")
     Long checkUserRole(@Param("userId") Long userId, @Param("roleId") Long roleId);
+
+    /**
+     * 根据用户id和角色key查询用户是否拥有该角色
+     * @param userId  用户id
+     * @param roleKey 角色key
+     * @return 角色数量
+     */
+    @Select("SELECT  count(sr.role_key) FROM sys_role sr JOIN sys_user_role sur ON sr.role_id = sur.role_id WHERE   sr.del_flag = '0' AND  sur.user_id = #{userId} AND sr.role_key = #{roleKey}")
+    int isUserHasRole(Long userId,String roleKey);
+
+    /**
+     * 根据角色key查询角色id
+     * @param roleKey 角色key
+     * @return 角色id
+     */
+    @Select("SELECT  DISTINCT role_id  FROM sys_role WHERE del_flag = '0' AND  role_key = #{roleKey}")
+    List<Long> getRoleIdByRoleKey(String roleKey);
 }
 

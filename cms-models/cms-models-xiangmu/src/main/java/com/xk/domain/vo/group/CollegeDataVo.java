@@ -6,12 +6,20 @@ import com.xk.entity.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 /**
  * 学院组人员表的vo类
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Accessors(chain = true)
 public class CollegeDataVo  {
+    /**
+     * 学院人员id
+     */
+    private Long collegeDataId;
     /**
      * 学院组的id
      */
@@ -28,5 +36,4 @@ public class CollegeDataVo  {
      * 学院人员手机号
      */
     private String phonenumber;
-
 }

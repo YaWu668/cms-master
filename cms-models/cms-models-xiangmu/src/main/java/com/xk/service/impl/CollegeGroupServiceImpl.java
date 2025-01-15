@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cms.common.core.exception.ServiceException;
 import com.cms.common.core.web.domain.Response;
+import com.xk.domain.dto.AddCollegeUserDto;
 import com.xk.domain.dto.CollegeDto;
 import com.xk.domain.dto.PageDTO;
 import com.xk.domain.dto.collegeListDto;
@@ -38,6 +39,8 @@ public class CollegeGroupServiceImpl extends ServiceImpl<CollegeGroupMapper, Col
      * 学院人员组
      */
     private final CollegeDataService collegeDataService;
+
+
     @Override
     public Response<List<collegeListDto>> collegeList(String name) {
         //1构造条件
@@ -91,33 +94,21 @@ public class CollegeGroupServiceImpl extends ServiceImpl<CollegeGroupMapper, Col
         Page<CollegeGroup> page = collegeDto.toMpPageDefaultSortByCreateTimeDesc();
         this.page(page, queryWrapper);
         PageDTO<CollegeDetailedLisVo> pageDTO = PageDTO.of(page, CollegeDetailedLisVo.class);
-        //2.学院列表转为id查询对应人员
-        List<CollegeDetailedLisVo> collegeDetailedLisVoList = pageDTO.getList(); // 获取学院列表
-        if (collegeDetailedLisVoList == null || collegeDetailedLisVoList.size() == 0){//.非空判断
-            return pageDTO;
-        }
-        //转为id
-        List<Long> ids = collegeDetailedLisVoList.stream()
-                .map(collegeDetailedLisVo -> collegeDetailedLisVo.getCollegeGroupId())
-                .collect(Collectors.toList());
-        List<CollegeData> collegeDatas = collegeDataService.lambdaQuery()
-                .in(CollegeData::getCollegeGroupId, ids)
-                .list();
-        if(collegeDatas == null || collegeDatas.size() == 0){
-            return pageDTO;
-        }
-
-        //3.人员信息封装到学院里
-        collegeDetailedLisVoList.stream()
-                .forEach(collegeVo->{
-                    //获取出来一个学院进行封装
-                    List<CollegeData> collegeData = collegeDatas.stream()
-                            .filter(data -> data.getCollegeDataId().equals(collegeVo.getCollegeGroupId()))
-                            .collect(Collectors.toList());
-                    List<CollegeDataVo> dataVos = BeanCopyUtils.copyBeans(collegeData, CollegeDataVo.class);
-                    collegeVo.setCollegeDataVoList(dataVos);
-                });
         return pageDTO;
     }
+
+    @Override
+    public List<CollegeDataVo> getCollegeUser(Long id) {
+        //1.查询
+        List<CollegeData> collegeDataList = collegeDataService.lambdaQuery()
+                .eq(CollegeData::getCollegeGroupId, id)
+                .list();
+        if (collegeDataList != null && collegeDataList.size() > 0){
+            return BeanCopyUtils.copyBeans(collegeDataList, CollegeDataVo.class);
+        }
+        return Collections.emptyList();
+    }
+
+
 }
 

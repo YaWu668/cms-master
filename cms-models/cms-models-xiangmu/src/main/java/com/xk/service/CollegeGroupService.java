@@ -2,9 +2,11 @@ package com.xk.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cms.common.core.web.domain.Response;
+import com.xk.domain.dto.AddCollegeUserDto;
 import com.xk.domain.dto.CollegeDto;
 import com.xk.domain.dto.PageDTO;
 import com.xk.domain.dto.collegeListDto;
+import com.xk.domain.vo.group.CollegeDataVo;
 import com.xk.domain.vo.group.CollegeDetailedLisVo;
 import com.xk.domain.vo.group.CollegeGroupVo;
 import com.xk.entity.CollegeGroup;
@@ -45,5 +47,15 @@ public interface CollegeGroupService extends IService<CollegeGroup> {
      * @return
      */
     PageDTO<CollegeDetailedLisVo> getCollegedetailedList(CollegeDto collegeDto);
+
+    /**
+     * 获取学院用户列表
+     * @param id 学院id
+     * @return 学院用户列表
+     */
+    List<CollegeDataVo> getCollegeUser(Long id);
+
+
+
 }
 
