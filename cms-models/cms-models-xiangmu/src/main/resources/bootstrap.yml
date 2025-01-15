@@ -4,6 +4,8 @@ server:
 
 # Spring
 spring:
+  rocket-api:
+    base-register-path: /interface-ui
   application:
     # 应用名称
     name: cms-xiangmu
