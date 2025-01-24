@@ -13,6 +13,7 @@ import java.util.Map;
 /**
  * 默认分页数据构建器
  */
+/*
 @Component
 public class DefaultApiPager implements IApiPager {
 
@@ -45,35 +46,43 @@ public class DefaultApiPager implements IApiPager {
         return "pageNo";
     }
 
-    /**
+    */
+/**
      * @return
-     */
+     *//*
+
     @Override
     public String getOffsetVarName() {
         return "index";
     }
 
-    /**
+    */
+/**
      * @param pageSize
      * @param pageNo
      * @return
-     */
+     *//*
+
     @Override
     public Integer getOffset(Integer pageSize, Integer pageNo) {
         return (pageNo-1)*pageSize;
     }
 
-    /**
+    */
+/**
      * @return
-     */
+     *//*
+
     @Override
     public Integer getPageNo() {
         return 1;
     }
 
-    /**
+    */
+/**
      * @return
-     */
+     *//*
+
     @Override
     public Integer getPageSize() {
         return 15;
@@ -84,3 +93,4 @@ public class DefaultApiPager implements IApiPager {
 
 
 }
+*/
