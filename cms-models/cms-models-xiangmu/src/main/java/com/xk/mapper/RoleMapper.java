@@ -35,7 +35,7 @@ public interface RoleMapper extends BaseMapper<Role> {
      * @return 角色数量
      */
     @Select("SELECT  count(sr.role_key) FROM sys_role sr JOIN sys_user_role sur ON sr.role_id = sur.role_id WHERE   sr.del_flag = '0' AND  sur.user_id = #{userId} AND sr.role_key = #{roleKey}")
-    int isUserHasRole(Long userId,String roleKey);
+    int isUserHasRole( @Param("userId")Long userId,@Param("roleKey") String roleKey);
 
     /**
      * 根据角色key查询角色id
@@ -43,6 +43,6 @@ public interface RoleMapper extends BaseMapper<Role> {
      * @return 角色id
      */
     @Select("SELECT  DISTINCT role_id  FROM sys_role WHERE del_flag = '0' AND  role_key = #{roleKey}")
-    List<Long> getRoleIdByRoleKey(String roleKey);
+    List<Long> getRoleIdByRoleKey(@Param("roleKey") String roleKey);
 }
 

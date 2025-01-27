@@ -46,5 +46,9 @@ public class ProjectConstant {
     public static final Long PROJECT_TYPE_STARTUP_TRAINING = 2L;
     public static final Long PROJECT_TYPE_STARTUP_PRACTICE = 3L;
 
-
+    /**
+     * 学院和专家组是否启动,状态(0正常 1停用)
+     */
+    public static final Long COLLEGE_GROUP_STATUS_NORMAL = 0L;
+    public static final Long COLLEGE_GROUP_STATUS_DISABLE = 1L;
 }

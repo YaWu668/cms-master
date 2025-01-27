@@ -6,18 +6,17 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cms.common.core.exception.ServiceException;
 import com.cms.common.core.web.domain.Response;
-import com.xk.domain.dto.AddCollegeUserDto;
-import com.xk.domain.dto.CollegeDto;
-import com.xk.domain.dto.PageDTO;
-import com.xk.domain.dto.collegeListDto;
+import com.xk.domain.dto.*;
 import com.xk.domain.vo.group.CollegeDataVo;
 import com.xk.domain.vo.group.CollegeDetailedLisVo;
 import com.xk.domain.vo.group.CollegeGroupVo;
 import com.xk.entity.CollegeData;
 import com.xk.entity.CollegeGroup;
+import com.xk.entity.User;
 import com.xk.mapper.CollegeGroupMapper;
 import com.xk.service.CollegeDataService;
 import com.xk.service.CollegeGroupService;
+import com.xk.service.UserService;
 import com.xk.utils.BeanCopyUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,6 +38,10 @@ public class CollegeGroupServiceImpl extends ServiceImpl<CollegeGroupMapper, Col
      * 学院人员组
      */
     private final CollegeDataService collegeDataService;
+    /**
+     * 用户服务
+     */
+    private final UserService userService;
 
 
     @Override
@@ -103,12 +106,71 @@ public class CollegeGroupServiceImpl extends ServiceImpl<CollegeGroupMapper, Col
         List<CollegeData> collegeDataList = collegeDataService.lambdaQuery()
                 .eq(CollegeData::getCollegeGroupId, id)
                 .list();
+        //2.封装返回数据
         if (collegeDataList != null && collegeDataList.size() > 0){
-            return BeanCopyUtils.copyBeans(collegeDataList, CollegeDataVo.class);
+            //2.1返回数据
+            List<CollegeDataVo> dataVos = BeanCopyUtils.copyBeans(collegeDataList, CollegeDataVo.class);
+            //2.2获取用户的id,查询用户昵称
+            List<Long> userIds = dataVos.stream()
+                    .map(dataVo -> dataVo.getUserId())
+                    .collect(Collectors.toList());
+            //2.3 根据用户id查询用户信息
+            List<User> users = userService.selectByUserIds(userIds);
+            dataVos.stream()
+                    .forEach(dataVo -> {
+                        users.stream()
+                                .filter(user -> user.getUserId().equals(dataVo.getUserId()))
+                                .limit(1)
+                                .forEach(user -> {
+                                    dataVo.setNickName(user.getNickName());
+                                });
+                    });
+            return dataVos;
         }
         return Collections.emptyList();
     }
 
+    @Override
+    public boolean updateCollege(UpdateCollegeGroup updateCollegeUserDto) {
+        //1.判断修名称是否重复
+        if(checkCollegeName(updateCollegeUserDto.getName())){
+            throw new ServiceException("学院组名称重复",400);
+        }
+        //2.判断是否存在
+        if (this.getById(updateCollegeUserDto.getCollegeGroupId()) == null){
+            throw new ServiceException("学院组不存在",400);
+        }
+        //3.修改
+        CollegeGroup collegeGroup = BeanCopyUtils.copyBean(updateCollegeUserDto, CollegeGroup.class);
+        if(this.updateById(collegeGroup)){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean addCollegeGroup(AddCollegeGroup addCollegeGroup) {
+        //1.先判断学院名称是否重复
+        if(checkCollegeName(addCollegeGroup.getName())){
+            throw new ServiceException("学院组名称重复",400);
+        }
+        //2.添加学院组
+        CollegeGroup collegeGroup = BeanCopyUtils.copyBean(addCollegeGroup, CollegeGroup.class);
+        if(this.save(collegeGroup)){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 根据学院名称查询,判断是否重复
+     *
+     */
+    private boolean checkCollegeName(String name) {
+        LambdaQueryWrapper<CollegeGroup> queryWrapper = new LambdaQueryWrapper<CollegeGroup>()
+                .eq(CollegeGroup::getName, name);
+        return this.count(queryWrapper) > 0;
+    }
 
 }
 

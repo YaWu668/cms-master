@@ -37,7 +37,8 @@ public interface CollegeDataService extends IService<CollegeData> {
     void addCollegeRole(Long userId);
 
     /**
-     * 删除学院用户,如果学院用户有数据则不删除,如果学院用户没有数据则删除
+     * 删除学院用户,如果学院用户有数据则不删除,如果学院用户没有数据则删除<br>
+     * 该方法不可以抛出异常,否者删除学院组组人员会失败,因为会出现,在当前组内,但是又没有角色,这样就会出现异常,导致删除失败
      * @param userId 用户id
      */
     void deleteColleRole(Long userId);
@@ -48,6 +49,6 @@ public interface CollegeDataService extends IService<CollegeData> {
      * @param userId 用户
      * @return
      */
-    boolean deleteCollegeUser(Long collegeGroupId, Long userId);
+    boolean deleteCollegeUser(Long id);
 }
 

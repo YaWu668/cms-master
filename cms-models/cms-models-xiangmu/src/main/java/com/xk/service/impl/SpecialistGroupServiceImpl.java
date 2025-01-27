@@ -12,6 +12,7 @@ import com.xk.service.SpecialistGroupService;
 
 import com.xk.utils.BeanCopyUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -30,6 +31,7 @@ public class SpecialistGroupServiceImpl extends ServiceImpl<SpecialistGroupMappe
     }
 
     @Override
+    @Transactional
     public Response updateSpecialistGroup(SpecialistGroup specialistGroup) {
         //校验专家组是否存在
         isIdNull(specialistGroup.getSpecialistGroupId());

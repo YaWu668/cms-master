@@ -2,15 +2,13 @@ package com.xk.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cms.common.core.web.domain.Response;
-import com.xk.domain.dto.AddCollegeUserDto;
-import com.xk.domain.dto.CollegeDto;
-import com.xk.domain.dto.PageDTO;
-import com.xk.domain.dto.collegeListDto;
+import com.xk.domain.dto.*;
 import com.xk.domain.vo.group.CollegeDataVo;
 import com.xk.domain.vo.group.CollegeDetailedLisVo;
 import com.xk.domain.vo.group.CollegeGroupVo;
 import com.xk.entity.CollegeGroup;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -55,7 +53,18 @@ public interface CollegeGroupService extends IService<CollegeGroup> {
      */
     List<CollegeDataVo> getCollegeUser(Long id);
 
+    /**
+     * 根据id修改学院组信息
+     * @param updateCollegeUserDto
+     * @return
+     */
+    boolean updateCollege( UpdateCollegeGroup updateCollegeUserDto);
 
-
+    /**
+     * 新增学院组
+     * @param addCollegeGroup
+     * @return
+     */
+    boolean addCollegeGroup( AddCollegeGroup addCollegeGroup);
 }
 

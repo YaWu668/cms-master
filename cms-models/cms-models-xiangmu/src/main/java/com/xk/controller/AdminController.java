@@ -179,27 +179,51 @@ public class AdminController {
         return Response.success(collegeGroupService.getCollegeUser(id));
     }
 
+    /**
+     * 新增学院组
+     * @param addCollegeGroup
+     * @return
+     */
+    @PostMapping("/addCollegeGroup")
+    @Log(title = "新增学院组", businessType = BusinessType.INSERT)
+    public Response addCollegeGroup(@RequestBody @Valid AddCollegeGroup addCollegeGroup){
+        //新增学院组
+        boolean r = collegeGroupService.addCollegeGroup(addCollegeGroup);
+        return r ? Response.success() : Response.error("新增学院组失败");
+    }
 
+    /**
+     * 根据学院组的id,修改学院组<br>如果修改禁用,学生申请项目就无法绑定
+     * @param updateCollegeUserDto
+     * @return
+     */
+    @PutMapping("/updateCollegeUser")
+    @Log(title = "根据学院组的id,修改学院组", businessType = BusinessType.UPDATE)
+    public Response updateCollegeUser(@RequestBody @Valid UpdateCollegeGroup updateCollegeUserDto){
+        //根据学院id修改学院组
+        boolean r = collegeGroupService.updateCollege(updateCollegeUserDto);
+        return r ? Response.success() : Response.error("修改学院组失败");
+    }
     /**
      *学院id添加人员
      */
     @PostMapping("/addCollegeUser")
     @Log(title = "学院id添加人员", businessType = BusinessType.INSERT)
-    public Response addCollegeUser(@RequestBody AddCollegeUserDto addCollegeUserDto){
+    public Response addCollegeUser(@RequestBody @Valid AddCollegeUserDto addCollegeUserDto){
         //根据学院id添加人员
         boolean r = collegeDataService.addCollegeUser(addCollegeUserDto);
-        return r ? Response.success() : Response.error();
+        return r ? Response.success() : Response.error("添加人员失败");
     }
 
     /**
-     * 根据学院id和用户id,删除学院人员
+     * 根据学院人员组的id,删除学院人员
      */
-    @DeleteMapping("/deleteCollegeUser/")
-    @Log(title = "根据学院id和用户id,删除学院人员", businessType = BusinessType.DELETE)
-    public Response deleteCollegeUser(@RequestBody AddCollegeUserDto addCollegeUserDto){
+    @DeleteMapping("/deleteCollegeUser")
+    @Log(title = "根据学院人员组的id,删除学院人员", businessType = BusinessType.DELETE)
+    public Response deleteCollegeUser(@RequestParam Long collegeDataId ){
         //根据学院id和用户id,删除学院人员
-        boolean r = collegeDataService.deleteCollegeUser(addCollegeUserDto.getCollegeGroupId(), addCollegeUserDto.getUserId());
-        return r ? Response.success() : Response.error();
+        boolean r = collegeDataService.deleteCollegeUser(collegeDataId);
+        return r ? Response.success() : Response.error("删除人员失败");
     }
 }
 

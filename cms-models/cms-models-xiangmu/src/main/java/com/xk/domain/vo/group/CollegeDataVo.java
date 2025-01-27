@@ -33,6 +33,10 @@ public class CollegeDataVo  {
      */
     private String userName;
     /**
+     * 学院人员昵称
+     */
+    private String nickName;
+    /**
      * 学院人员手机号
      */
     private String phonenumber;
