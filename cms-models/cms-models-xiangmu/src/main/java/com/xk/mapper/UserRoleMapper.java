@@ -12,6 +12,7 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface UserRoleMapper extends BaseMapper<UserRole> {
     /**
+     * todo 可以优化,一个用户删除多个角色
      * 根据用户 ID 和角色 ID 删除记录
      * @param userId 用户 ID
      * @param roleId  角色 ID

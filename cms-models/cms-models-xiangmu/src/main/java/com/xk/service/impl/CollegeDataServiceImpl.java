@@ -80,11 +80,11 @@ public class CollegeDataServiceImpl extends ServiceImpl<CollegeDataMapper, Colle
         CollegeData data = BeanCopyUtils.copyBean(addCollegeUserDto, CollegeData.class);
         //3.检查人员是否存在
         User user = userService.getById(addCollegeUserDto.getUserId());
-        data.setUserName(user.getUserName());
         if(user == null){
             throw new ServiceException("用户不存在");
         }
         //4.保存添加角色
+        data.setUserName(user.getUserName());//补充数据
         if (this.save(data)){
             //5.给新增的人员添加,学院角色
             this.addCollegeRole(addCollegeUserDto.getUserId());//存在角色，则不添加,不存在则添加
@@ -93,6 +93,10 @@ public class CollegeDataServiceImpl extends ServiceImpl<CollegeDataMapper, Colle
         return false;
     }
 
+    /**
+     * 判断学院组是否启用
+     * @param collegeGroupId 学院组id
+     */
     private void extracted(Long collegeGroupId) {
         int count = collegeDataMapper.isCollegeGroupStatus(collegeGroupId, ProjectConstant.COLLEGE_GROUP_STATUS_NORMAL);
         if (count <= 0){
@@ -102,15 +106,15 @@ public class CollegeDataServiceImpl extends ServiceImpl<CollegeDataMapper, Colle
 
     @Override
     public void addCollegeRole(Long userId) {
-        if (userId == null && userId < 0){
-            return ;
+        if (userId == null || userId < 0){
+            throw new ServiceException("用户id为空或者不合法");
         }
         //1.先判断是否存在数据库当中
         List<CollegeData> list = this.lambdaQuery()
                 .eq(CollegeData::getUserId, userId)
                 .list();
         if (list.isEmpty()){
-            return ;
+            throw new ServiceException("当前用户不存在学院组,请先添加到学院组当中");
         }
         //2.先判断是否已经存在角色
         int count =roleMapper.isUserHasRole(userId, RoleConstant.COLLEGE);
@@ -124,7 +128,7 @@ public class CollegeDataServiceImpl extends ServiceImpl<CollegeDataMapper, Colle
         if (insert > 0){
             return ;
         }
-        throw new ServiceException("添加失败");
+        throw new ServiceException("学院审核员角色添加失败");
     }
 
     @Override
@@ -152,7 +156,7 @@ public class CollegeDataServiceImpl extends ServiceImpl<CollegeDataMapper, Colle
         if (i > 0){
             return ;
         }
-       log.error("出现异常,当前用户存在学院组内,又没有学院组的角色,当前异常账号的id:"+userId);
+       throw new ServiceException("请联系管理员:出现异常,当前用户存在学院组内,又没有学院组的角色,当前异常账号的id:"+userId);
     }
 
     @Override
@@ -166,6 +170,7 @@ public class CollegeDataServiceImpl extends ServiceImpl<CollegeDataMapper, Colle
         //1.2获取学院组
         CollegeGroup group = collegeDataMapper.getCollegeGroupById(collegeData.getCollegeGroupId());
         //1.3是否启用 判断是否启用
+//        extracted(group.getCollegeGroupId()); 优化减少查询
         if(group.getStatus().intValue() != ProjectConstant.COLLEGE_GROUP_STATUS_NORMAL){
             throw new ServiceException("当前学院组未启用,请启用再进行删除");
         }

@@ -16,10 +16,14 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProjectIdDto {
-
+    /**
+     * 项目id
+     */
     private Long id;
 
-
+    /**
+     * 项目角色标识符
+     */
     private String type;
 
 }

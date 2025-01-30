@@ -9,6 +9,8 @@ import com.xk.domain.vo.admin.UserListVo;
 import com.xk.domain.vo.group.CollegeDataVo;
 import com.xk.domain.vo.group.CollegeDetailedLisVo;
 import com.xk.domain.vo.group.YearDetailedLisVo;
+import com.xk.domain.vo.specialist.SpecialistDataVo;
+import com.xk.entity.SpecialistData;
 import com.xk.entity.SpecialistGroup;
 import com.xk.entity.YearGroup;
 import com.xk.service.*;
@@ -54,31 +56,96 @@ public class AdminController {
      * 学院数据的服务
      */
     private final CollegeDataService collegeDataService;
+//-------------------------------------------------------
 
     /**
-     * 添加专家组
+     * 获取专家组的列表
+     * @return
+     */
+    @GetMapping("/getSpecialistGroup")
+    @Log(title = "获取专家组的列表", businessType = BusinessType.OTHER)
+    public Response<PageDTO<SpecialistGroup>> getSpecialistGroupList(@Valid QuerySpecialistGroup querySpecialistGroup){
+        return Response.success(specialistGroupService.getSpecialistGroupList(querySpecialistGroup));
+    }
+
+    /**
+     * 新增专家组列表
+     */
+    @PostMapping("/addSpecialistGroup")
+    @Log(title = "添加专家组", businessType = BusinessType.INSERT)
+    public Response addSpecialistGroup(@RequestBody @Valid AddSpecialistGroup addSpecialistGroup){
+        return specialistGroupService.addSpecialistGroup(addSpecialistGroup)?
+                Response.success() : Response.error("添加专家失败");
+    }
+
+    /**
+     * 更新专家组,禁用状态时候,项目无法绑定
+     * @param updateSpecialistGroup
+     * @return
+     */
+    @PutMapping("/modifySpecialistGroup")
+    @Log(title = "修改专家组", businessType = BusinessType.UPDATE)
+    public Response modifySpecialistGroup(@RequestBody @Valid UpdateSpecialistGroup updateSpecialistGroup){
+        return specialistGroupService.modifySpecialistGroup(updateSpecialistGroup)?
+                Response.success() : Response.error("修改专家组失败");
+    }
+
+    /**
+     * 根据专家组的id获取专家人员信息
+     * @param querySpecialistData
+     * @return
+     */
+    @GetMapping("/getSpecialistDate")
+    @Log(title = "获取专家数据", businessType = BusinessType.OTHER)
+    public Response<PageDTO<SpecialistDataVo>> getSpecialistDate(@Valid QuerySpecialistData querySpecialistData){
+        return Response.success(specialistDataService.getSpecialistDate(querySpecialistData));
+    }
+
+    /**
+     * 新增人员
+     * @param addSpecialistDataDto
+     * @return
+     */
+    @PostMapping("/addSpecialistData")
+    @Log(title = "新增专家人员", businessType = BusinessType.INSERT)
+    public Response addSpecialistData(@RequestBody @Valid AddSpecialistDataDto addSpecialistDataDto){
+        return specialistDataService.addSpecialistData(addSpecialistDataDto)?
+                Response.success() : Response.error("新增专家人员失败");
+    }
+    /**
+     * 根据专家人员的id删除专家人员信息
+     */
+    @DeleteMapping("/deleteSpecialistData")
+    @Log(title = "删除专家人员数据", businessType = BusinessType.DELETE)
+    public Response deleteSpecialistData(@RequestParam Long id){
+        return specialistDataService.deleteSpecialistData(id)?
+                Response.success() : Response.error("删除专家人员失败");
+    }
+
+    /**
+     * 添加专家组(废弃)
      * @param specialistGroup
      * @return
      */
-    @PostMapping("/addannual/addGroup")
+    /*@PostMapping("/addannual/addGroup")
     // todo   @RequiresPermissions("xm:admin:insert")
     @Log(title = "添加专家组", businessType = BusinessType.INSERT)
     public Response addSpecialistGroup(@RequestBody SpecialistGroup specialistGroup){
         return specialistGroupService.insertSpecialistGroup(specialistGroup);
-    }
+    }*/
 
 
     /**
-     * 修改专家组信息
+     * 修改专家组信息(废弃)
      * @param specialistGroup
      * @return
      */
-    @PutMapping("/search/updateGroup")
+    /*@PutMapping("/search/updateGroup")
     // todo   @RequiresPermissions("xm:admin:update")
     @Log(title = "修改专家组信息", businessType = BusinessType.UPDATE)
     public Response SpecialistGroup(@RequestBody SpecialistGroup specialistGroup){
         return specialistGroupService.updateSpecialistGroup(specialistGroup);
-    }
+    }*/
 
     /**
      * (废案)
@@ -94,14 +161,14 @@ public class AdminController {
     }*/
 
     /**
-     * 添加专家组人员
+     * 添加专家组人员(废弃)
      */
-    @PostMapping("/addGroupUser/addSpecialistUser")
+    /*@PostMapping("/addGroupUser/addSpecialistUser")
     // todo   @RequiresPermissions("xm:admin:select")
     @Log(title = "添加专家组人员", businessType = BusinessType.OTHER)
     public Response addSpecialistUser(@RequestBody AddSpecialistUserDTO addSpecialistUserDTO){
         return specialistDataService.addSpecialistUser(addSpecialistUserDTO);
-    }
+    }*/
 
 
 //-------------------------------------------------------
@@ -193,7 +260,7 @@ public class AdminController {
     }
 
     /**
-     * 根据学院组的id,修改学院组<br>如果修改禁用,学生申请项目就无法绑定
+     * 根据学院组的id,修改学院组<br>如果修改禁用,学生申请项目就无法绑定,同时禁止增删入员
      * @param updateCollegeUserDto
      * @return
      */

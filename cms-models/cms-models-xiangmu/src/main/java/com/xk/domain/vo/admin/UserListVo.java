@@ -10,8 +10,9 @@ import lombok.Lombok;
  */
 @Data
 public class UserListVo {
-    //用户ID
-    @TableId
+    /**
+     * 用户ID
+     */
     private Long userId;
     //用户账号, (学生就学号, 老师就是工号)
     private String userName;

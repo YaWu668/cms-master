@@ -26,7 +26,7 @@ public class SpecialistGroup  extends BaseEntity{
     private String name;
 
     //状态(0正常 1停用)
-    private String status;
+    private Long status;
 
     //备注
     private String remark;

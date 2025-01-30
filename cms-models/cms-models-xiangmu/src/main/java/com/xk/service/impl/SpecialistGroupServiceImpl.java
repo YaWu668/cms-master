@@ -1,10 +1,16 @@
 package com.xk.service.impl;
 
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cms.common.core.exception.ServiceException;
 import com.cms.common.core.web.domain.Response;
+import com.xk.domain.dto.AddSpecialistGroup;
+import com.xk.domain.dto.PageDTO;
+import com.xk.domain.dto.QuerySpecialistGroup;
+import com.xk.domain.dto.UpdateSpecialistGroup;
 import com.xk.domain.vo.group.SpecialistGroupVo;
 import com.xk.entity.SpecialistGroup;
 import com.xk.mapper.SpecialistGroupMapper;
@@ -44,7 +50,7 @@ public class SpecialistGroupServiceImpl extends ServiceImpl<SpecialistGroupMappe
 
             case 1:
                 //校验修改的信息里是否有启用状态
-                if (specialistGroup.getStatus().equals("0")){
+                if (specialistGroup.getStatus() == 0L){
                     newUpdateSpecialistGroup(specialistGroup);
                     return Response.success();
                 }
@@ -86,6 +92,55 @@ public class SpecialistGroupServiceImpl extends ServiceImpl<SpecialistGroupMappe
         return Response.success(specialistGroupVo);
     }
 
+    @Override
+    public PageDTO<SpecialistGroup> getSpecialistGroupList(QuerySpecialistGroup querySpecialistGroup) {
+        Page<SpecialistGroup> page = querySpecialistGroup.toMpPageDefaultSortByCreateTimeDesc();
+        LambdaUpdateWrapper<SpecialistGroup> wrapper = new LambdaUpdateWrapper<SpecialistGroup>()
+                .like(querySpecialistGroup.getName() != null && StrUtil.isNotBlank(querySpecialistGroup.getName()), SpecialistGroup::getName, querySpecialistGroup.getName());
+        this.page(page, wrapper);
+        return PageDTO.of(page, SpecialistGroup.class);
+    }
+
+    @Override
+    @Transactional
+    public boolean addSpecialistGroup(AddSpecialistGroup addSpecialistGroup) {
+        //1.判断名字是否重复
+        if(isRepeat(addSpecialistGroup.getName())){
+            throw new ServiceException("专家组名字重复", 444);
+        }
+        //2.新增
+        SpecialistGroup bean = BeanCopyUtils.copyBean(addSpecialistGroup, SpecialistGroup.class);
+        if(this.save(bean)){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isRepeat(String name) {
+        Long count = this.lambdaQuery()
+                .eq(SpecialistGroup::getName, name)
+                .count();
+        if (count > 0){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean modifySpecialistGroup(UpdateSpecialistGroup updateSpecialistGroup) {
+        //1.判断名字是否重复
+        if(isRepeat(updateSpecialistGroup.getName())){
+            throw new ServiceException("专家组名字重复", 444);
+        }
+        //2.修改
+        SpecialistGroup bean = BeanCopyUtils.copyBean(updateSpecialistGroup, SpecialistGroup.class);
+        if(this.updateById(bean)){
+            return true;
+        }
+        return false;
+    }
+
     public void newUpdateSpecialistGroup(SpecialistGroup specialistGroup) {
         //校验要更改的名字有无重复
         newIsNameNull(specialistGroup.getName(),specialistGroup.getSpecialistGroupId());
@@ -114,7 +169,7 @@ public class SpecialistGroupServiceImpl extends ServiceImpl<SpecialistGroupMappe
     public int isStatusEnable(Long id) {
         return lambdaQuery()
                 .eq(SpecialistGroup::getSpecialistGroupId, id)
-                .ne(SpecialistGroup::getStatus, "1")
+                .ne(SpecialistGroup::getStatus, 1L)
                 .exists()?0:1;
     }
 
