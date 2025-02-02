@@ -189,7 +189,7 @@ public class SpecialistDataServiceImpl extends ServiceImpl<SpecialistDataMapper,
         if (i > 0){
             return ;
         }
-        log.error("出现异常,当前用户存在专家组内,又没有专家组的角色,当前异常账号的id:"+userId);
+        throw new ServiceException("出现异常,当前用户存在专家组内,又没有专家组的角色,当前异常账号的id:"+userId);
     }
 
     @Override
@@ -200,7 +200,7 @@ public class SpecialistDataServiceImpl extends ServiceImpl<SpecialistDataMapper,
                 .eq(SpecialistData::getUserId, addSpecialistDataDto.getUserId())
                 .list();
         if(!list.isEmpty()){
-            throw new ServiceException("不要重复添加当前用户");
+            throw new ServiceException("当前用户已经存在当前专家组当中,请不要重复添加");
         }
         //1.1 判断是否启用
         extracted(addSpecialistDataDto.getSpecialistGroupId());

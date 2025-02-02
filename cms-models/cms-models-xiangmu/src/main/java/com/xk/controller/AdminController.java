@@ -10,6 +10,7 @@ import com.xk.domain.vo.group.CollegeDataVo;
 import com.xk.domain.vo.group.CollegeDetailedLisVo;
 import com.xk.domain.vo.group.YearDetailedLisVo;
 import com.xk.domain.vo.specialist.SpecialistDataVo;
+import com.xk.domain.vo.specialist.SpecialistGroupListVo;
 import com.xk.entity.SpecialistData;
 import com.xk.entity.SpecialistGroup;
 import com.xk.entity.YearGroup;
@@ -64,7 +65,7 @@ public class AdminController {
      */
     @GetMapping("/getSpecialistGroup")
     @Log(title = "获取专家组的列表", businessType = BusinessType.OTHER)
-    public Response<PageDTO<SpecialistGroup>> getSpecialistGroupList(@Valid QuerySpecialistGroup querySpecialistGroup){
+    public Response<PageDTO<SpecialistGroupListVo>> getSpecialistGroupList(@Valid QuerySpecialistGroup querySpecialistGroup){
         return Response.success(specialistGroupService.getSpecialistGroupList(querySpecialistGroup));
     }
 
@@ -102,7 +103,7 @@ public class AdminController {
     }
 
     /**
-     * 新增人员
+     * 新增专家人员(会添加专家角色)
      * @param addSpecialistDataDto
      * @return
      */
@@ -113,7 +114,7 @@ public class AdminController {
                 Response.success() : Response.error("新增专家人员失败");
     }
     /**
-     * 根据专家人员的id删除专家人员信息
+     * 根据专家人员的id删除专家人员信息(会删除专家角色)
      */
     @DeleteMapping("/deleteSpecialistData")
     @Log(title = "删除专家人员数据", businessType = BusinessType.DELETE)
@@ -240,9 +241,9 @@ public class AdminController {
      * @param id 学院id
      * @return 学院人员
      */
-    @GetMapping("/getCollegeUser/{id}")
+    @GetMapping("/getCollegeUser")
     @Log(title = "根据学院id,查询人员信息", businessType = BusinessType.OTHER)
-    public Response<List<CollegeDataVo>> getCollegeUser(@PathVariable("id") Long id){
+    public Response<List<CollegeDataVo>> getCollegeUser(@RequestParam("id") Long id){
         return Response.success(collegeGroupService.getCollegeUser(id));
     }
 
@@ -272,7 +273,7 @@ public class AdminController {
         return r ? Response.success() : Response.error("修改学院组失败");
     }
     /**
-     *学院id添加人员
+     *学院id添加人员(会添加学院角色)
      */
     @PostMapping("/addCollegeUser")
     @Log(title = "学院id添加人员", businessType = BusinessType.INSERT)
@@ -283,7 +284,7 @@ public class AdminController {
     }
 
     /**
-     * 根据学院人员组的id,删除学院人员
+     * 根据学院人员组的id,删除学院人员(会删除学院角色)
      */
     @DeleteMapping("/deleteCollegeUser")
     @Log(title = "根据学院人员组的id,删除学院人员", businessType = BusinessType.DELETE)

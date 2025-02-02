@@ -1,37 +1,48 @@
-package com.xk.domain.vo.group;
+package com.xk.domain.vo.specialist;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.xk.entity.YearData;
+import com.xk.entity.BaseEntity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.List;
+
 
 /**
- * 年度组的详细信息
+ * 专家组表查询列表
  */
 @Data
-public class YearDetailedLisVo {
+@AllArgsConstructor
+@NoArgsConstructor
+public class SpecialistGroupListVo  {
     /**
-     * 年度组的id
+     * 专家组的id
      */
-    private Long yearGroupId;
+    private Long specialistGroupId;
     /**
-     * 年度组的名称
+     * 专家组的名称
      */
     private String name;
+
     /**
-     * 状态(0正常 1停用)停用状态,无法添加年度组人员和给项目绑定
+     * 状态(0正常 1停用)
      */
-    private Integer status;
+    private Long status;
+
     /**
      * 备注
      */
     private String remark;
     /**
-     * 创建人的账号
+     * 创建者
      */
+
     private String createBy;
     /**
      * 创建时间
@@ -39,7 +50,7 @@ public class YearDetailedLisVo {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
     /**
-     * 更新人的账号
+     * 更新者
      */
     private String updateBy;
     /**
@@ -47,8 +58,5 @@ public class YearDetailedLisVo {
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date updateTime;
-    /**
-     * 年度组的数据
-     */
-    private List<YearDataVo> yearDataList;
+
 }

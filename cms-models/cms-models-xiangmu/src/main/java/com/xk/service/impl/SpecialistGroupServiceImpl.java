@@ -12,6 +12,7 @@ import com.xk.domain.dto.PageDTO;
 import com.xk.domain.dto.QuerySpecialistGroup;
 import com.xk.domain.dto.UpdateSpecialistGroup;
 import com.xk.domain.vo.group.SpecialistGroupVo;
+import com.xk.domain.vo.specialist.SpecialistGroupListVo;
 import com.xk.entity.SpecialistGroup;
 import com.xk.mapper.SpecialistGroupMapper;
 import com.xk.service.SpecialistGroupService;
@@ -93,19 +94,19 @@ public class SpecialistGroupServiceImpl extends ServiceImpl<SpecialistGroupMappe
     }
 
     @Override
-    public PageDTO<SpecialistGroup> getSpecialistGroupList(QuerySpecialistGroup querySpecialistGroup) {
+    public PageDTO<SpecialistGroupListVo> getSpecialistGroupList(QuerySpecialistGroup querySpecialistGroup) {
         Page<SpecialistGroup> page = querySpecialistGroup.toMpPageDefaultSortByCreateTimeDesc();
         LambdaUpdateWrapper<SpecialistGroup> wrapper = new LambdaUpdateWrapper<SpecialistGroup>()
                 .like(querySpecialistGroup.getName() != null && StrUtil.isNotBlank(querySpecialistGroup.getName()), SpecialistGroup::getName, querySpecialistGroup.getName());
         this.page(page, wrapper);
-        return PageDTO.of(page, SpecialistGroup.class);
+        return PageDTO.of(page, SpecialistGroupListVo.class);
     }
 
     @Override
     @Transactional
     public boolean addSpecialistGroup(AddSpecialistGroup addSpecialistGroup) {
         //1.判断名字是否重复
-        if(isRepeat(addSpecialistGroup.getName())){
+        if(isRepeat(addSpecialistGroup.getName(), null)){
             throw new ServiceException("专家组名字重复", 444);
         }
         //2.新增
@@ -117,9 +118,10 @@ public class SpecialistGroupServiceImpl extends ServiceImpl<SpecialistGroupMappe
     }
 
     @Override
-    public boolean isRepeat(String name) {
+    public boolean isRepeat(String name,Long id) {
         Long count = this.lambdaQuery()
                 .eq(SpecialistGroup::getName, name)
+                .notIn(id!=null,SpecialistGroup::getSpecialistGroupId,id)
                 .count();
         if (count > 0){
             return true;
@@ -130,7 +132,7 @@ public class SpecialistGroupServiceImpl extends ServiceImpl<SpecialistGroupMappe
     @Override
     public boolean modifySpecialistGroup(UpdateSpecialistGroup updateSpecialistGroup) {
         //1.判断名字是否重复
-        if(isRepeat(updateSpecialistGroup.getName())){
+        if(isRepeat(updateSpecialistGroup.getName(),updateSpecialistGroup.getSpecialistGroupId())){
             throw new ServiceException("专家组名字重复", 444);
         }
         //2.修改

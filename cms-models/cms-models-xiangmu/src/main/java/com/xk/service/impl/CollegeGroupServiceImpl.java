@@ -133,7 +133,7 @@ public class CollegeGroupServiceImpl extends ServiceImpl<CollegeGroupMapper, Col
     @Override
     public boolean updateCollege(UpdateCollegeGroup updateCollegeUserDto) {
         //1.判断修名称是否重复
-        if(checkCollegeName(updateCollegeUserDto.getName())){
+        if(checkCollegeName(updateCollegeUserDto.getName(),updateCollegeUserDto.getCollegeGroupId())){
             throw new ServiceException("学院组名称重复",400);
         }
         //2.判断是否存在
@@ -151,7 +151,7 @@ public class CollegeGroupServiceImpl extends ServiceImpl<CollegeGroupMapper, Col
     @Override
     public boolean addCollegeGroup(AddCollegeGroup addCollegeGroup) {
         //1.先判断学院名称是否重复
-        if(checkCollegeName(addCollegeGroup.getName())){
+        if(checkCollegeName(addCollegeGroup.getName(),null)){
             throw new ServiceException("学院组名称重复",400);
         }
         //2.添加学院组
@@ -166,9 +166,10 @@ public class CollegeGroupServiceImpl extends ServiceImpl<CollegeGroupMapper, Col
      * 根据学院名称查询,判断是否重复
      *
      */
-    private boolean checkCollegeName(String name) {
+    private boolean checkCollegeName(String name,Long id) {
         LambdaQueryWrapper<CollegeGroup> queryWrapper = new LambdaQueryWrapper<CollegeGroup>()
-                .eq(CollegeGroup::getName, name);
+                .eq(CollegeGroup::getName, name)
+                .notIn(id!=null,CollegeGroup::getCollegeGroupId,id);
         return this.count(queryWrapper) > 0;
     }
 

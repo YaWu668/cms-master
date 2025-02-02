@@ -160,13 +160,13 @@ public class YearGroupServiceImpl extends ServiceImpl<YearGroupMapper, YearGroup
                 .eq(YearGroup::getName, yearGroup.getName())
                 .list();
         if(list != null && list.size() > 0){
-            return Response.error("年度组名称已存在");
+            throw new ServiceException("年度组名称已存在");
         }
         //2.保存年度组
         if(this.save(yearGroup)){
             return Response.success();
         }
-        return Response.error();
+        throw new ServiceException("新增失败");
     }
 
     @Override
@@ -180,17 +180,35 @@ public class YearGroupServiceImpl extends ServiceImpl<YearGroupMapper, YearGroup
         if(list != null && list.size() == 0){
             return Response.error("年度组不存在");
         }
-        long count = list.stream()
+      /*  long count = list.stream()
                 .filter(e -> e.getName().equals(yearGroup.getName()))
                 .count();
         if(count > 0){
             throw new ServiceException("年度组名称已存在",400);
+        }*/
+        if(isRepeatName(yearGroup.getName(),yearGroup.getYearGroupId())){
+            throw new ServiceException("年度组名称重复");
         }
+
         //2.修改年度组
         if(this.updateById(yearGroup)){
             return Response.success();
         }
-        return Response.error();
+        throw new ServiceException("更新失败");
+    }
+
+    /**
+     * 检查年度组名称是否重复,根据名字和id进行判断
+     * @param name 名称
+     * @param id id
+     * @return 重复返回true,不重复返回false
+     */
+    private boolean isRepeatName(String name,Long id){
+        Long count = this.lambdaQuery()
+                .eq(YearGroup::getName, name)
+                .notIn(id != null, YearGroup::getYearGroupId, id)
+                .count();
+        return count > 0;
     }
 }
 

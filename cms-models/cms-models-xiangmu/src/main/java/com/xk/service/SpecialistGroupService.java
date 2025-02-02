@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.cms.common.core.web.domain.Response;
 import com.xk.domain.dto.*;
 import com.xk.domain.vo.group.SpecialistGroupVo;
+import com.xk.domain.vo.specialist.SpecialistGroupListVo;
 import com.xk.entity.SpecialistGroup;
 
 import javax.validation.Valid;
@@ -47,7 +48,7 @@ public interface SpecialistGroupService extends IService<SpecialistGroup> {
      * @param querySpecialistGroup
      * @return
      */
-    PageDTO<SpecialistGroup> getSpecialistGroupList(QuerySpecialistGroup querySpecialistGroup);
+    PageDTO<SpecialistGroupListVo> getSpecialistGroupList(QuerySpecialistGroup querySpecialistGroup);
 
     /**
      * 添加专家组
@@ -61,7 +62,7 @@ public interface SpecialistGroupService extends IService<SpecialistGroup> {
      * @param name 专家组的名称
      * @return true:重复 false:不重复
      */
-    boolean isRepeat(String name);
+    boolean isRepeat(String name,Long id);
 
     /**
      * 修改专家组
