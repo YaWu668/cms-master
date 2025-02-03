@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
+import com.alibaba.nacos.api.remote.response.ResponseCode;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 
@@ -44,6 +45,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.ArrayList;
@@ -159,27 +161,28 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     @Override
     @Transactional
     public Response addProject(ApplyForDTO applyForDTO) {
-        //a ,b ,c必须三选一,参数不能为null
+        //1.a ,b ,c必须三选一,参数不能为null
         checkApplyFor(applyForDTO);
-        //钱的比较验算 财政+学校 = 总金额
+        //2.钱的比较验算 财政+学校 = 总金额
         checkMoney(applyForDTO);
-        //校验用户(老师和学生)都存在
+        //3.校验用户(老师和学生)都存在
         isStuentAndTeacherExist(applyForDTO);
-        //字典数据校验
+        //4.字典数据校验
         checkAddProjectDictData(applyForDTO);
-        //校验负责人是不是只有一个,并且第一个id要和申请人id一致
+        //5.校验负责人是不是只有一个,并且第一个id要和申请人id一致
         checkPrincipal(applyForDTO);
-        //校验报名人数限制,有老师和学生
+        //6.校验报名人数限制,有老师和学生
         checkStuentAndTeacher(applyForDTO);
-        //校验附加4之外都需要企业老师支持
+        //7.校验附加4之外都需要企业老师支持
         teachersSupport(applyForDTO);
-        //todo 特别设置三组是否启用
-        //TODO 验证学院组id是否存在并且是否启用
-        isCollegeGroupExistAndEnable(applyForDTO.getCollegeGroupId());
-        //检查报名的学生的学院组是否存在并且是否启用
+        //8.验证学院组id是否存在并且是否启用
+        checkCollegeGroup(applyForDTO.getCollegeGroupId());
+//        isCollegeGroupExistAndEnable(applyForDTO.getCollegeGroupId());
+        //9.年度组id  是否存在并且是否启用  ,之后再检查  年度数据id是否存在
+        checkYearGroup(applyForDTO.getYearGroupId(),applyForDTO.getYearDataId());
+//        isYearGroupIdExistAndYearDataIsEnable(applyForDTO.getYearGroupId(),applyForDTO.getYearDataId());
+        //10.检查报名的学生的学院组是否存在并且是否启用
         isStudentCollegeGroupsEnabled(applyForDTO.getStudents());
-        //todo 年度组id  是否存在并且是否启用  ,之后再检查  年度数据id是否存在
-        isYearGroupIdExistAndYearDataIsEnable(applyForDTO.getYearGroupId(),applyForDTO.getYearDataId());
         //todo 有空写,验证文件存在通内
 
         //todo 有空再写,验证用户负责人只有一个项目在进行中才可以申请新的项目&&(同时只有一个是负责人|| 参加项目进行中最多2个)
@@ -894,6 +897,67 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         userService.page(page,queryWrapper);
 
         return PageDTO.of(page,StudentVo.class);
+    }
+
+    @Override
+    public boolean calibrationBasicInformation(BasicInformationDTO basicInformationDTO,String msg) {
+        //1.信息拷贝
+        ApplyForDTO dto = BeanCopyUtils.copyBean(basicInformationDTO, ApplyForDTO.class);
+        //2.字典数据校验
+        checkAddProjectDictData(dto);
+        //3.校验学院是否存在和启用
+        checkCollegeGroup(dto.getCollegeGroupId());
+        //4.校验年度组是否存在和启用,还有年度数据的id
+        checkYearGroup(dto.getYearGroupId(), dto.getYearDataId());
+        //5.附件4之外的需要企业老师的支持
+        teachersSupport(dto);
+        return true;
+    }
+
+    /**
+     * 校验年度组是否存在和启用
+     * @param yearGroupId 年度组id
+     * @param yearDataId 年度数据id
+     */
+    private void checkYearGroup(Long yearGroupId,Long yearDataId) {
+        //1.根据id查询
+        YearGroup one = yearGroupService.getOne(
+                new LambdaQueryWrapper<YearGroup>()
+                        .eq(YearGroup::getYearGroupId, yearGroupId)
+        );
+        //2.判断是否存在
+        if (one == null){
+            throw new ServiceException("年度组不存在");
+        }
+        //3.判断是否启用
+        if (one.getStatus().intValue() != ProjectConstant.COLLEGE_GROUP_STATUS_NORMAL){
+            throw new ServiceException("当前年度组未启用,请启用再进行操作");
+        }
+        //4.判断年度数据是否存在
+        YearData yearData = yearDataService.getOne(
+                new LambdaQueryWrapper<YearData>()
+                        .eq(YearData::getYearDataId, yearDataId)
+        );
+        if (yearData == null){
+            throw new ServiceException("年度数据不存在");
+        }
+    }
+
+    /**
+     * 校验学院是否存在和启用
+     * @param collegeGroupId 学院id
+     */
+    private void checkCollegeGroup( Long collegeGroupId) {
+        //1.根据id查询
+        CollegeGroup one = collegeGroupService.getById(collegeGroupId);
+        //2.判断是否存在
+        if (one == null){
+            throw new ServiceException("学院不存在");
+        }
+        //3.判断是否启用
+        if (one.getStatus().intValue() != ProjectConstant.COLLEGE_GROUP_STATUS_NORMAL){
+            throw new ServiceException("当前学院组未启用,请启用再进行操作");
+        }
     }
 
 
@@ -2166,7 +2230,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     public void isStudentCollegeGroupsEnabled(List<ApplyForStudent> students){
         students.forEach(student -> {
             try {
-                isCollegeGroupExistAndEnable(student.getCollegeGroupId());
+                //检查学院组是否存在并且是否启用
+                checkCollegeGroup(student.getCollegeGroupId());
+//                isCollegeGroupExistAndEnable(student.getCollegeGroupId());
             }catch (ServiceException e){
                 throw new ServiceException("学生"+student.getName()+"所属学院组不存在或已停用,请检查",444);
             }
@@ -2197,21 +2263,21 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     private void teachersSupport(ApplyForDTO applyForDTO) {
         //获取项目类型的企业老师支持情况
         Map<Long, Long> teacherBusinessGuidance = xmStudnetProperties.getTeacherBusinessGuidance();
-        if(teacherBusinessGuidance == null){
+        /*if(teacherBusinessGuidance == null){
             throw new ServiceException("xm.studnet.teacherBusinessGuidance 配置错误,请联系管理员",444);
-        }
+        }*/
         //进行判断nacos有没有配置当前项目
         if(!teacherBusinessGuidance.containsKey(applyForDTO.getType())){
             throw new ServiceException("当前项目类型没有配置企业老师支持情况,请联系管理员",444);
         }
 
         //判断当前项目类型是否需要企业老师支持
-        if(teacherBusinessGuidance.get(applyForDTO.getType()) == 0){
+        if(teacherBusinessGuidance.get(applyForDTO.getType()) == 0L){
             //不需要企业老师支持
             if(applyForDTO.getFirmTeacherExperience()!= null){
                 throw new ServiceException("附加4项目不需要企业老师支持,请不要填写企业老师经历",444);
             }
-        }else if(teacherBusinessGuidance.get(applyForDTO.getType()) == 1){
+        }else if(teacherBusinessGuidance.get(applyForDTO.getType()) == 1L){
             //需要企业老师支持
             if(applyForDTO.getFirmTeacherExperience() == null){
                 throw new ServiceException("附加4项目需要企业老师支持,请填写企业老师经历",444);
@@ -2371,6 +2437,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             if (count > 1){
                 throw new ServiceException("a,b,c只能选一",444);
             }
+        }
+        if (count == 0){
+            throw new ServiceException("a,b,c不能都为空",444);
         }
     }
 

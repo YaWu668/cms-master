@@ -164,5 +164,13 @@ public interface ProjectService extends IService<Project> {
      * @return
      */
     PageDTO<StudentVo> getStudentBindStudent(TeacherSearchStuentDto teacherSearchStuentDto);
+
+    /**
+     * 校验基本情况,校验成功返回true,失败返回false
+     * @param basicInformationDTO
+     * @param msg 错误信息
+     * @return true:校验成功,false:校验失败
+     */
+    boolean calibrationBasicInformation(BasicInformationDTO basicInformationDTO,String msg);
 }
 

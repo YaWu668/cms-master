@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -27,6 +28,7 @@ public class AddCollegeGroup {
      */
     @NotNull(message = "学院组名称不能为空")
     @Length(min= 3,max = 50, message = "学院组名称长度3~50以内")
+    @NotEmpty(message = "学院组名称不能为空")
     private String name;
     /**
      * 备注

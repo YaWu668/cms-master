@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -21,6 +22,7 @@ public class UpdateYearGroup {
      * 年度组的名称
      */
     @NotNull(message = "年度组名称不能为空")
+    @NotEmpty(message = "年度组名称不能为空")
     @Length(min = 5,max = 30, message = "年度组名字长度:5~30")
     private String name;
     /**

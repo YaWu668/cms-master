@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -24,6 +25,7 @@ public class AddYearDataDto {
      */
     @NotNull(message = "年度数据的名称不能为空")
     @Length(min = 5,max = 30,message = "年度数据的名称长度在5~30之间")
+    @NotEmpty(message = "年度数据的名称不能为空")
     private String name;
     /**
      * 年度开始时间 格式 yyyy-MM-dd HH:mm:ss

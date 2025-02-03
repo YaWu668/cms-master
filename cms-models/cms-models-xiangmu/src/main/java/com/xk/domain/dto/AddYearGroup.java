@@ -3,6 +3,7 @@ package com.xk.domain.dto;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -16,6 +17,7 @@ public class AddYearGroup {
      */
     @NotNull(message = "年度组名称不能为空")
     @Length(min = 5,max = 30, message = "年度组名字长度:5~30")
+    @NotEmpty(message = "年度组名称不能为空")
     private String name;
     //备注
     private String remark;

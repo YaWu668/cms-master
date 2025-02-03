@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 
@@ -24,8 +25,9 @@ public class AddSpecialistGroup  {
     /**
      * 专家组的名称
      */
-    @NotNull
+    @NotNull(message = "专家组的名称不能为空")
     @Length(min =3,max = 50, message = "专家组的名称长度范围是3~50")
+    @NotEmpty(message = "专家组的名称不能为空")
     private String name;
     /**
      * 状态(0正常 1停用)

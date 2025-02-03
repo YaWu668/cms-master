@@ -11,7 +11,13 @@ import java.util.List;
  */
 @Data
 public class AddSpecialistUserDTO {
+    /**
+     * 专家组的id
+     */
     private Long specialistGroupId;
+    /**
+     * 用户的id
+     */
     private List<User> userIdList;
 }
 

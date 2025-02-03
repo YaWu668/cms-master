@@ -4,8 +4,10 @@ import com.cms.common.core.web.domain.Response;
 import com.cms.common.log.annotation.Log;
 import com.cms.common.log.enums.BusinessType;
 import com.xk.domain.dto.ApplyForDTO;
+import com.xk.domain.dto.BasicInformationDTO;
 import com.xk.service.ProjectService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -89,6 +91,26 @@ public class StudentController  {
             @RequestParam(value = "pageSize",defaultValue = "10") int pageSize
     ) {
         return projectService.getMyCrectProject(currentPage,pageSize);
+    }
+
+    /**
+     * 校验项目基本情况
+     */
+    @GetMapping("/calibration/basicInformation")
+    @Log(title = "校验项目基本情况",businessType = BusinessType.OTHER)
+    public Response calibrationBasicInformation(BasicInformationDTO basicInformationDTO) {
+        String msg = "";
+        return projectService.calibrationBasicInformation(basicInformationDTO,msg)?Response.success():Response.error(msg);
+    }
+
+    /**
+     * 校验项目成员&指导老师
+     */
+    @PostMapping("/calibration/member")
+    @Log(title = "校验项目成员&指导老师",businessType = BusinessType.OTHER)
+    public Response calibrationMember(@RequestBody @Valid BasicInformationDTO basicInformationDTO) {
+        String msg = "";
+        return projectService.calibrationBasicInformation(basicInformationDTO,msg)?Response.success():Response.error(msg);
     }
 
 
