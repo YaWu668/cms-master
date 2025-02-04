@@ -914,6 +914,41 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return true;
     }
 
+    @Override
+    public boolean calibrationMember(MemberDTO memberDTO, String msg) {
+        //1.数据拷贝
+        ApplyForDTO data = BeanCopyUtils.copyBean(memberDTO, ApplyForDTO.class);
+        //2.校验用户(老师和学生)都存在
+        isStuentAndTeacherExist(data);
+        //3.校验负责人是不是排列第一个,并且第一个id要和申请人id一致
+        checkPrincipal(data);
+        //4.校验报名人数,有老师和学生
+        checkStuentAndTeacher(data);
+        //5.todo 有空再写,验证用户负责人只有一个项目在进行中才可以申请新的项目&&(同时只有一个是负责人|| 参加项目进行中最多2个)
+
+        //6.todo 有空再写,验证队员和老师参数进行项目最多有2个
+
+        return true;
+    }
+
+    @Override
+    public boolean calibrationBasis(BasisForTheProjectDTO basisForTheProjectDTO, String msg) {
+        //1.数据拷贝
+        ApplyForDTO data = BeanCopyUtils.copyBean(basisForTheProjectDTO, ApplyForDTO.class);
+        //2.a,b,c 必填参数,三选一
+        checkApplyFor(data);
+        return true;
+    }
+
+    @Override
+    public boolean calibrationBudget(BudgetDTO budgetDTO, String msg) {
+        //1.数据拷贝
+        ApplyForDTO data = BeanCopyUtils.copyBean(budgetDTO, ApplyForDTO.class);
+        //2.校验金额格式
+        checkMoney(data);
+        return true;
+    }
+
     /**
      * 校验年度组是否存在和启用
      * @param yearGroupId 年度组id
@@ -2441,6 +2476,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         if (count == 0){
             throw new ServiceException("a,b,c不能都为空",444);
         }
+
+
     }
 
 }

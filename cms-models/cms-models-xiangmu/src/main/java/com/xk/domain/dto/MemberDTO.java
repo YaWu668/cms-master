@@ -12,11 +12,19 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.List;
 
+/**
+ * 校验项目成员&指导老师
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
 public class MemberDTO {
+    /**
+     * 项目类型 1为创新训练项目
+     */
+    @NotNull(message = "项目类型不能为空")
+    private Long type;
     /**
      * 学生人数,第一个必须是负责人,否则抛出异常
      */

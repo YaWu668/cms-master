@@ -13,6 +13,7 @@ import com.xk.domain.vo.student.StudentProjectVo;
 import com.xk.domain.vo.student.StudentVo;
 import com.xk.entity.Project;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -172,5 +173,28 @@ public interface ProjectService extends IService<Project> {
      * @return true:校验成功,false:校验失败
      */
     boolean calibrationBasicInformation(BasicInformationDTO basicInformationDTO,String msg);
+    /**
+     * 校验成员&指导老师,校验成功返回true,失败返回false
+     * @param memberDTO
+     * @param msg 错误信息
+     * @return true:校验成功,false:校验失败
+     */
+    boolean calibrationMember( MemberDTO memberDTO, String msg);
+
+    /**
+     * 校验立项依据,校验成功返回true,失败返回false
+     * @param basisForTheProjectDTO
+     * @param msg
+     * @return true:校验成功,false:校验失败
+     */
+    boolean calibrationBasis(BasisForTheProjectDTO basisForTheProjectDTO, String msg);
+
+    /**
+     * 校验经费预算,校验成功返回true,失败返回false
+     * @param budgetDTO
+     * @param msg
+     * @return  true:校验成功,false:校验失败
+     */
+    boolean calibrationBudget(BudgetDTO budgetDTO, String msg);
 }
 

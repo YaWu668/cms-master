@@ -3,8 +3,7 @@ package com.xk.controller;
 import com.cms.common.core.web.domain.Response;
 import com.cms.common.log.annotation.Log;
 import com.cms.common.log.enums.BusinessType;
-import com.xk.domain.dto.ApplyForDTO;
-import com.xk.domain.dto.BasicInformationDTO;
+import com.xk.domain.dto.*;
 import com.xk.service.ProjectService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -82,6 +81,12 @@ public class StudentController  {
         return projectService.getUserApply(role,name);
     }
 
+    /**
+     * 搜索自己创建的项目
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
     @GetMapping("/search/project")
     // todo 权限 暂时不管
     // todo 分页默认值常量
@@ -96,9 +101,9 @@ public class StudentController  {
     /**
      * 校验项目基本情况
      */
-    @GetMapping("/calibration/basicInformation")
+    @PostMapping("/calibration/basicInformation")
     @Log(title = "校验项目基本情况",businessType = BusinessType.OTHER)
-    public Response calibrationBasicInformation(BasicInformationDTO basicInformationDTO) {
+    public Response calibrationBasicInformation(@RequestBody @Valid BasicInformationDTO basicInformationDTO) {
         String msg = "";
         return projectService.calibrationBasicInformation(basicInformationDTO,msg)?Response.success():Response.error(msg);
     }
@@ -108,10 +113,28 @@ public class StudentController  {
      */
     @PostMapping("/calibration/member")
     @Log(title = "校验项目成员&指导老师",businessType = BusinessType.OTHER)
-    public Response calibrationMember(@RequestBody @Valid BasicInformationDTO basicInformationDTO) {
+    public Response calibrationMember(@RequestBody @Valid MemberDTO memberDTO) {
         String msg = "";
-        return projectService.calibrationBasicInformation(basicInformationDTO,msg)?Response.success():Response.error(msg);
+        return projectService.calibrationMember(memberDTO,msg)?Response.success():Response.error(msg);
     }
 
+    /**
+     * 立项依据校验
+     */
+    @PostMapping("/calibration/basis")
+    @Log(title = "校验立项依据",businessType = BusinessType.OTHER)
+    public Response calibrationBasis(@RequestBody @Validated BasisForTheProjectDTO basisForTheProjectDTO) {
+        String msg = "";
+        return projectService.calibrationBasis(basisForTheProjectDTO,msg)?Response.success():Response.error(msg);
+    }
+    /**
+     * 经费预算
+     */
+    @PostMapping("/calibration/budget")
+    @Log(title = "校验经费预算",businessType = BusinessType.OTHER)
+    public Response calibrationBudget(@RequestBody @Validated BudgetDTO budgetDTO) {
+        String msg = "";
+        return projectService.calibrationBudget(budgetDTO,msg)?Response.success():Response.error(msg);
+    }
 
 }
