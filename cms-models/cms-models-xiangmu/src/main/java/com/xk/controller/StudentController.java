@@ -38,6 +38,18 @@ public class StudentController  {
     }
 
     /**
+     * 修改未通过审核的项目
+     * todo 修改时候有没有修改我设置那个指针,不然会出问题
+     * @param modifyApplyForDTO
+     * @return
+     */
+    @PutMapping("/update")
+    @Log(title = "修改未通过审核的项目", businessType = BusinessType.UPDATE)
+    public Response updateProject(@RequestBody @Valid ModifyApplyForDTO modifyApplyForDTO) {
+        return projectService.updateProject(modifyApplyForDTO);
+    }
+
+    /**
      * 获取自己创建的项目列表或者是直接报名项目
      * @return
      */

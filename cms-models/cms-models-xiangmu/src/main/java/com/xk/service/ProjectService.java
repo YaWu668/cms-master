@@ -196,5 +196,18 @@ public interface ProjectService extends IService<Project> {
      * @return  true:校验成功,false:校验失败
      */
     boolean calibrationBudget(BudgetDTO budgetDTO, String msg);
+
+    /**
+     * 根据指导项目id最后添加一个项目进度记录
+     * @param projectId
+     * @param msg
+     */
+    void addAProjectProcess(Long projectId, String msg);
+    /**
+     * 修改项目(只能修改审核为通过的)
+     * @param modifyApplyForDTO
+     * @return
+     */
+    Response updateProject( ModifyApplyForDTO modifyApplyForDTO);
 }
 

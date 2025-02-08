@@ -153,6 +153,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      */
     private final SpecialistGroupService specialistGroupService;
 
+
     /**
      * 申请项目
      * @param applyForDTO 申请信息
@@ -947,6 +948,164 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         //2.校验金额格式
         checkMoney(data);
         return true;
+    }
+
+    @Override
+    @Transactional
+    public Response updateProject(ModifyApplyForDTO modifyApplyForDTO) {
+        //1.判断当前状态是否可以进行修改
+        Long projectId = modifyApplyForDTO.getProjectId();
+        Project byId = this.getById(projectId);
+        Long userId = SecurityUtils.getUserId();
+        if(!byId.getUserId().equals(userId)){
+            throw new ServiceException("当前项目不属于你,请不要修改");
+        }
+        if (byId.getState().intValue() != ProjectConstant.PROJECT_STATUS_NOT_PASS_VALUE){
+            throw new ServiceException("当前项目状态不可以修改");
+        }
+        //2.修改项目
+        ApplyForDTO update = BeanCopyUtils.copyBean(modifyApplyForDTO, ApplyForDTO.class);
+        //2.1.a ,b ,c必须三选一,参数不能为null
+        checkApplyFor(update);
+        //2.2.钱的比较验算 财政+学校 = 总金额
+        checkMoney(update);
+        //2.3.校验用户(老师和学生)都存在
+        isStuentAndTeacherExist(update);
+        //2.4.字典数据校验
+        checkAddProjectDictData(update);
+        //2.5.校验负责人是不是只有一个,并且第一个id要和申请人id一致
+        checkPrincipal(update);
+        //2.6.校验报名人数限制,有老师和学生
+        checkStuentAndTeacher(update);
+        //2.7.校验附加4之外都需要企业老师支持
+        teachersSupport(update);
+        //2.8.验证学院组id是否存在并且是否启用
+        checkCollegeGroup(update.getCollegeGroupId());
+//        isCollegeGroupExistAndEnable(applyForDTO.getCollegeGroupId());
+        //2.9.年度组id  是否存在并且是否启用  ,之后再检查  年度数据id是否存在
+        checkYearGroup(update.getYearGroupId(),update.getYearDataId());
+        //2.10.检查报名的学生的学院组是否存在并且是否启用
+        isStudentCollegeGroupsEnabled(update.getStudents());
+
+        //3.1先更新项目表
+        updateProject(update,projectId);
+        //3.2记录项目过程
+        addAProjectProcess(projectId, projectScheduleConfig.getNewApply());
+        //3.3更新学生报名表
+        if(!updateProjectStudent(update,projectId)){
+            throw new ServiceException("更新项目学生报名表失败");
+        }
+        //3.4更新老师报名表
+        if(!updateProjectTeacher(update,projectId)){
+            throw new ServiceException("更新项目老师报名表失败");
+        }
+        return Response.success("项目修改完成,请等待重新审核");
+    }
+
+    private boolean updateProjectTeacher(ApplyForDTO update, Long projectId) {
+        //1.拷贝信息
+        List<TeacherApplys> teacherApplys = BeanCopyUtils.copyBeans(update.getTeachers(), TeacherApplys.class);
+        //2.删除老师报名表信息
+        boolean remove = teacherApplysService.remove(new LambdaQueryWrapper<TeacherApplys>()
+                .eq(TeacherApplys::getProjectId, projectId));
+        if (!remove){
+            throw new ServiceException("删除项目老师信息失败");
+        }
+        //3.添加老师报名表信息
+
+        //3.1  获取用户id集合 key是用户id value是用户对象
+        List<Long> userIds = teacherApplys.stream().map(e -> e.getUserId()).collect(Collectors.toList());
+        List<User> users = userService.selectByUserIds(userIds);
+        Map<Long, User> userMap = users.stream().collect(Collectors.toMap(User::getUserId, e -> e));
+        //3.2 遍历集合,进行添加
+        teacherApplys.stream().forEach(e -> {
+            e.setName(userMap.get(e.getUserId()).getNickName());
+        });
+        //3.3 添加到项目老师表
+        return teacherApplysService.saveBatch(teacherApplys);
+    }
+
+    /**
+     * 根据id更新项目学生表
+     * @param update 项目更新信息
+     * @param projectId 项目id
+     */
+    private boolean updateProjectStudent(ApplyForDTO update, Long projectId) {
+        //1.拷贝信息
+        List<StudnetApplys> studnetApplyas = BeanCopyUtils.copyBeans(update.getStudents(), StudnetApplys.class);
+        //2.根据项目id进行删除学生报名信息
+        boolean remove = studnetApplysService.remove(new LambdaQueryWrapper<StudnetApplys>()
+                .eq(StudnetApplys::getProjectId, projectId));
+        if (!remove){
+            throw new ServiceException("删除项目学生信息失败");
+        }
+        //3.添加新的学生报名信息
+
+        //3.1 获取用户id集合 key是用户id value是用户对象
+        List<Long> userIds = studnetApplyas.stream().map(e -> e.getUserId()).collect(Collectors.toList());
+        List<User> users = userService.selectByUserIds(userIds);
+        Map<Long, User> userMap = users.stream().collect(Collectors.toMap(User::getUserId, e -> e));
+        //3.2 遍历集合,设置用户名
+        studnetApplyas.forEach(e ->{
+            e.setProjectId(projectId);//设置id
+            e.setUserName(userMap.get(e.getUserId()).getUserName());
+            e.setName(userMap.get(e.getUserId()).getNickName());
+        });
+        //3.3 写入数据库
+        return studnetApplysService.saveBatch(studnetApplyas);
+    }
+
+    @Override
+    public void addAProjectProcess(Long projectId, String msg) {
+        //1.获取最后一条记录
+        ProjectSchedule lastByProjectId = projectScheduleService.getLastByProjectId(projectId);
+        //2.添加一条记录
+        ProjectSchedule projectSchedule = new ProjectSchedule();
+        projectSchedule.setProjectId(projectId)
+                .setRootId(lastByProjectId.getProjectScheduleId())
+                .setUserId(SecurityUtils.getUserId())
+                .setContent(msg);
+        //3.写入数据库
+        boolean save = projectScheduleService.save(projectSchedule);
+        if (!save){
+            throw new ServiceException("添加项目过程失败");
+        }
+    }
+
+    /**
+     * 把数据转到实体类当中并写入数据库
+     * @param applyForDTO 申请信息
+     * @return 添加成功的项目id
+     */
+    private boolean updateProject(ApplyForDTO applyForDTO,Long id) {
+        //cv固定参数
+        Project project = BeanCopyUtils.copyBean(applyForDTO, Project.class);
+        //转写金额参数
+        project.setFiscalAppropriation(new BigDecimal(applyForDTO.getFiscalAppropriation()))
+                .setSchoolAllocation(new BigDecimal(applyForDTO.getSchoolAllocation()))
+                .setTotalMoney(new BigDecimal(applyForDTO.getTotalMoney()));
+        //根据年度数据id获取到开始和结束时间
+        YearData yearDataBaen = yearDataService.getById(applyForDTO.getYearDataId());
+
+
+        //写入负责人的id,参加人员的所有的id,
+        project .setProjectId(id)
+                .setUserId(SecurityUtils.getUserId())//负责人的id
+                .setMemberId(tudentToJsonArrray(applyForDTO.getStudents()))//参加人员的所有的 数组id
+                .setTeacherId(teacherToJsonArrray(applyForDTO.getTeachers()))//指导老师的 数组id
+                .setFirmTeacherId(firstTeacherToJsonArrray(applyForDTO.getTeachers()))//企业老师的 数组id
+                .setBeginTime(yearDataBaen.getBegin())
+                .setEndTime(yearDataBaen.getEnd())
+                .setState(ProjectConstant.PROJECT_STATUS_AUDIT_VALUE);
+        //1.todo 修改项目特殊设计
+        project.setAuditStatus(1L);//审核指针,只要重新修改都会重新审核进度
+        //导入立项依据
+        boolean result = setABC(project,applyForDTO);
+        if(!result){
+            throw new ServiceException("项目立项依据存在问题,请检查",444);
+        }
+        //根据id修改
+        return  this.updateById(project);
     }
 
     /**
@@ -2082,11 +2241,16 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      */
     public boolean insertProjectStudnet(ApplyForDTO applyForDTO, Long projectId) {
         List<StudnetApplys> studnetApplys= BeanCopyUtils.copyBeans(applyForDTO.getStudents(),StudnetApplys.class);
-        //设置项目id
-        for (StudnetApplys studnetApply : studnetApplys) {
-            studnetApply.setProjectId(projectId);
-            studnetApply.setUserName(SecurityUtils.getUsername());
-        }
+        //3.1 获取用户id集合 key是用户id value是用户对象
+        List<Long> userIds = studnetApplys.stream().map(e -> e.getUserId()).collect(Collectors.toList());
+        List<User> users = userService.selectByUserIds(userIds);
+        Map<Long, User> userMap = users.stream().collect(Collectors.toMap(User::getUserId, e -> e));
+        //3.2 遍历集合,设置用户名
+        studnetApplys.forEach(e ->{
+            e.setProjectId(projectId);//设置id
+            e.setUserName(userMap.get(e.getUserId()).getUserName());
+            e.setName(userMap.get(e.getUserId()).getNickName());
+        });
         //插入学生表
         return studnetApplysService.saveBatch(studnetApplys);
     }
@@ -2122,7 +2286,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             throw new ServiceException("项目立项依据存在问题,请检查",444);
         }
         //先插入项目表
-        this.save(project);
+        if(!this.save(project)){
+            throw new ServiceException("项目信息插入失败,请检查",444);
+        }
         return project.getProjectId();
     }
 
