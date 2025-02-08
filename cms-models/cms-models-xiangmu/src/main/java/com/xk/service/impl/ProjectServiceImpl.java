@@ -1019,6 +1019,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         Map<Long, User> userMap = users.stream().collect(Collectors.toMap(User::getUserId, e -> e));
         //3.2 遍历集合,进行添加
         teacherApplys.stream().forEach(e -> {
+            e.setProjectId(projectId);
             e.setName(userMap.get(e.getUserId()).getNickName());
         });
         //3.3 添加到项目老师表
@@ -2225,10 +2226,15 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      */
     public boolean insertProjectTeacher(ApplyForDTO applyForDTO, Long projectId) {
         List<TeacherApplys> teacherApplys = BeanCopyUtils.copyBeans(applyForDTO.getTeachers(), TeacherApplys.class);
-        //设置项目id
-        for (TeacherApplys teacherApply : teacherApplys) {
-            teacherApply.setProjectId(projectId);
-        }
+        //1  获取用户id集合 key是用户id value是用户对象
+        List<Long> userIds = teacherApplys.stream().map(e -> e.getUserId()).collect(Collectors.toList());
+        List<User> users = userService.selectByUserIds(userIds);
+        Map<Long, User> userMap = users.stream().collect(Collectors.toMap(User::getUserId, e -> e));
+        //2 遍历集合,进行添加
+        teacherApplys.stream().forEach(e -> {
+            e.setProjectId(projectId);
+            e.setName(userMap.get(e.getUserId()).getNickName());
+        });
         //插入老师表
         return teacherApplysService.saveBatch(teacherApplys);
     }
