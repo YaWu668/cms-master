@@ -28,5 +28,12 @@ public interface ProjectScheduleService extends IService<ProjectSchedule> {
      * @return 项目进度列表
      */
     List<ProjectSchedule> listByProjectId(Long projectId);
+
+    /**
+     * 根据项目id批量更新项目进度记录
+     * @param ids 项目id集合
+     * @return 更新成功返回true,失败抛出异常
+     */
+    boolean updateBatchByProjectId(List<Long> ids);
 }
 

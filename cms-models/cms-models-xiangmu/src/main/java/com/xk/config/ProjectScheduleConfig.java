@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 
 /**
- * 项目状态变化配置类，支持热更新。
+ * 项目进度状态变化配置类，支持热更新。
  */
 @Data
 @Component

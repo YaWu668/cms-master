@@ -1062,10 +1062,11 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         ProjectSchedule lastByProjectId = projectScheduleService.getLastByProjectId(projectId);
         //2.添加一条记录
         ProjectSchedule projectSchedule = new ProjectSchedule();
-        projectSchedule.setProjectId(projectId)
-                .setRootId(lastByProjectId.getProjectScheduleId())
-                .setUserId(SecurityUtils.getUserId())
-                .setContent(msg);
+        projectSchedule
+                .setProjectId(projectId) //项目id
+                .setRootId(lastByProjectId.getProjectScheduleId())//上一条记录的id
+                .setUserId(SecurityUtils.getUserId()) //用户id
+                .setContent(msg);//内容
         //3.写入数据库
         boolean save = projectScheduleService.save(projectSchedule);
         if (!save){
