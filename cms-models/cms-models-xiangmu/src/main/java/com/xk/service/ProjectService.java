@@ -210,6 +210,26 @@ public interface ProjectService extends IService<Project> {
      */
     Response updateProject( ModifyApplyForDTO modifyApplyForDTO);
 
+    /**
+     * 修改项目解题时间
+     * @param updateProjectEndTimeDto
+     * @return
+     */
+    Response updateProjectEndTime( UpdateProjectEndTimeDto updateProjectEndTimeDto);
 
+    /**
+     * 修改项目解题时间(延期解题)
+     * @param updateProjectEndTimeDelayDto
+     * @return
+     */
+    Response updateProjectEndTimeDelay( UpdateProjectEndTimeDelayDto updateProjectEndTimeDelayDto);
+
+    /**
+     * 结题操作,可以设置的状态为  3为待结题 4为结题通过 5为结题不通过<br>
+     * 一样的状态不可以重复覆盖操作
+     * @param updateProjectPassDto
+     * @return
+     */
+    Response updateProjectPass( UpdateProjectPassDto updateProjectPassDto);
 }
 

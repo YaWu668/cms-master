@@ -25,9 +25,7 @@ public class CustomMetaObjectHandler implements MetaObjectHandler {
         try {
             userName = SecurityUtils.getUsername();
         } catch (Exception e) {
-            log.error("正常异常------这个异常是注册账号时候解析token失败,获取不到 use  rid 失败异常");
-            e.printStackTrace();
-            userName = "定时任务";//表示是自己创建
+            userName = "定时任务执行";//表示是自己创建
         }
 
         if (TaskContext.isTaskContext()) {
@@ -53,9 +51,7 @@ public class CustomMetaObjectHandler implements MetaObjectHandler {
         try {
             userName = SecurityUtils.getUsername();
         } catch (Exception e) {
-            log.error("正常异常------这个异常是注册账号时候解析token失败,获取不到 use  rid 失败异常");
-            e.printStackTrace();
-            userName = "定时任务";//表示是自己创建
+            userName = "定时任务执行";//表示是自己创建
         }
 
         if (TaskContext.isTaskContext()) {

@@ -1,5 +1,6 @@
 package com.xk.service.impl;
 
+import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
@@ -1000,6 +1001,92 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             throw new ServiceException("更新项目老师报名表失败");
         }
         return Response.success("项目修改完成,请等待重新审核");
+    }
+
+
+    @Override
+    @Transactional
+    public Response updateProjectEndTime(UpdateProjectEndTimeDto updateProjectEndTimeDto) {
+        //1.判断项目是否存在
+        Project byId = this.getById(updateProjectEndTimeDto.getProjectId());
+        if (byId == null){
+            throw new ServiceException("项目不存在");
+        }
+        //2.判断项目状态是否可以修改,只有进行中的才可以进行修改
+        if (byId.getState().intValue() != ProjectConstant.PROJECT_STATUS_IN_PROGRESS_VALUE){
+            throw new ServiceException("项目状态不可以修改,只有项目在进行中才可以修改项目结束时间");
+        }
+        //3.修改项目结束时间
+        byId.setEndTime(updateProjectEndTimeDto.getProjectEndTime());
+        boolean b = this.updateById(byId);
+        if (!b){
+            throw new ServiceException("修改项目结束时间失败");
+        }
+        //4.记录项目修改状态
+        Date endTime = byId.getEndTime();
+        String endTimeStr = DateUtil.formatDateTime(endTime);//上次结题时间
+        String currentTimeStr = DateUtil.formatDateTime(updateProjectEndTimeDto.getProjectEndTime());
+        this.addAProjectProcess(byId.getProjectId(), projectScheduleConfig.getAdvanced()+",上一次结题时间为:"+endTimeStr+",本次修改结题时间为:"+currentTimeStr);
+        return Response.success("修改项目结束时间成功");
+    }
+
+    @Override
+    @Transactional
+    public Response updateProjectEndTimeDelay(UpdateProjectEndTimeDelayDto updateProjectEndTimeDelayDto) {
+        //1.判断项目是否存在
+        Project byId = this.getById(updateProjectEndTimeDelayDto.getProjectId());
+        if (byId == null){
+            throw new ServiceException("项目不存在");
+        }
+        //2.判断项目状态是否可以修改,待结题才可以修改
+        if (byId.getState().intValue() != ProjectConstant.PROJECT_STATUS_PENDING_VALUE){
+            throw new ServiceException("项目状态不可以修改,只有项目待结题才可以修改项目结束时间");
+        }
+        //3.修改项目结束时间 和 修改状态
+        byId.setEndTime(updateProjectEndTimeDelayDto.getProjectEndTime());
+        byId.setState(ProjectConstant.PROJECT_STATUS_IN_PROGRESS_VALUE);
+        //4.记录项目修改状态
+        String endTimeStr = DateUtil.formatDateTime(byId.getEndTime());
+        String currentTimeStr = DateUtil.formatDateTime(updateProjectEndTimeDelayDto.getProjectEndTime());
+        this.addAProjectProcess(byId.getProjectId(), projectScheduleConfig.getPostpone()+",上一次结题时间为:"+endTimeStr+",本次修改结题时间为:"+currentTimeStr);
+        return Response.success("延期解题");
+    }
+
+    @Override
+    @Transactional
+    public Response updateProjectPass(UpdateProjectPassDto updateProjectPassDto) {
+        //1.判断项目是否存在
+        Project byId = this.getById(updateProjectPassDto.getProjectId());
+        if (byId == null){
+            throw new ServiceException("项目不存在");
+        }
+        //2.判断项目状态是否可以修改,只有 待结题 结题同 结题 不通过 3个状态才可以进行解题操作
+        if (byId.getState().intValue() != ProjectConstant.PROJECT_STATUS_PENDING_VALUE
+                && byId.getState().intValue() != ProjectConstant.PROJECT_STATUS_PASS_VALUE
+                && byId.getState().intValue() != ProjectConstant.PROJECT_STATUS_NOT_PASS_VALUE_2){
+            throw new ServiceException("项目状态不可以修改,只有项目待结题 结题 不通过 才可以进行项目结题操作");
+        }
+        //3.如果修改状态,和当前状态一样也无法修改
+        if (byId.getState().intValue() == updateProjectPassDto.getStatus().intValue()){
+            throw new ServiceException("项目状态和修改状态一样,请不要做重复一样操作");
+        }
+        //4.修改项目状态
+        byId.setState(updateProjectPassDto.getStatus());
+        boolean b = this.updateById(byId);
+        if (!b){
+            throw new ServiceException("修改项目状态失败");
+        }
+        //5.记录项目修改状态
+        if (updateProjectPassDto.getStatus() == 3L){
+            this.addAProjectProcess(byId.getProjectId(), projectScheduleConfig.getWithdraw()+",备注:"+updateProjectPassDto.getMsg());
+        }else if (updateProjectPassDto.getStatus() == 4L){
+            this.addAProjectProcess(byId.getProjectId(), projectScheduleConfig.getPass()+",备注:"+updateProjectPassDto.getMsg());
+        }else if (updateProjectPassDto.getStatus() == 5L){
+            this.addAProjectProcess(byId.getProjectId(), projectScheduleConfig.getNoPass()+",备注:"+updateProjectPassDto.getMsg());
+        }else {
+            throw new ServiceException("非法状态无法记录,请联系管理员,状态项目状态为:"+updateProjectPassDto.getStatus());
+        }
+        return Response.success();
     }
 
     private boolean updateProjectTeacher(ApplyForDTO update, Long projectId) {

@@ -43,7 +43,7 @@ public class ProjectScheduleConfig {
     private String solveProblems;
 
     /**
-     * 手动需要提前结题的记录信息。
+     * 项目修改结题时间 记录信息
      */
     private String advanced;
 

@@ -57,6 +57,10 @@ public class AdminController {
      * 学院数据的服务
      */
     private final CollegeDataService collegeDataService;
+    /**
+     * 项目服务
+     */
+    private final  ProjectService projectService;
 //-------------------------------------------------------
 
     /**
@@ -293,5 +297,34 @@ public class AdminController {
         boolean r = collegeDataService.deleteCollegeUser(collegeDataId);
         return r ? Response.success() : Response.error("删除人员失败");
     }
+
+    //-----------------结题操作-----
+    /**
+     * 修改解题时间
+     */
+    @PutMapping("/updateProjectEndTime")
+    @Log(title = "修改解题时间", businessType = BusinessType.UPDATE)
+    public Response updateProjectEndTime(@RequestBody @Valid UpdateProjectEndTimeDto updateProjectEndTimeDto){
+        return projectService.updateProjectEndTime(updateProjectEndTimeDto);
+    }
+
+    /**
+     * 延期解题
+     */
+    @PutMapping("/updateProjectEndTimeDelay")
+    @Log(title = "延期解题", businessType = BusinessType.UPDATE)
+    public Response updateProjectEndTimeDelay(@RequestBody @Valid UpdateProjectEndTimeDelayDto updateProjectEndTimeDelayDto){
+        return projectService.updateProjectEndTimeDelay(updateProjectEndTimeDelayDto);
+    }
+
+    /**
+     * 项目进行解题操作(解题通过或者是撤回解题)
+     */
+    @PutMapping("/updateProjectPass")
+    @Log(title = "项目进行解题操作", businessType = BusinessType.UPDATE)
+    public Response updateProjectPass(@RequestBody @Valid UpdateProjectPassDto updateProjectPassDto){
+        return projectService.updateProjectPass(updateProjectPassDto);
+    }
+
 }
 
