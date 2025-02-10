@@ -2,6 +2,7 @@ package com.xk.service.impl;
 
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
@@ -506,8 +507,19 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         if (project == null){
             throw new ServiceException("该项目不存在！或已被删除",404);
         }
-        //2.判断项目是否为学生创建
-        if (project.getUserId().equals(userId)){
+        //2.判断项目是否为学生创建或者是不是自己参加的
+        boolean isOwned = false; //判当前项目是不是自己报名参加的
+        try {
+            JSONArray array = JSONUtil.parseArray(project.getMemberId());
+            List<Long> userList = JSONUtil.toList(array, Long.class);
+            if (userList.contains(userId)){
+                isOwned = true;
+            }
+        }catch (Exception e){
+            throw new ServiceException("项目成员id解析失败",500);
+        }
+
+        if (project.getUserId().equals(userId) || isOwned){
             return true;
         }else {
             return false;
