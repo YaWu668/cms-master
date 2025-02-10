@@ -1646,7 +1646,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 .setRootId(last.getProjectScheduleId())
                 .setUserId(SecurityUtils.getUserId())
                 .setContent(projectScheduleConfig.getNoPassTheAudit());
-        if(projectScheduleService.save(projectSchedule)){
+        if(!projectScheduleService.save(projectSchedule)){
                 throw new ServiceException("项目进度表插入失败,请检查",500);
         }
     }
@@ -2117,7 +2117,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         //3.判断用户是否有当前项目的审核角色
         if(!userRolesIds.contains(roleId)){
             Role byId = roleService.getById(roleId);
-            throw new ServiceException("当前项目审核进度需要的角色不匹配,现在需要的角色是"+byId.getRoleName() == null ? "未知角色,请联系管理员" : byId.getRoleName(),400);
+            throw new ServiceException("当前项目审核进度需要的角色不匹配,现在需要的角色是"+(byId.getRoleName() == null ? "未知角色,请联系管理员" : byId.getRoleName()),400);
         }
     }
 
