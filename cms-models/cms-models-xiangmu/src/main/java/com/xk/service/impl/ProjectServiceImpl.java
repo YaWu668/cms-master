@@ -1301,6 +1301,17 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         //
 
         //4.多条件构建
+
+        //4.1 构建查询是否分配专家组
+        if(projectSelectDto.getIsAudit() != null){
+            if(projectSelectDto.getIsAudit()){
+                queryWrapper.isNotNull(Project::getSpecialistGroupId);
+            }else {
+                queryWrapper.isNull(Project::getSpecialistGroupId);
+            }
+        }
+
+        //4.2提前添加查询
         queryWrapper
                 //项目名称 模糊
                 .like(StrUtil.isNotBlank(projectSelectDto.getName()), Project::getName, projectSelectDto.getName())
@@ -1316,8 +1327,6 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 .eq(projectSelectDto.getUserId() != null, Project::getUserId, projectSelectDto.getUserId())
                 // 年度组 ID
                 .eq(projectSelectDto.getYearGroupId() != null, Project::getYearGroupId, projectSelectDto.getYearGroupId())
-                //是否分配专家组
-                .eq(projectSelectDto.getIsAudit() != null,Project::getSpecialistGroupId,projectSelectDto.getIsAudit())
                 // 指导老师和企业老师 JSON 包含查询
                 .and(projectSelectDto.getTeacherId() != null,wrapper -> wrapper
                         .apply("JSON_CONTAINS(teacher_id, JSON_ARRAY({0}))", projectSelectDto.getTeacherId())
