@@ -4,6 +4,7 @@ package com.xk.domain.dto;
 import com.xk.constant.ProjectConstant;
 import com.xk.domain.query.PageQuery;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -47,6 +48,10 @@ public class ProjectSelectDto extends PageQuery {
      * 年度id
      */
     private Long yearGroupId;
+    /**
+     * 是否分配专家组  true:已分配, false:未分配,为null话,全部查询
+     */
+    private Boolean isAudit;
 
 
     /**

@@ -1298,7 +1298,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 throw new ServiceException("isAdmin为true时,userProjectListId, CollegeGroupIds, specialistGroupIds不能同时传入,请联系管理员",500);
             }
         }
-
+        //
 
         //4.多条件构建
         queryWrapper
@@ -1316,6 +1316,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 .eq(projectSelectDto.getUserId() != null, Project::getUserId, projectSelectDto.getUserId())
                 // 年度组 ID
                 .eq(projectSelectDto.getYearGroupId() != null, Project::getYearGroupId, projectSelectDto.getYearGroupId())
+                //是否分配专家组
+                .eq(projectSelectDto.getIsAudit() != null,Project::getSpecialistGroupId,projectSelectDto.getIsAudit())
                 // 指导老师和企业老师 JSON 包含查询
                 .and(projectSelectDto.getTeacherId() != null,wrapper -> wrapper
                         .apply("JSON_CONTAINS(teacher_id, JSON_ARRAY({0}))", projectSelectDto.getTeacherId())
