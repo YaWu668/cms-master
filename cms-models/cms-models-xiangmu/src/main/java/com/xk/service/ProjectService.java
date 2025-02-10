@@ -231,5 +231,12 @@ public interface ProjectService extends IService<Project> {
      * @return
      */
     Response updateProjectPass( UpdateProjectPassDto updateProjectPassDto);
+
+    /**
+     * 根据项目id集合进行批量分配专家组
+     * @param updateProjectSpecialistGroupDto
+     * @return
+     */
+    Response updateProjectSpecialistGroup( UpdateProjectSpecialistGroupDto updateProjectSpecialistGroupDto);
 }
 

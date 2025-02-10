@@ -325,6 +325,18 @@ public class AdminController {
     public Response updateProjectPass(@RequestBody @Valid UpdateProjectPassDto updateProjectPassDto){
         return projectService.updateProjectPass(updateProjectPassDto);
     }
+//----------根据项目id集合进行批量分配专家组-----------
+
+    /**
+     * 根据项目id集合进行批量分配专家组
+     * @param updateProjectSpecialistGroupDto
+     * @return
+     */
+    @PutMapping("/updateProjectSpecialistGroup")
+    @Log(title = "根据项目id集合进行批量分配专家组", businessType = BusinessType.UPDATE)
+    public Response updateProjectSpecialistGroup(@RequestBody @Valid UpdateProjectSpecialistGroupDto updateProjectSpecialistGroupDto){
+        return projectService.updateProjectSpecialistGroup(updateProjectSpecialistGroupDto);
+    }
 
 }
 

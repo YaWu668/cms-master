@@ -1101,6 +1101,35 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return Response.success();
     }
 
+    @Override
+    public Response updateProjectSpecialistGroup(UpdateProjectSpecialistGroupDto updateProjectSpecialistGroupDto) {
+        //1.1判断项目是否存在和专家组是否存在
+        List<Project> projectList = this.listByIds(updateProjectSpecialistGroupDto.getProjectIds());
+        if(projectList.size() != updateProjectSpecialistGroupDto.getProjectIds().size()){
+            //查询到项目转为id集合
+            List<Long> idList = projectList.stream().map(e -> e.getProjectId()).collect(Collectors.toList());
+            List<Long> collected = updateProjectSpecialistGroupDto
+                    .getProjectIds().stream()
+                    .filter(e -> !idList.contains(e))
+                    .collect(Collectors.toList());
+            throw new ServiceException("项目id集合中存在不存在项目,请检查项目id集合,项目id集合为:"+updateProjectSpecialistGroupDto.getProjectIds()+",不存在项目id集合为:"+collected);
+        }
+        //1.2专家组校验
+        SpecialistGroup byId = this.specialistGroupService.getById(updateProjectSpecialistGroupDto.getSpecialistGroupId());
+        if (byId == null){
+            throw new ServiceException("专家组不存在");
+        }
+        //2.添加(修改)专家组
+        projectList.stream().forEach(e -> {
+            e.setSpecialistGroupId(updateProjectSpecialistGroupDto.getSpecialistGroupId());
+        });
+        boolean b = this.updateBatchById(projectList);
+        if (!b){
+            throw new ServiceException("修改项目专家组失败");
+        }
+        return Response.success();
+    }
+
     private boolean updateProjectTeacher(ApplyForDTO update, Long projectId) {
         //1.拷贝信息
         List<TeacherApplys> teacherApplys = BeanCopyUtils.copyBeans(update.getTeachers(), TeacherApplys.class);
@@ -2741,23 +2770,56 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      */
     private void checkApplyFor(ApplyForDTO applyForDTO) {
         int count = 0;
+        int count1 = 0;
         if(BeanUtils.areAllFieldsNotNull(applyForDTO.getA())){// 不为NUL+1
             count++;
+            count1 = 1;
         }
         if(BeanUtils.areAllFieldsNotNull(applyForDTO.getB())){
             count++;
+            count1 = 2;
             if (count > 1){
                 throw new ServiceException("a,b,c只能选一",444);
             }
         }
         if(BeanUtils.areAllFieldsNotNull(applyForDTO.getC())){
             count++;
+            count1 = 3;
             if (count > 1){
                 throw new ServiceException("a,b,c只能选一",444);
             }
         }
         if (count == 0){
             throw new ServiceException("a,b,c不能都为空",444);
+        }
+
+        if (count1 == 1){
+            //b不能有数据
+            if (BeanUtils.areAllFieldsNull(applyForDTO.getB())){
+                throw new ServiceException("a不为空时,b不能有数据");
+            }
+            //c不能有数据
+            if (BeanUtils.areAllFieldsNull(applyForDTO.getC())){
+                throw new ServiceException("a不为空时,c不能有数据");
+            }
+        }else if(count1 == 2){
+            //a不能有数据
+            if (BeanUtils.areAllFieldsNull(applyForDTO.getA())){
+                throw new ServiceException("b不为空时,a不能有数据");
+            }
+            //c不能有数据
+            if (BeanUtils.areAllFieldsNull(applyForDTO.getC())){
+                throw new ServiceException("b不为空时,c不能有数据");
+            }
+        }else if(count1 == 3){
+            //b不能有数据
+            if (BeanUtils.areAllFieldsNull(applyForDTO.getB())){
+                throw new ServiceException("c不为空时,b不能有数据");
+            }
+            //a不能有数据
+            if (BeanUtils.areAllFieldsNull(applyForDTO.getA())){
+                throw new ServiceException("c不为空时,a不能有数据");
+            }
         }
 
 
