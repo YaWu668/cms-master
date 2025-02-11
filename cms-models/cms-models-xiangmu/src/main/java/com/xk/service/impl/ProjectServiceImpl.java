@@ -969,6 +969,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         //1.判断当前状态是否可以进行修改
         Long projectId = modifyApplyForDTO.getProjectId();
         Project byId = this.getById(projectId);
+        if (byId == null){
+            throw new ServiceException("当前项目不存在");
+        }
         Long userId = SecurityUtils.getUserId();
         if(!byId.getUserId().equals(userId)){
             throw new ServiceException("当前项目不属于你,请不要修改");
@@ -1001,7 +1004,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         isStudentCollegeGroupsEnabled(update.getStudents());
 
         //3.1先更新项目表
-        updateProject(update,projectId);
+        if(!updateProject(update,projectId)){
+            throw new ServiceException("更新项目表失败");
+        }
         //3.2记录项目过程
         addAProjectProcess(projectId, projectScheduleConfig.getNewApply());
         //3.3更新学生报名表
@@ -1740,7 +1745,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 .setContent(projectAuditDto.getAuditState() == 0 ? //审核通过记录项目进度
                         projectScheduleConfig.getAuditSpecialOne()+"\n审核信息:"+projectAuditDto.getAuditOpinion()+"\n审核人的工号:"+SecurityUtils.getUsername()://这里指针指针>max,所以是特殊记录,通过记录信息
                         projectScheduleConfig.getAuditSpecialTwo()+"\n审核信息:"+projectAuditDto.getAuditOpinion()+"\n审核人的工号:"+SecurityUtils.getUsername());//这里指针指针>max,所以是特殊记录,审核不通过记录信息
-        if(projectScheduleService.save(projectSchedule)){
+        if(!projectScheduleService.save(projectSchedule)){
             throw new ServiceException("项目进度表插入失败,请检查",500);
         }
         return true;
@@ -1786,7 +1791,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 .setContent(projectAuditDto.getAuditState() == 0 ? //审核通过记录项目进度
                         (b>max ? projectScheduleConfig.getAuditSpecialOne():projectScheduleConfig.getPassTheAudit()) ://审核通过记录信息,b>max记录信息比较特殊
                         (b>max? projectScheduleConfig.getAuditSpecialTwo() :projectScheduleConfig.getNoPassTheAudit()));//审核不通过记录信息
-        if(projectScheduleService.save(projectSchedule)){
+        if(!projectScheduleService.save(projectSchedule)){
             throw new ServiceException("项目进度表插入失败,请检查",500);
         }
         return true;
@@ -1839,7 +1844,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 .setContent(projectAuditDto.getAuditState() == 0 ? //审核通过记录项目进度
                         projectScheduleConfig.getPassTheAudit() ://审核通过记录信息
                         projectScheduleConfig.getNoPassTheAudit());//审核不通过记录信息
-        if(projectScheduleService.save(projectSchedule)){
+        if(!projectScheduleService.save(projectSchedule)){
             throw new ServiceException("项目进度表插入失败,请检查",500);
         }
         return true;
@@ -2157,7 +2162,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         //3.判断用户是否有当前项目的审核角色
         if(!userRolesIds.contains(roleId)){
             Role byId = roleService.getById(roleId);
-            throw new ServiceException("当前项目审核进度需要的角色不匹配,现在需要的角色是"+(byId.getRoleName() == null ? "未知角色,请联系管理员" : byId.getRoleName()),400);
+            throw new ServiceException("当前项目审核进度需要的角色不匹配,现在需要的角色是"+(byId.getRoleName() == null ? "未知角色,请联系管理员" : byId.getRoleName()));
         }
     }
 
@@ -2716,9 +2721,17 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                         .collect(Collectors.toList());
                 StringBuilder result = new StringBuilder("当前教师账号不存在:");
                 teachers.forEach(teacher -> result.append(teacher.getName()).append("，"));
-                throw new ServiceException(result.toString(), 444);
+                throw new ServiceException(result.toString());
             }
         });
+
+        //1.必须存在一个指导老师
+        long teacherCount = applyForDTO.getTeachers().stream()
+                .filter(teacher -> teacher.getIsTeacher() == 0)
+                .count();
+        if (teacherCount <= 0) {
+            throw new ServiceException("必须存在一个指导老师");
+        }
 
         //验证 学生学号是否和id对应,先根据id批量查询用户信息
         userService.listByIds(studentId).stream().forEach(user -> {
@@ -2729,10 +2742,10 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             //判断用户发的学号是否正确
             String userName = map.get(user.getUserId());//用户的请求学号
             if(StrUtil.isBlank(user.getUserName())){
-                throw new ServiceException("当前用户的学号:"+userName+"不存在数据库中,请联系管理员",500);
+                throw new ServiceException("当前用户的学号:"+userName+"不存在数据库中,请联系管理员");
             }
             if(!user.getUserName().equals(userName)){
-                throw new ServiceException("当前用户的学号:"+userName+"与数据库中不一致,当前用户的id:"+user.getUserId()+"不一致,请联系管理员",444);
+                throw new ServiceException("当前用户的学号:"+userName+"与数据库中不一致,当前用户的id:"+user.getUserId()+"不一致,请联系管理员");
             }
         });
 

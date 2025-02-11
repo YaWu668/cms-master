@@ -22,6 +22,8 @@ public class ApplyForStudent {
      * 是否负责人 , 0为不是, 1是(只能存在一个)
      */
     @NotNull(message = "是否负责人不能为空")
+    @Min(value = 0, message = "isPrincipal是否负责人不能小于0")
+    @Max(value = 1, message = "isPrincipal是否负责人不能大于1")
     private Long isPrincipal;
     /**
      * 项目分工

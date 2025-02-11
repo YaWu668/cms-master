@@ -3,10 +3,7 @@ package com.xk.domain.dto;
 ;
 import com.cms.common.core.constant.VerifyConstants;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 
 @lombok.Data
 @lombok.ToString
@@ -16,6 +13,8 @@ public class ApplyForTeacher {
      * 是否指导老师(0代表是指导老师, 1代表是企业老师)
      */
     @NotNull(message = "请选择是否指导老师")
+    @Min(value = 0, message = "isTeacher输入0或者1代表是否指导老师或者企业老师")
+    @Max(value = 1, message = "isTeacher输入0或者1代表是否指导老师或者企业老师")
     private Long isTeacher;
     /**
      * 邮箱
