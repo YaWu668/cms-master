@@ -2793,31 +2793,33 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             throw new ServiceException("a,b,c不能都为空",444);
         }
 
+
+        //2. 根据count1的值进行判断 三选一,其中有满参数的,另外两个要全部为空
         if (count1 == 1){
             //b不能有数据
-            if (BeanUtils.areAllFieldsNull(applyForDTO.getB())){
+            if (!BeanUtils.areAllFieldsNull(applyForDTO.getB())){
                 throw new ServiceException("a不为空时,b不能有数据");
             }
             //c不能有数据
-            if (BeanUtils.areAllFieldsNull(applyForDTO.getC())){
+            if (!BeanUtils.areAllFieldsNull(applyForDTO.getC())){
                 throw new ServiceException("a不为空时,c不能有数据");
             }
         }else if(count1 == 2){
             //a不能有数据
-            if (BeanUtils.areAllFieldsNull(applyForDTO.getA())){
+            if (!BeanUtils.areAllFieldsNull(applyForDTO.getA())){
                 throw new ServiceException("b不为空时,a不能有数据");
             }
             //c不能有数据
-            if (BeanUtils.areAllFieldsNull(applyForDTO.getC())){
+            if (!BeanUtils.areAllFieldsNull(applyForDTO.getC())){
                 throw new ServiceException("b不为空时,c不能有数据");
             }
         }else if(count1 == 3){
             //b不能有数据
-            if (BeanUtils.areAllFieldsNull(applyForDTO.getB())){
+            if (!BeanUtils.areAllFieldsNull(applyForDTO.getB())){
                 throw new ServiceException("c不为空时,b不能有数据");
             }
             //a不能有数据
-            if (BeanUtils.areAllFieldsNull(applyForDTO.getA())){
+            if (!BeanUtils.areAllFieldsNull(applyForDTO.getA())){
                 throw new ServiceException("c不为空时,a不能有数据");
             }
         }
