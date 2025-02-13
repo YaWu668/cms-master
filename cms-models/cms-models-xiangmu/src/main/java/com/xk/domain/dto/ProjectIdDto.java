@@ -19,6 +19,8 @@ public class ProjectIdDto {
     /**
      * 项目id
      */
+    @NotNull(message = "项目id不能为空")
+    @Min(value = 1,message = "项目id不能小于1")
     private Long id;
 
     /**

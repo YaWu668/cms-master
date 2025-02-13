@@ -107,7 +107,7 @@ public class PulicController {
      */
     @Log(title = "根据项目id查询项目详细信息", businessType = BusinessType.OTHER)
     @GetMapping("/detail")
-    public Response<DetailProjectVo> getProjectById(@Valid @ModelAttribute   ProjectIdDto projectIdDto) {
+    public Response<DetailProjectVo> getProjectById(@Valid   ProjectIdDto projectIdDto) {
         return projectService.getProjectById(projectIdDto.getId(), projectIdDto.getType());
     }
 

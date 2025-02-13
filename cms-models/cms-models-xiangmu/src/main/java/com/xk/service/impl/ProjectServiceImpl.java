@@ -356,11 +356,12 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     @Override
     public Response<DetailProjectVo> getProjectById(Long id,String type) {
         // 1. 判断项目是否存在
-        List<Project> list = this.lambdaQuery().eq(Project::getProjectId, id).list();
-        if (list == null || list.isEmpty()) { // 检查返回的 list 是否为空
+        Project project = this.getById(id);
+
+        if (project == null ) { // 检查返回的 list 是否为空
             throw new ServiceException("该项目不存在！或已被删除", 404);
         }
-        Project project = list.get(0);
+
         //1.权限校验
         if(!checkUserRole(id,type)){
             throw new ServiceException("当前用户没有权限查看该项目",403);
@@ -414,17 +415,84 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 .sorted(Comparator.comparing(AuditOpinion::getRootId))
                 .collect(Collectors.toList());
         List<Opinion> audits = BeanCopyUtils.copyBeans(sortedAuditOpinions, Opinion.class);
+        //设置用户和角色
+        setUserAndRole(audits);
+
+
         // 项目进度
         List<ProjectSchedule> scheduleList = projectScheduleService.listByProjectId(project.getProjectId());
         List<ProjectSchedule> schedules = scheduleList.stream()
                 .sorted(Comparator.comparing(ProjectSchedule::getRootId))
                 .collect(Collectors.toList());
         List<Schedule> list = BeanCopyUtils.copyBeans(schedules, Schedule.class);
+
+        processSetUserInfo(schedules, list);
+
+        //获取当前项目需要审核角色的顺序
+        Map<Long, List<XMAuditConfig.AuditRole>> projectAuditTypes = xmAuditConfig.getProjectAuditTypes();
+        List<XMAuditConfig.AuditRole> auditRoles = projectAuditTypes.get(project.getType());
+
         Audit audit = new Audit()
                 .setOpinion(audits)
                 .setSchedule(list)
+                .setAuditRoles(auditRoles)
+                .setAuditProgress(project.getAuditStatus())
                 .setState(project.getState());
         return audit;
+    }
+
+    /**
+     * 给流程节点设置用户信息
+     * @param schedules 流程节点(有完整信息节点)
+     * @param list 流程节点(返回给前端的节点)
+     */
+    private void processSetUserInfo(List<ProjectSchedule> schedules, List<Schedule> list) {
+        List<Long> userIds = schedules.stream()
+                .map(e -> e.getUserId())
+                .collect(Collectors.toList());
+        List<User> userList = userService.listByIds(userIds);
+        list.forEach(e->{
+            userList.stream().filter(user->user.getUserId().equals(e.getUserId()))
+                    .limit(1)
+                    .forEach(user->{
+                        e.setUserName(user.getUserName());
+                        e.setNickName(user.getNickName());
+                    });
+        });
+    }
+
+    /**
+     * 写入用户名和账号和角色名
+     * @param audits
+     */
+    private void setUserAndRole(List<Opinion> audits) {
+        //用户id和角色id
+        List<Long> userIds = audits.stream()
+                .map(e -> e.getUserId())
+                .collect(Collectors.toList());
+        List<Long> roleIds = audits.stream()
+                .map(e -> e.getRoleId())
+                .collect(Collectors.toList());
+
+        List<User> users = userService.listByIds(userIds);
+        List<Role> roles = roleService.listByIds(roleIds);
+
+        //写入
+        audits.forEach(audit->{
+            //用户
+            users.stream().filter(e->e.getUserId().equals(audit.getUserId()))
+                    .limit(1)
+                    .forEach(user->{
+                        audit.setUserName(user.getUserName());
+                        audit.setNickName(user.getNickName());
+                    });
+            roles.stream().filter(e->e.getRoleId().equals(audit.getRoleId()))
+                    .limit(1)
+                    .forEach(role->{
+                        audit.setRole(role.getRoleName());
+                    });
+
+        });
     }
 
     /**
@@ -590,9 +658,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
     /**
      * 获取当前绑定的项目中某个学生的项目列表
-     * @param currentPage 页码
-     * @param pageSize 单页大小
-     * @param studentId 学生id
+
      * @return Page<StudentProjectVo>
      */
     @Override

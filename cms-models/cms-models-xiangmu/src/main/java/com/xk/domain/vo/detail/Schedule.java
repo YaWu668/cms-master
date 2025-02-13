@@ -1,5 +1,6 @@
 package com.xk.domain.vo.detail;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.experimental.Accessors;
 
 /**
@@ -20,4 +21,9 @@ public class Schedule {
      * 账号(工号)
      */
     private String userName;
+    /**
+     * 用户id
+     */
+    @JsonIgnore
+    private Long userId;
 }
