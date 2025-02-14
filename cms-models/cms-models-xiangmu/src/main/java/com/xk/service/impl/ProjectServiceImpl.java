@@ -425,7 +425,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 .sorted(Comparator.comparing(ProjectSchedule::getRootId))
                 .collect(Collectors.toList());
         List<Schedule> list = BeanCopyUtils.copyBeans(schedules, Schedule.class);
-
+        //给流程节点设置用户信息
         processSetUserInfo(schedules, list);
 
         //获取当前项目需要审核角色的顺序
@@ -450,7 +450,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         List<Long> userIds = schedules.stream()
                 .map(e -> e.getUserId())
                 .collect(Collectors.toList());
-        List<User> userList = userService.listByIds(userIds);
+
+        List<User> userList = userIds.size()==0?Collections.emptyList(): userService.listByIds(userIds);
+
         list.forEach(e->{
             userList.stream().filter(user->user.getUserId().equals(e.getUserId()))
                     .limit(1)
@@ -474,8 +476,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 .map(e -> e.getRoleId())
                 .collect(Collectors.toList());
 
-        List<User> users = userService.listByIds(userIds);
-        List<Role> roles = roleService.listByIds(roleIds);
+        List<User> users = userIds.size()==0?Collections.emptyList():userService.listByIds(userIds);
+        List<Role> roles = roleIds.size()==0?Collections.emptyList():roleService.listByIds(roleIds);
 
         //写入
         audits.forEach(audit->{
@@ -1431,7 +1433,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 .and(projectSelectDto.getTeacherId() != null,wrapper -> wrapper
                         .apply("JSON_CONTAINS(teacher_id, JSON_ARRAY({0}))", projectSelectDto.getTeacherId())
                         .or()
-                        .apply("JSON_CONTAINS(firm_teacher_id, JSON_ARRAY({0}))", projectSelectDto.getTeacherId()));
+                        .apply("JSON_CONTAINS(firm_teacher_id, JSON_ARRAY({0}))", projectSelectDto.getTeacherId()))
+                .and(projectSelectDto.getMemberId() != null,wrapper -> wrapper
+                        .apply("JSON_CONTAINS(member_id, JSON_ARRAY({0}))", projectSelectDto.getMemberId()));
         return queryWrapper;
     }
 

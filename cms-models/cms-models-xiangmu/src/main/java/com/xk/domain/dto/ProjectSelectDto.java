@@ -52,7 +52,10 @@ public class ProjectSelectDto extends PageQuery {
      * 是否分配专家组  true:已分配, false:未分配,为null话,全部查询
      */
     private Boolean isAudit;
-
+    /**
+     * 参加项目的人员的id
+     */
+    private Long memberId;
 
     /**
      * 判断用户输入的角色标识符是否正确
