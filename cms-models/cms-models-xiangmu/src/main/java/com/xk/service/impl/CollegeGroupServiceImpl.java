@@ -92,8 +92,9 @@ public class CollegeGroupServiceImpl extends ServiceImpl<CollegeGroupMapper, Col
     @Override
     public PageDTO<CollegeDetailedLisVo> getCollegedetailedList(CollegeDto collegeDto) {
         //1.分页模糊查询
-        LambdaQueryWrapper<CollegeGroup> queryWrapper = new LambdaQueryWrapper<CollegeGroup>()
-                .like(StrUtil.isNotBlank(collegeDto.getName()), CollegeGroup::getName, collegeDto);
+        LambdaQueryWrapper<CollegeGroup> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper
+                .like(StrUtil.isNotBlank(collegeDto.getName()), CollegeGroup::getName, collegeDto.getName());
         Page<CollegeGroup> page = collegeDto.toMpPageDefaultSortByCreateTimeDesc();
         this.page(page, queryWrapper);
         PageDTO<CollegeDetailedLisVo> pageDTO = PageDTO.of(page, CollegeDetailedLisVo.class);
