@@ -15,7 +15,7 @@ public class ApplyForTeacher {
     @NotNull(message = "请选择是否指导老师")
     @Min(value = 0, message = "isTeacher输入0或者1代表是否指导老师或者企业老师")
     @Max(value = 1, message = "isTeacher输入0或者1代表是否指导老师或者企业老师")
-    private Long isTeacher;
+    private Integer isTeacher;
     /**
      * 邮箱
      */
