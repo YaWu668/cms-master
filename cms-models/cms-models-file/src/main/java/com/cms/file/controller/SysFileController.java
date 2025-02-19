@@ -13,6 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -64,6 +65,19 @@ public class SysFileController extends BaseController {
         return this.success(this.sysFileService.download(response, file));
     }
 
+    /**
+     * 上传图片
+     * @param file
+     * @return
+     */
+    @ApiOperation(value = "上传图片", notes = "上传图片", httpMethod = "POST")
+    @PostMapping("/uploadImg")
+    @Log(title = "上传图片", businessType = BusinessType.UPLOAD)
+    public Response<String> uploadImg(@RequestParam("file") MultipartFile file) {
+        return this.success(this.sysFileService.uploadImg(file));
+    }
+
+
     @ApiOperation(value = "判断文件是否存在", notes = "判断文件是否存在", httpMethod = "GET")
     @GetMapping("/fileIsNull")
     public Response fileIsNull(@RequestParam("fileName") String fileName) {
@@ -72,6 +86,14 @@ public class SysFileController extends BaseController {
         }else {
             return this.error("文件不存在");
         }
+    }
+
+    /**
+     * 通过 URL 访问图片（Spring Boot 代理）
+     */
+    @GetMapping("/viewXm/{fileName}")
+    public Response<?> viewXmFile(@PathVariable String fileName, HttpServletResponse response) {
+        return this.success(sysFileService.viewXmFile(fileName, response));
     }
 
 

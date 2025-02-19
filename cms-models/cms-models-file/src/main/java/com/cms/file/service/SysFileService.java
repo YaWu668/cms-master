@@ -22,4 +22,13 @@ public interface SysFileService {
      * 判断文件是否在桶内
      */
     boolean checkFileIsExist(String fileId);
+
+    /**
+     * 上传图片
+     * @param file
+     * @return 访问URL(不包含服务器请求地址)
+     */
+    String uploadImg(MultipartFile file);
+
+    boolean viewXmFile(String fileName, HttpServletResponse response);
 }

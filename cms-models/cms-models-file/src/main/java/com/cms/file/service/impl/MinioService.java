@@ -18,8 +18,10 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLConnection;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
 
 @Service
 public class MinioService implements SysFileService {
@@ -115,5 +117,64 @@ public class MinioService implements SysFileService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public String uploadImg(MultipartFile file) {
+        try {
+            String fileName = getTimeUUIDFileName(file.getOriginalFilename());
+
+            minioClient.putObject(
+                    PutObjectArgs.builder()
+                            .bucket(this.minioConfig.getFileBucketName())
+                            .object(fileName)
+                            .stream(file.getInputStream(), file.getSize(), -1)
+                            .contentType(file.getContentType())
+                            .build());
+
+            return "/file/viewXm/"+fileName;
+        } catch (Exception e) {
+            throw new ServiceException("文件上传失败: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean viewXmFile(String fileName, HttpServletResponse response) {
+        // 参数校验，防止路径穿越攻击
+        if (fileName == null || fileName.isEmpty() || fileName.contains("..") || fileName.contains("/") || fileName.contains("\\")) {
+            throw new IllegalArgumentException("文件名无效");
+        }
+
+        // 根据文件扩展名动态设置 Content-Type
+        String contentType = URLConnection.guessContentTypeFromName(fileName);
+        if (contentType == null) {
+            contentType = "application/octet-stream"; // 未知类型时默认
+        }
+        response.setContentType(contentType);
+
+        try (
+                InputStream inputStream = minioClient.getObject(
+                        GetObjectArgs.builder()
+                                .bucket(minioConfig.getFileBucketName())
+                                .object(fileName)
+                                .build());
+                ServletOutputStream outputStream = response.getOutputStream()
+        ) {
+            IoUtil.copy(inputStream, outputStream);
+            response.flushBuffer();
+            return true;
+        } catch (Exception e) {
+            throw new ServiceException("文件下载失败"); // 保留完整异常信息
+        }
+    }
+
+    /**
+     * 时间戳+UUID+原文件名
+     * @param originalName
+     * @return
+     */
+    private String getTimeUUIDFileName(String originalName) {
+        //        return UUID.randomUUID() + "-" + originalName;
+        return System.currentTimeMillis() + UUID.randomUUID().toString().replace("-", "") + originalName;
     }
 }
