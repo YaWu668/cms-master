@@ -1338,6 +1338,11 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         if (yearData == null){
             throw new ServiceException("年度数据不存在");
         }
+
+        //5.判断年度数据是否属于年度组
+        if(yearData.getYearGroupId().equals(yearGroupId)){
+            throw new ServiceException("当前年度数据不属于当前年度组,请选择正确的年度数据");
+        }
     }
 
     /**
