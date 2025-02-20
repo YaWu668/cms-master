@@ -66,9 +66,18 @@ public class ProjectListvo {
      * 年度id
      */
     private Long yearGroupId;
+
     /**
      * 年度名称
      */
     private String yearGroupName;
+    /**
+     * 年度数据的id
+     */
+    private Long yearDataId;
+    /**
+     * 年度数据名称
+     */
+    private String yearDataName;
 
 }

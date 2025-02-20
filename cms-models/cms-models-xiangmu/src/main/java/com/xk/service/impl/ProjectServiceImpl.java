@@ -858,6 +858,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         ArrayList<Long> specialistIds = new ArrayList<>();//专家组id
         ArrayList<Long> collegeGroupIds = new ArrayList<>();//学院组id
         ArrayList<Long> yearGroupId = new ArrayList<>(); //年度id
+        ArrayList<Long> yearDataId = new ArrayList<>(); //年度id
+
         //拷贝常用字段
         PageDTO<ProjectListvo> pageDTO = PageDTO.of(page, project -> {
             ProjectListvo projectVo = BeanCopyUtils.copyBean(project, ProjectListvo.class);
@@ -865,6 +867,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             specialistIds.add(project.getSpecialistGroupId());//专家组id
             collegeGroupIds.add(project.getCollegeGroupId()); //学院组id
             yearGroupId.add(project.getYearGroupId());
+            yearDataId.add(project.getYearDataId());
             return projectVo;
         });
 
@@ -876,24 +879,33 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         projectListVoSetCollegeGroupName(collegeGroupIds, projectListvo);
         //4.设置专家组名称
         projectListVoSetSpecialistGroupName(specialistIds, projectListvo);
-        //5写入年度名称
-        projectListVoSetYearGroupName(yearGroupId, projectListvo);
+        //5写入年度名称和年度数据名称
+        projectListVoSetYearGroupName(yearGroupId,yearDataId, projectListvo);
         return pageDTO;
     }
 
-    private void projectListVoSetYearGroupName(ArrayList<Long> yearGroupId, List<ProjectListvo> projectListvo) {
+    private void projectListVoSetYearGroupName(ArrayList<Long> yearGroupId,ArrayList<Long> yearDataId, List<ProjectListvo> projectListvo) {
         //1.根据年度id获取年度集合
         List<YearGroup> yearGroups = yearGroupService.selectBatchyearGroupIds(yearGroupId);
+        List<YearData> yearDatas = yearDataId.size() == 0?new ArrayList<>():yearDataService.listByIds(yearDataId);
 
         //2.给每个vo进行匹配一个年度名称
         projectListvo
                 .stream()
                 .forEach(projectVo->{
+                    //年度组名称
                     yearGroups.stream()
                             .filter(yearGroup -> yearGroup.getYearGroupId().equals(projectVo.getYearGroupId()))
                             .limit(1)
                             .forEach(yearGroup -> {
                                 projectVo.setYearGroupName(yearGroup.getName());
+                            });
+                    //年度数据名称
+                    yearDatas.stream()
+                            .filter(yearData -> yearData.getYearDataId().equals(projectVo.getYearDataId()))
+                            .limit(1)
+                            .forEach(yearData -> {
+                                projectVo.setYearDataName(yearData.getName());
                             });
                 });
 
@@ -1340,7 +1352,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         }
 
         //5.判断年度数据是否属于年度组
-        if(yearData.getYearGroupId().equals(yearGroupId)){
+        if(!yearData.getYearGroupId().equals(yearGroupId)){
             throw new ServiceException("当前年度数据不属于当前年度组,请选择正确的年度数据");
         }
     }

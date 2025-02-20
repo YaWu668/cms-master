@@ -4,6 +4,7 @@ package com.cms.file.service;
 import com.cms.file.domain.SysFile;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public interface SysFileService {
@@ -30,5 +31,5 @@ public interface SysFileService {
      */
     String uploadImg(MultipartFile file);
 
-    boolean viewXmFile(String fileName, HttpServletResponse response);
+    boolean viewXmFile(HttpServletRequest request, HttpServletResponse response);
 }

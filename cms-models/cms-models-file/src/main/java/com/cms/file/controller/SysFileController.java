@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -91,9 +92,9 @@ public class SysFileController extends BaseController {
     /**
      * 通过 URL 访问图片（Spring Boot 代理）
      */
-    @GetMapping("/viewXm/{fileName}")
-    public Response<?> viewXmFile(@PathVariable String fileName, HttpServletResponse response) {
-        return this.success(sysFileService.viewXmFile(fileName, response));
+    @GetMapping("/viewXm/**")
+    public Response<?> viewXmFile(HttpServletRequest request, HttpServletResponse response) {
+        return this.success(sysFileService.viewXmFile(request, response));
     }
 
 
