@@ -629,7 +629,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         //2.判断项目是否为自己学院的项目
         Long collegeGroupId = project.getCollegeGroupId();
 
-        List<CollegeData> list = collegeDataService.list(Wrappers.<CollegeData>lambdaQuery().eq(CollegeData::getUserId, userId).eq(CollegeData::getCollegeGroupId, collegeGroupId));
+        List<CollegeData> list = collegeDataService.list(Wrappers.<CollegeData>lambdaQuery()
+                .eq(CollegeData::getUserId, userId)
+                .eq(CollegeData::getCollegeGroupId, collegeGroupId));
         if ( list == null || list.size() == 0){
             return false;
         }
@@ -1538,15 +1540,15 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             }
         }
         //2.根据不同角色判断是否有权限查看该项目
-        if(type.equals(ProjectConstant.ROLE_STUDENT)) { //学生 1.判断项目是不是自己的
+        if(ProjectConstant.ROLE_STUDENT.equals(type)) { //学生 1.判断项目是不是自己的
             return isProjectOwnedByStudent(id);
-        }else if(type.equals(ProjectConstant.ROLE_TEACHER)) { //教师 2.判断项目是不是自己的学生的
+        }else if(ProjectConstant.ROLE_TEACHER.equals(type)) { //教师 2.判断项目是不是自己的学生的
             return isProjectOfTeacherStudents(id);
-        }else if(type.equals(ProjectConstant.ROLE_COLLEGE)) { //学院审核人 3.判断这个项目是不是自己学院的
+        }else if(ProjectConstant.ROLE_COLLEGE.equals(type)) { //学院审核人 3.判断这个项目是不是自己学院的
             return isProjectInSameCollege(id);
-        }else if(type.equals(ProjectConstant.ROLE_SPECIALIST)) { //专家 4.判断这个项目可不可以审核
+        }else if(ProjectConstant.ROLE_SPECIALIST.equals(type)) { //专家 4.判断这个项目可不可以审核
             return canExpertReviewProject(id);
-        }else if(type.equals(ProjectConstant.ROLE_ADMIN)) { //管理员 直接返回
+        }else if(ProjectConstant.ROLE_ADMIN.equals(type)) { //管理员 直接返回
             return true;
         }
         return false;
@@ -2271,21 +2273,21 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         Role role = roleService.getById(roleId);
         // 下面都根据项目状态需要的角色,进行校验用户是否有权限审核当前项目
         //2.老师角色进行判断
-        if(role.getRoleKey().equals(RoleConstant.TEACHER)){
+        if(RoleConstant.TEACHER.equals(role.getRoleKey())){
             //判断当前用户,是不是报名的老师
             return isHaveTeacher(project);
         }
         //3.学院审核员进行判断
-        if(role.getRoleKey().equals(RoleConstant.COLLEGE)){
+        if(RoleConstant.COLLEGE.equals(role.getRoleKey())){
             //判断当前用户,是不是绑定对应的学院
             return isHaveCollege(project);
         }
         //4.管理员进行判断
-        if(role.getRoleKey().equals(RoleConstant.ADMIN)){
+        if(RoleConstant.ADMIN.equals(role.getRoleKey())){
             return isHaveAdmin();
         }
         //5.专家进行判断
-        if(role.getRoleKey().equals(RoleConstant.EXPERT)){
+        if(RoleConstant.EXPERT.equals(role.getRoleKey())){
             return isHaveExpert(project);
         }
         //6.返回结果

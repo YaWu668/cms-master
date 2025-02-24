@@ -17,8 +17,11 @@ import com.xk.entity.YearGroup;
 import com.xk.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -336,6 +339,20 @@ public class AdminController {
     @Log(title = "根据项目id集合进行批量分配专家组", businessType = BusinessType.UPDATE)
     public Response updateProjectSpecialistGroup(@RequestBody @Valid UpdateProjectSpecialistGroupDto updateProjectSpecialistGroupDto){
         return projectService.updateProjectSpecialistGroup(updateProjectSpecialistGroupDto);
+    }
+
+    //----
+
+    /**
+     * 批量根据用户信息进行绑定角色
+     */
+    @PostMapping("/importUser")
+    @Log(title = "批量导入用户信息,并且同时绑定指定角色", businessType = BusinessType.INSERT)
+    public Response importUser(@RequestPart("file") MultipartFile file,
+                               @RequestPart("rolekey") @NotBlank(message = "角色key不允许为空") String rolekey){
+        //批量导入用户信息,并且同时绑定指定角色
+        boolean r = userService.importUserBindingRole(file, rolekey);
+        return r ? Response.success() : Response.error("导入失败");
     }
 
 }
