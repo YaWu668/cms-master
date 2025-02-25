@@ -51,5 +51,12 @@ public interface UserService extends IService<User> {
      * @return
      */
     boolean importUserBindingRole(MultipartFile file, @NotBlank(message = "角色key不允许为空") String rolekey);
+
+    /**
+     * 导入用户信息
+     * @param file
+     * @return
+     */
+    boolean importUser(MultipartFile file);
 }
 

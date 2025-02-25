@@ -8,24 +8,23 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cms.common.core.utils.ExcelUtils;
+import com.cms.common.security.utils.SecurityUtils;
 import com.cms.system.api.domain.pojo.SysUser;
 import com.xk.constant.RoleConstant;
-import com.xk.domain.dto.ProjectPersonDto;
-import com.xk.domain.dto.UserBindingRoleDto;
+import com.xk.constant.UserConstant;
+import com.xk.domain.dto.*;
 import com.xk.domain.vo.SearchPersonListVo;
 import com.xk.domain.vo.detail.Student;
 import com.cms.common.core.exception.ServiceException;
 import com.cms.common.core.utils.StringUtils;
-import com.xk.domain.dto.InquireUserDTO;
-import com.xk.domain.dto.PageDTO;
 import com.xk.domain.vo.admin.UserListVo;
+import com.xk.entity.Config;
 import com.xk.entity.Role;
 import com.xk.entity.User;
 import com.xk.entity.UserRole;
 import com.xk.mapper.UserMapper;
-import com.xk.service.RoleService;
-import com.xk.service.UserRoleService;
-import com.xk.service.UserService;
+import com.xk.service.*;
+import com.xk.utils.BeanCopyUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,6 +58,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * 角色
      */
     private final RoleService roleService;
+    /**
+     * 配置
+     */
+    private final ConfigService configService;
 
     @Override
     public List<User> selectByUserIds(List<Long> userIds) {
@@ -181,6 +184,175 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         //6.写入数据库
         boolean r=userBindRole(role,users);
         return r;
+    }
+
+    @Override
+    @Transactional
+    public boolean importUser(MultipartFile file) {
+        //1.解析用户信息,同时校验不为空和学号不能重复(没有查数据库),校验性别
+        List<importUserDto> dtos = parsingUserExecl(file);
+        //2.校验查询数据库,判断用户账号是否已经存在,如果存在抛出异常
+        List<User> list= checkUserRoleDto(dtos);//校验完成,返回可以写入用户实体类
+        //3.写入数据库
+        boolean r= this.saveBatch(list);
+        return r;
+    }
+
+    /**
+     * 校验查询数据库,判断用户账号是否已经存在,如果存在抛出异常
+     * @param dtos
+     * @return
+     */
+    private List<User> checkUserRoleDto(List<importUserDto> dtos) {
+        //1.去数据库查询用户账号,转为set集合存储userName
+        List<String> userNames = dtos.stream().map(e -> e.getUserName()).collect(Collectors.toList());
+        List<User> users = this.lambdaQuery()
+                .in(User::getUserName, userNames)
+                .list();
+        Set<String> userNameSet = users.stream().map(e -> e.getUserName()).collect(Collectors.toSet());
+        if (userNames.size() == userNameSet.size()){
+            throw new ServiceException("出现账号一样的用户,请联系管理员进行处理,再进行导入用户操作");
+        }
+        //2.查询导入用户信息是否已经存在数据库里
+        ArrayList<String> msg = new ArrayList<>();
+        for (int i = 0; i < dtos.size(); i++) {
+            importUserDto dto = dtos.get(i);
+            if (userNameSet.contains(dto.getUserName())){
+                msg.add("第"+(i+2)+"行,账号已经存在,请修改");
+            }
+        }
+        if (CollUtil.isNotEmpty(msg)){
+            throw new ServiceException(CollUtil.join(msg,"\n"));
+        }
+
+        //3.准备返回数据,数据拷贝设置默认密码
+        List<User> dataList = BeanCopyUtils.copyBeans(dtos, User.class);
+        String defaultPassword = getDefaultPassword();
+        dataList.stream()
+                .forEach(e -> {
+                    e.setPassword(defaultPassword);
+                });
+        return dataList;
+    }
+
+
+    /**
+     * 获取默认配置密码,先查询系统配置默认密码,<br>
+     * 如果默认密码查询不到就返回内置密码:123456
+     * @return 默认密码
+     */
+    private String getDefaultPassword() {
+        Config one = configService.lambdaQuery()
+                .eq(Config::getConfigKey, UserConstant.DEFAULT_PASSWORD_KEY)
+                .one();
+        if (one == null || one.getConfigValue() == null){
+            return SecurityUtils.encryptPassword(UserConstant.DEFAULT_PASSWORD);
+        }
+        return SecurityUtils.encryptPassword(one.getConfigValue());
+    }
+
+    /**
+     * 解析用户信息,同时校验不为空和学号不能重复(没有查数据库),校验性别
+     * @param file
+     * @return List<importUserDto>
+     */
+    private List<importUserDto> parsingUserExecl(MultipartFile file) {
+        List<importUserDto> data;
+        try {
+            data = ExcelUtils.read(file, importUserDto.class);
+        } catch (IOException e) {
+            throw new RuntimeException("excel格式不对,解析excel出错");
+        }
+
+        if(CollUtil.isEmpty(data)){
+            throw new ServiceException("导入数据为空");
+        }
+
+        //1.校验是否为空
+        UserNotEmpty(data);
+        //2.校验是否有重复学号
+        UserRepeatData(data);
+        //3.校验性别是否正确
+        UserSexNotEmpty(data);
+        return data;
+    }
+
+    /**
+     * 用户批量导入实体类 ,进行性别校验
+     * @param data List<importUserDto>
+     */
+    private void UserSexNotEmpty(List<importUserDto> data) {
+        //1.错误信息
+        List<String> messages = new ArrayList<>();
+        for (int i = 0; i < data.size(); i++) {
+            importUserDto dto = data.get(i);
+            if(!"男".equals(dto.getSex()) && !"女".equals(dto.getSex())){
+                messages.add("第" + (i + 2) + "行性别不正确,请修改");
+            }
+        }
+        if(CollUtil.isNotEmpty(messages)){
+            throw new ServiceException("性别只能为男或者女,错误行:"+CollUtil.join(messages,";"));
+        }
+    }
+
+
+    /**
+     * 用户批量导入实体类 ,进行重复学号校验
+     * @param data
+     */
+    private void UserRepeatData(List<importUserDto> data) {
+        //1.错误信息
+        List<String> messages = new ArrayList<>();
+        //2.记录学号
+        Set<String> userNameSet = new HashSet<>();
+
+        for (int i = 0; i < data.size(); i++) {
+            importUserDto dto = data.get(i);
+            //3.判断当前行是否有重复的
+            if(userNameSet.contains(dto.getUserName())){
+                messages.add("第" + (i + 2) + "行");
+            }
+            userNameSet.add(dto.getUserName());
+        }
+        //4.判断响集合有数据抛出异常
+        if(CollUtil.isNotEmpty(messages)){
+            throw new ServiceException("学号不可以有重复的,重复行:"+CollUtil.join(messages,";"));
+        }
+
+    }
+
+
+
+    /**
+     * 用户批量导入实体类,校验不为空
+     * @param data
+     */
+    private void UserNotEmpty(List<importUserDto> data) {
+        //1.错误信息
+        List<String> messages = new ArrayList<>();
+        for (int i = 0; i < data.size(); i++) {
+            importUserDto dto = data.get(i);
+            List<String> rowMessages = new ArrayList<>();//记录行错写信息
+            //2.判断当前行是否是为空
+            if(StrUtil.isBlank(dto.getUserName())){
+                rowMessages.add("账号");
+            }
+            if (StrUtil.isBlank(dto.getNickName())){
+                rowMessages.add("名字");
+            }
+            if (StrUtil.isBlank(dto.getSex())){
+                rowMessages.add("性别");
+            }
+            //3.当前行有错误信息进行记录
+            if(CollUtil.isNotEmpty(rowMessages)){
+                messages.add("第" + (i + 2) + "行："+CollUtil.join(rowMessages,","));
+            }
+        }
+
+        //4.判断响集合有数据抛出异常
+        if(CollUtil.isNotEmpty(messages)){
+            throw new ServiceException("数据不允许为空:"+CollUtil.join(messages,";"));
+        }
     }
 
     /**
@@ -332,7 +504,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     /**
-     * 重复学号校验
+     * 用户批量绑定角色实体类 ,进行重复学号校验
      * @param data
      */
     private void UserBindingRoleRepeatData(List<UserBindingRoleDto> data) {
@@ -357,7 +529,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     /**
-     * 校验不为空
+     * 用户批量绑定角色实体类 ,校验不为空
      * @param data
      */
     private void UserBindingRoleNotEmpty(List<UserBindingRoleDto> data) {
