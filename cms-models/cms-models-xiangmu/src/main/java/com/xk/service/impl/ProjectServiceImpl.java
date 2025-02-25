@@ -229,7 +229,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     public Response projectAudit(ProjectAuditDto projectAuditDto) {
         //1.判断当前项目是否存在,并返回项目的bean对象,不存在抛出异常
         Project project = getProject(projectAuditDto.getProjectId());
-        //2.情况二,当前项目已经审核完毕,不需要再次审核,直接抛出异常
+        //2.情况二,当前项目已经审核完毕,不需要再次审核,直接抛出异常,再进行状态判断,只有项目审核中才可以进行审核
         projectAlreadyAudit(project);
         //3.根据项目的审核状态,去查热更新配置类,返回当前项目的审核角色的id
         Long roleId = getAuditRoleId(project.getAuditStatus(), project.getType());
@@ -2415,12 +2415,16 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     /**
      * 前项目已经审核完毕,不需要再次审核<br>
      * 项目审核进度值为0表示项目已经审核完毕,不需要再次审核<br>
-     * 为0直接抛出异常
+     * 为0直接抛出异常<br>
+     * 再进行状态判断,只有项目审核中才可以进行审核
      * @param project 项目实体类
      */
     public void projectAlreadyAudit(Project project) {
         if(project.getAuditStatus() == 0L){
-            throw new ServiceException("当前项目已经审核完毕,不需要再次审核",444);
+            throw new ServiceException("当前项目已经审核完毕,不需要再次审核");
+        }
+        if(ProjectConstant.PROJECT_STATUS_AUDIT_VALUE != project.getState()){
+            throw new ServiceException("当中项目状态不为审核中,不能进行审核操作");
         }
     }
 
