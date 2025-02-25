@@ -210,8 +210,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 .in(User::getUserName, userNames)
                 .list();
         Set<String> userNameSet = users.stream().map(e -> e.getUserName()).collect(Collectors.toSet());
+        if (users.size() != userNameSet.size()){
+            List<String> errorMsg = users.stream()
+                    .filter(e -> !userNameSet.contains(e.getUserName()))
+                    .map(e -> e.getUserName())
+                    .collect(Collectors.toList());
+            throw new ServiceException("系统存在重复账号,请联系管理员出来,再进行导入操作,以下是重复账号:"+CollUtil.join(errorMsg,"; "));
+        }
         if (userNames.size() == userNameSet.size()){
-            throw new ServiceException("出现账号一样的用户,请联系管理员进行处理,再进行导入用户操作");
+            throw new ServiceException("当前Execl文件导入的用户,已经全部在系统当中,请不要重复操作");
         }
         //2.查询导入用户信息是否已经存在数据库里
         ArrayList<String> msg = new ArrayList<>();
@@ -222,7 +229,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             }
         }
         if (CollUtil.isNotEmpty(msg)){
-            throw new ServiceException(CollUtil.join(msg,"\n"));
+            throw new ServiceException("以下账号已经存在系统当中请不要重复导入:"+CollUtil.join(msg,"\n"));
         }
 
         //3.准备返回数据,数据拷贝设置默认密码

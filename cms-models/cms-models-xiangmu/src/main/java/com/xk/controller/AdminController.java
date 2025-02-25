@@ -346,13 +346,24 @@ public class AdminController {
     /**
      * 批量根据用户信息进行绑定角色
      */
-    @PostMapping("/importUser")
+    @PostMapping("/importUserBindingRole")
     @Log(title = "批量导入用户信息,并且同时绑定指定角色", businessType = BusinessType.INSERT)
-    public Response importUser(@RequestPart("file") MultipartFile file,
+    public Response<?> importUserBindingRole(@RequestPart("file") MultipartFile file,
                                @RequestPart("rolekey") @NotBlank(message = "角色key不允许为空") String rolekey){
         //批量导入用户信息,并且同时绑定指定角色
         boolean r = userService.importUserBindingRole(file, rolekey);
-        return r ? Response.success() : Response.error("导入失败");
+        return r ? Response.success("导入成功") : Response.error("导入失败");
+    }
+
+    /**
+     * 批量导入用户信息
+     */
+    @PostMapping("/importUser")
+    @Log(title = "批量导入用户信息", businessType = BusinessType.INSERT)
+    public Response<?> importUser(@RequestPart("file") MultipartFile file){
+        //批量导入用户信息
+        boolean r = userService.importUser(file);
+        return r ? Response.success("导入成功") : Response.error("导入失败");
     }
 
 }
