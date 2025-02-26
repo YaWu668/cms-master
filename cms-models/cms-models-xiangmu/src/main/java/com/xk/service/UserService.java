@@ -71,6 +71,12 @@ public interface UserService extends IService<User> {
      */
     boolean importUserUnbindingRole(MultipartFile file, @NotBlank(message = "角色key不允许为空") String rolekey);
 
+    /**
+     * 获取导入模板
+     * @param type 0获取绑定和解绑模板,1获取导入用户模板
+     * @param response 响应
+     * @return
+     */
     boolean getExeclTemplate(@NotNull(message = "type不允许为空") @Min(value = 0,message = "type不允许小于0") @Max(value = 1,message = "type不允许大于1") Integer type, HttpServletResponse response);
 }
 
