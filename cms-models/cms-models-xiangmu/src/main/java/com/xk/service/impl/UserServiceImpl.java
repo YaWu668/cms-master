@@ -23,6 +23,7 @@ import com.xk.entity.Role;
 import com.xk.entity.User;
 import com.xk.entity.UserRole;
 import com.xk.mapper.UserMapper;
+import com.xk.mapper.UserRoleMapper;
 import com.xk.service.*;
 import com.xk.utils.BeanCopyUtils;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +55,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * 用户关联角色
      */
     private final UserRoleService userRoleService;
+    /**
+     * 用户关联角色
+     */
+    private final UserRoleMapper userRoleMapper;
     /**
      * 角色
      */
@@ -179,9 +184,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new ServiceException("角色key不能为null");
         }
         Role role = roleService.selectByRoleKey(rolekey);
-        //4.校验用户信息是不是都存在和正确(查数据库),同时校验这些用户是否已经绑定过角色,如果已经绑定过就抛出异常
-        List<User> users = checkUserBindingRoleDto(list, role);//返回校验完成可以绑定用户信息
-        //6.写入数据库
+        //3.校验用户信息是不是都存在和正确(查数据库),同时校验这些用户是否已经绑定过角色,如果已经绑定过就抛出异常
+        List<User> users = checkUserBindingRoleDto(list, role,false);//返回校验完成可以绑定用户信息
+        //4.写入数据库
         boolean r=userBindRole(role,users);
         return r;
     }
@@ -197,6 +202,41 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         boolean r= this.saveBatch(list);
         return r;
     }
+
+    @Override
+    @Transactional
+    public boolean importUserUnbindingRole(MultipartFile file, String rolekey) {
+        //1.解析用户信息,同时校验不为空和学号不能重复(没有查数据库)
+        List<UserBindingRoleDto> list = parsingUserBindingRoleExecl(file);
+        //2.根据角色key查询,如果不存在抛出异常
+        if (StrUtil.isBlank(rolekey)){
+            throw new ServiceException("角色key不能为null");
+        }
+        Role role = roleService.selectByRoleKey(rolekey);
+
+        //3.校验用户信息是不是都存在和正确(查数据库),同时校验这些用户是否已经绑定过角色,如果已经绑定过就抛出异常
+        List<User> users = checkUserBindingRoleDto(list, role,true);//返回校验完成可以绑定用户信息
+
+        //4.解绑操作
+        boolean r = userUnbindingRole(role,users);
+        return r;
+    }
+
+    /**
+     * 用户批量解绑角色
+     * @param role 指导教师
+     * @param users 用户信息
+     * @return true 解绑成功 false 解绑失败
+     */
+    private boolean userUnbindingRole(Role role, List<User> users) {
+        List<Long> userIds = users.stream()
+                .map(e -> e.getUserId())
+                .collect(Collectors.toList());
+        return userRoleService.remove(new LambdaQueryWrapper<UserRole>()
+                .eq(UserRole::getRoleId, role.getRoleId())
+                .in(UserRole::getUserId, userIds));
+    }
+
 
     /**
      * 校验查询数据库,判断用户账号是否已经存在,如果存在抛出异常
@@ -382,6 +422,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * 校验这些用户是否已经绑定过角色,如果已经绑定过就抛出异常
      * @param list 导入的用户信息
      * @param role 角色信息
+     * @param userList 导入账号对应存在数据库的用户信息
      */
     private void checkTheUserToWhomTheRoleIsBound(List<UserBindingRoleDto> list, Role role,List<User> userList) {
         //1.设置hashMap集合 key是:userName value是:User
@@ -389,7 +430,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 .collect(Collectors.toMap(User::getUserName, e -> e));
 
         //2.再根据 用户ID 和 角色id去查询 userRole已经存在关联关系,再转为 set集合存在userID
-        List<UserRole> userRoles = selectByUserRoleList(role, userList);
+        List<UserRole> userRoles = selectByUserRoleList(role, userList,false);
         Set<Long> userIdSet = userRoles.stream()
                 .map(UserRole::getUserId)
                 .collect(Collectors.toSet());
@@ -416,12 +457,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     /**
-     * 根据userId和角色id查询已经存在的关系
+     * 根据userId和角色id查询已经存在的关系,专门优化批量删除和批量新增绑定关系
      * @param role
      * @param userList
+     * @param isCheck true(批量删除)要求查询用户全部没有绑定就关心抛出异常,false(批量绑定)全部要绑定关系抛出异常
      * @return 返回元素数量和 userList的数量一致代表,需要导入元素全部都有对应绑定关系,直接抛出异常
      */
-    private List<UserRole> selectByUserRoleList(Role role, List<User> userList) {
+    private List<UserRole> selectByUserRoleList(Role role, List<User> userList,boolean isCheck) {
         //转为UserRole实体类
         List<UserRole> userRoles = userList.stream()
                 .map(user -> new UserRole(user.getUserId(), role.getRoleId()))
@@ -434,28 +476,36 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 qw.or().eq("user_id", userRole.getUserId()).eq("role_id", userRole.getRoleId());
             }
         });
-        // 查询数据库
+        // todo 查询数据库
         List<UserRole> list = userRoleService.list(queryWrapper);
-        if (userList.size() == list.size()){
-            throw new ServiceException("导入用户信息,全部都已经存在数据库");
+        if (isCheck && CollUtil.isEmpty(list)){//true是进行批量删除绑定,全部都没有绑定角色就没有执行后续操作
+            throw new ServiceException("导入用户信息,全部没有绑定角色:"+role.getRoleName()+"不需要解绑操作");
         }
+        if (!isCheck && userList.size() == list.size()){//false是进行批量绑定关系,全部已经绑定就没有必须进行后续操作
+            throw new ServiceException("导入用户信息,全部都绑定角色:"+role.getRoleName()+"不要绑定操作");
+        }
+       /* if (userList.size() == list.size()){
+            throw new ServiceException("导入用户信息,全部都已经存在数据库");
+        }*/
         return list;
     }
 
     /**
-     * 校验用户信息是不是都存在和正确(查数据库)
+     * 校验用户信息是不是都存在和正确(查数据库),同时也可以选择校验这些账号是否绑定过传入的角色
      * @param list 导入的用户信息
      * @param role 角色信息
+     * @param isCheck 传入true(批量删除)要求当前账号绑定过角色,传入false(批量绑定)反之没有绑定过角色
+     *
      * @return 返回用户信息(用用于后续的插入,优化查询数据库次数)
      */
-    private List<User> checkUserBindingRoleDto(List<UserBindingRoleDto> list,Role role) {
+    private List<User> checkUserBindingRoleDto(List<UserBindingRoleDto> list,Role role,boolean isCheck) {
         //1.根据学号查询出来用户信息,再转为key:学号 value:名字
         List<String> userNameList = list.stream().map(e -> e.getUserName()).collect(Collectors.toList());
         List<User> userList = this.lambdaQuery()
                 .in(User::getUserName, userNameList)
                 .list();
         if (CollUtil.isEmpty(userList)){//优化,如果全部不在时候直接抛出异常
-            throw new ServiceException("当前Execl文件进行绑定《"+role.getRoleName()+"》的角色。\n当前文件中全部账号都不在系统当中,请进行导入用户账号以后再进行角色绑定");
+            throw new ServiceException("当前Execl文件进行绑定《"+role.getRoleName()+"》的角色。\n当前文件中全部账号都不在系统当中,"+(isCheck?"请不要操作系统不存在的账号":"请进行导入用户账号以后再进行批量绑定"));
         }
         Map<String, String> dataMap = userList.stream()
                 .collect(Collectors.toMap(User::getUserName, User::getNickName));
@@ -478,13 +528,54 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         //3.有错误信息就抛出异常
         if (CollUtil.isNotEmpty(msg)){
-            throw new ServiceException("当前Execl文件进行绑定《"+role.getRoleName()+"》的角色无法进行绑,因为以下账号不在系统当中:"+CollUtil.join(msg,";\n"));
+            throw new ServiceException("当前Execl文件进行绑定《"+role.getRoleName()+"》的角色"+(isCheck?"无法进行解绑":"无法进行绑定")+",因为以下账号不在系统当中:"+CollUtil.join(msg,";\n"));
         }
 
-        //4.校验这些用户是否已经绑定过角色,如果已经绑定过就抛出异常
-        checkTheUserToWhomTheRoleIsBound(list,role,userList);
-
+        //true是要求这些账号绑定Role角色 ,反正false 要求这些账号没有绑定过角色
+        if(isCheck){//如果传入账号没有绑定这个角色抛出异常(批量删除)
+            checkTheUserToWhomTheRoleIsNotBound(list, role, userList);
+        }else {//反之有绑定就抛出异常(批量新增)
+            checkTheUserToWhomTheRoleIsBound(list, role, userList);
+        }
         return userList;
+    }
+
+    /**
+     * 解析校验传入的用户要求绑定过的角色,导入用户没有绑定角色就抛出异常(批量删除)
+     * @param list 导入的用户信息
+     * @param role 角色信息
+     * @param userList 导入账号对应存在数据库的用户信息
+     */
+    private void checkTheUserToWhomTheRoleIsNotBound(List<UserBindingRoleDto> list, Role role, List<User> userList) {
+        //1.设置hashMap集合 key是:userName value是:User
+        Map<String, User> userMap = userList.stream()
+                .collect(Collectors.toMap(User::getUserName, e -> e));
+
+        //2.再根据 用户ID 和 角色id去查询 userRole已经存在关联关系,再转为 set集合存在userID
+        List<UserRole> userRoles = selectByUserRoleList(role, userList, true);
+        Set<Long> userIdSet = userRoles.stream()
+                .map(UserRole::getUserId)
+                .collect(Collectors.toSet());
+        //3.遍历用户信息,进行校验是否存在数据库
+        // 先获取dto -->根据userName查询 userMap获取到UserId,再根据userId去查询userIdSet判断判断是否存在
+        //  如果存在记录保存信息
+        ArrayList<String> msg = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            ArrayList<String> rowMsg = new ArrayList<>();
+            UserBindingRoleDto dto = list.get(i);
+            User user = userMap.get(dto.getUserName());
+            if (!userIdSet.contains(user.getUserId())){
+                rowMsg.add("第"+(i+2)+"行用户名:"+dto.getUserName()+"没有绑定过该角色");
+            }
+
+            if(CollUtil.isNotEmpty(rowMsg)){
+                msg.addAll(rowMsg);
+            }
+        }
+
+        if (CollUtil.isNotEmpty(msg)){
+            throw new ServiceException("下面用户没有绑定过"+role.getRoleName()+",不需要解绑操作的:"+CollUtil.join(msg,"\n"));
+        }
     }
 
     /**

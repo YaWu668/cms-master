@@ -356,6 +356,18 @@ public class AdminController {
     }
 
     /**
+     * 批量根据用户信息进行解绑角色
+     */
+    @DeleteMapping("/importUserUnbindingRole")
+    @Log(title = "批量导入用户信息,并且同时解绑指定角色", businessType = BusinessType.DELETE)
+    public Response<?> importUserUnbindingRole(@RequestPart("file") MultipartFile file,
+                                               @RequestPart("rolekey") @NotBlank(message = "角色key不允许为空") String rolekey){
+        //批量导入用户信息,并且同时解绑指定角色
+        boolean r = userService.importUserUnbindingRole(file, rolekey);
+        return r ? Response.success("解绑成功") : Response.error("解绑失败");
+    }
+
+    /**
      * 批量导入用户信息
      */
     @PostMapping("/importUser")

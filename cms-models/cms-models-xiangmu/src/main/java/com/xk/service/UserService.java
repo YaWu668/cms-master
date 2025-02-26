@@ -58,5 +58,13 @@ public interface UserService extends IService<User> {
      * @return
      */
     boolean importUser(MultipartFile file);
+
+    /**
+     * 根据用户信息进行解绑角色
+     * @param file
+     * @param rolekey
+     * @return
+     */
+    boolean importUserUnbindingRole(MultipartFile file, @NotBlank(message = "角色key不允许为空") String rolekey);
 }
 
