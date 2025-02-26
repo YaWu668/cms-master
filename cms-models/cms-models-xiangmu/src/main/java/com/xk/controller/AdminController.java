@@ -19,7 +19,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -376,6 +379,20 @@ public class AdminController {
         //批量导入用户信息
         boolean r = userService.importUser(file);
         return r ? Response.success("导入成功") : Response.error("导入失败");
+    }
+
+    /**
+     * 获取Execl文件模板,0获取绑定和解绑模板,1获取导入用户模板
+     */
+    @GetMapping("/getExeclTemplate")
+    public Response<?> getExeclTemplate(@RequestParam("type")
+                                            @NotNull(message = "type不允许为空")
+                                            @Min(value = 0,message = "type不允许小于0")
+                                            @Max(value = 1,message = "type不允许大于1")
+                                            Integer type,
+                                        HttpServletResponse response){
+        //获取Execl文件模板,0获取绑定和解绑模板,1获取导入用户模板
+        return userService.getExeclTemplate(type,response) ?Response.success():Response.error("获取失败");
     }
 
 }

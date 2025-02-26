@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -220,6 +221,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         //4.解绑操作
         boolean r = userUnbindingRole(role,users);
         return r;
+    }
+
+    @Override
+    public boolean getExeclTemplate(Integer type, HttpServletResponse response) {
+        if (type==0){
+            try {
+                ExcelUtils.write(response, "用户关系绑定或者解绑模板", "模板", UserBindingRoleDto.class, new  ArrayList<>());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else if (type ==1){
+            try {
+                ExcelUtils.write(response, "创建用户信息模板", "模板", importUserDto.class, new  ArrayList<>());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else{
+            return false;
+        }
+        return true;
     }
 
     /**

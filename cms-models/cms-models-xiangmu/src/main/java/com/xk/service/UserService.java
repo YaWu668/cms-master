@@ -10,7 +10,11 @@ import com.xk.domain.vo.admin.UserListVo;
 import com.xk.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 
@@ -66,5 +70,7 @@ public interface UserService extends IService<User> {
      * @return
      */
     boolean importUserUnbindingRole(MultipartFile file, @NotBlank(message = "角色key不允许为空") String rolekey);
+
+    boolean getExeclTemplate(@NotNull(message = "type不允许为空") @Min(value = 0,message = "type不允许小于0") @Max(value = 1,message = "type不允许大于1") Integer type, HttpServletResponse response);
 }
 
