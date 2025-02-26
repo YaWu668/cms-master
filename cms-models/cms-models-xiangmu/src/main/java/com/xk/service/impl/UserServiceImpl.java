@@ -411,7 +411,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
 
         if (CollUtil.isNotEmpty(msg)){
-            throw new ServiceException("下面用户意见绑定过"+role.getRoleName()+":"+msg);
+            throw new ServiceException("下面用户已经绑定过"+role.getRoleName()+":"+CollUtil.join(msg,"\n"));
         }
     }
 
@@ -455,7 +455,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 .in(User::getUserName, userNameList)
                 .list();
         if (CollUtil.isEmpty(userList)){//优化,如果全部不在时候直接抛出异常
-            throw new ServiceException("导入用户信息,全部都不存在数据库");
+            throw new ServiceException("当前Execl文件进行绑定《"+role.getRoleName()+"》的角色。\n当前文件中全部账号都不在系统当中,请进行导入用户账号以后再进行角色绑定");
         }
         Map<String, String> dataMap = userList.stream()
                 .collect(Collectors.toMap(User::getUserName, User::getNickName));
@@ -478,7 +478,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         //3.有错误信息就抛出异常
         if (CollUtil.isNotEmpty(msg)){
-            throw new ServiceException(CollUtil.join(msg,"\n"));
+            throw new ServiceException("当前Execl文件进行绑定《"+role.getRoleName()+"》的角色无法进行绑,因为以下账号不在系统当中:"+CollUtil.join(msg,";\n"));
         }
 
         //4.校验这些用户是否已经绑定过角色,如果已经绑定过就抛出异常
@@ -554,7 +554,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             }
             //3.当前行有错误信息进行记录
             if(CollUtil.isNotEmpty(rowMessages)){
-                messages.add("第" + (i + 2) + "行："+CollUtil.join(rowMessages,","));
+                messages.add("第" + (i + 2) + "行："+CollUtil.join(rowMessages,";\n"));
             }
         }
 
