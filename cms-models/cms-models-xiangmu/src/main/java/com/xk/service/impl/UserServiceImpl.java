@@ -300,6 +300,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 .forEach(e -> {
                     e.setPassword(defaultPassword);
                 });
+        //4.设置男女
+        dataList.stream()
+                .forEach(e -> {
+                    if ("男".equals(e.getSex())){
+                        e.setSex("0");
+                    }else if ("女".equals(e.getSex())){
+                        e.setSex("1");
+                    }else{
+                        throw new ServiceException("性别只能是男或者女");
+                    }
+                });
         return dataList;
     }
 
