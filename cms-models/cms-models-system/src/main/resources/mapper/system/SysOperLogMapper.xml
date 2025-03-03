@@ -42,19 +42,16 @@
                 and o.title like concat('%',#{title},'%')
             </if>
             <if test="operName != null and operName != ''">
-                and o.oper_name = concat('%',#{operName},'%')
+                and o.oper_name like concat('%', #{operName}, '%')
             </if>
             <if test="operUrl != null and operUrl != ''">
-                and o.oper_url = concat('%',#{operUrl},'%')
+                and o.oper_url like concat('%', #{operUrl}, '%')
             </if>
             <if test="status != null and status != ''">
                 and o.status = #{status}
             </if>
             <if test="beginTime != null and endTime != null">
                 and o.oper_time between #{beginTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
-            </if>
-            <if test="roleId != null">
-                and ur.role_id = #{roleId}
             </if>
         </where>
     </select>

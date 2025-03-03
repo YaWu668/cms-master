@@ -1,5 +1,6 @@
 package com.xk.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ArrayUtil;
@@ -963,6 +964,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         List<Long> projectIds = teacherApplys.stream()
                 .map(teacherApply -> teacherApply.getProjectId())
                 .collect(Collectors.toList());
+        if(CollUtil.isEmpty(projectIds)){
+            return PageDTO.empty();
+        }
         //1.1 去重已经删除项目(逻辑删除不会删除报名表)
         List<Long> projectIdList = this.lambdaQuery()
                 .in(Project::getProjectId, projectIds)
