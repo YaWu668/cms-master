@@ -102,15 +102,21 @@ public class CollegeGroupServiceImpl extends ServiceImpl<CollegeGroupMapper, Col
     }
 
     @Override
-    public List<CollegeDataVo> getCollegeUser(Long id) {
+    public PageDTO<CollegeDataVo> getCollegeUser(selectByIdCollegeDateDto dto) {
         //1.查询
-        List<CollegeData> collegeDataList = collegeDataService.lambdaQuery()
-                .eq(CollegeData::getCollegeGroupId, id)
-                .list();
+//        List<CollegeData> collegeDataList = collegeDataService.lambdaQuery()
+//                .eq(CollegeData::getCollegeGroupId, dto.getCollegeGroupId())
+//                .list();
+        LambdaQueryWrapper<CollegeData> queryWrapper = new LambdaQueryWrapper<CollegeData>()
+                .eq(CollegeData::getCollegeGroupId, dto.getCollegeGroupId());
+        Page<CollegeData> page = dto.toMpPageDefaultSortByCreateTimeDesc();
+        collegeDataService.page(page, queryWrapper);
+
+        PageDTO<CollegeDataVo> pageDTO = PageDTO.of(page, CollegeDataVo.class);
         //2.封装返回数据
-        if (collegeDataList != null && collegeDataList.size() > 0){
+        if (pageDTO.getList() != null && pageDTO.getList().size() > 0){
             //2.1返回数据
-            List<CollegeDataVo> dataVos = BeanCopyUtils.copyBeans(collegeDataList, CollegeDataVo.class);
+            List<CollegeDataVo> dataVos = pageDTO.getList();
             //2.2获取用户的id,查询用户昵称
             List<Long> userIds = dataVos.stream()
                     .map(dataVo -> dataVo.getUserId())
@@ -126,9 +132,9 @@ public class CollegeGroupServiceImpl extends ServiceImpl<CollegeGroupMapper, Col
                                     dataVo.setNickName(user.getNickName());
                                 });
                     });
-            return dataVos;
+            return pageDTO;
         }
-        return Collections.emptyList();
+        return PageDTO.empty();
     }
 
     @Override

@@ -16,6 +16,7 @@ import com.xk.entity.SpecialistGroup;
 import com.xk.entity.YearGroup;
 import com.xk.service.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,6 +34,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin")
+@Validated
 public class AdminController {
     /**
      * 专家组的服务
@@ -248,13 +250,13 @@ public class AdminController {
 
     /**
      * 根据学院id,查询人员信息
-     * @param id 学院id
+     * @param dto 学院id
      * @return 学院人员
      */
     @GetMapping("/getCollegeUser")
     @Log(title = "根据学院id,查询人员信息", businessType = BusinessType.OTHER)
-    public Response<List<CollegeDataVo>> getCollegeUser(@RequestParam("id") Long id){
-        return Response.success(collegeGroupService.getCollegeUser(id));
+    public Response<PageDTO<CollegeDataVo>> getCollegeUser(@Valid @ModelAttribute  selectByIdCollegeDateDto dto){
+        return Response.success(collegeGroupService.getCollegeUser(dto));
     }
 
     /**

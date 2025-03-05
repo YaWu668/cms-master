@@ -48,10 +48,10 @@ public interface CollegeGroupService extends IService<CollegeGroup> {
 
     /**
      * 获取学院用户列表
-     * @param id 学院id
+     * @param dto 学院id和分页参数
      * @return 学院用户列表
      */
-    List<CollegeDataVo> getCollegeUser(Long id);
+    PageDTO<CollegeDataVo> getCollegeUser(selectByIdCollegeDateDto dto);
 
     /**
      * 根据id修改学院组信息
