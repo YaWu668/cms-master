@@ -157,6 +157,17 @@ public class LogAspect {
      * @param operLog 操作日志
      */
     public void getControllerMethodDescription(JoinPoint joinPoint, Log log, SysOperLog operLog, Object jsonResult) throws Exception {
+        //todo 新加 statr
+        Long userId = null;
+        try {
+            userId = SecurityUtils.getUserId();
+        } catch (Exception e) {
+            userId = 0L;
+        }finally {
+            operLog.setUserId(userId);
+        }
+        //todo end
+
         // 设置action动作
         operLog.setBusinessType(log.businessType().ordinal());
         // 设置标题
