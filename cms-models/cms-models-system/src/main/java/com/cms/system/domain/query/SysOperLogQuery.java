@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 /**
@@ -21,6 +22,8 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SysOperLogQuery {
+
+
 
     /**
      * 模块标题
@@ -67,5 +70,26 @@ public class SysOperLogQuery {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endTime;
+
+    /**
+     * 操作ip地址
+     */
+    @ApiModelProperty(value = "操作ip地址", position = 8)
+    private String operIp;
+
+    /**
+     *业务类型（0其它 1新增 2修改 3删除
+     */
+    @ApiModelProperty(value = "业务类型（0其它 1新增 2修改 3删除", position = 9)
+    @Pattern(regexp = "^[0-9]*$", message = "业务类型只能是数字字符串")
+    private String businessType;
+    /**
+     * 用户ID
+     */
+    @ApiModelProperty(value = "用户ID", position = 10)
+    @Pattern(regexp = "^[0-9]*$", message = "用户ID只能是数字字符串")
+    private String userId;
+
+
 
 }

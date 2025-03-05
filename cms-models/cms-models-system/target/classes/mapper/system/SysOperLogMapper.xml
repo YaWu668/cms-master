@@ -31,6 +31,7 @@
         o.request_method,
         o.oper_name,
         o.oper_ip,
+        o.oper_url,
         o.status,
         o.oper_time,
         o.cost_time
@@ -53,8 +54,14 @@
             <if test="beginTime != null and endTime != null">
                 and o.oper_time between #{beginTime,jdbcType=TIMESTAMP} and #{endTime,jdbcType=TIMESTAMP}
             </if>
-            <if test="roleId != null">
-                and ur.role_id = #{roleId}
+            <if test="operIp != null and operIp != '' " >
+                and o.oper_ip like concat('%', #{operIp}, '%')
+            </if>
+            <if test="businessType != null and businessType != ''  ">
+                and o.business_type = #{businessType}
+            </if>
+            <if test="userId != null and userId != ''">
+                and o.user_id = #{userId}
             </if>
         </where>
     </select>

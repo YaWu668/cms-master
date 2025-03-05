@@ -1,6 +1,7 @@
 package com.cms.system.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.cms.common.security.utils.SecurityUtils;
 import com.cms.system.api.domain.pojo.SysOperLog;
 import com.cms.system.domain.query.SysOperLogQuery;
 import com.cms.system.mapper.SysOperLogMapper;
@@ -51,6 +52,15 @@ public class SysOperLogServiceImpl extends ServiceImpl<SysOperLogMapper, SysOper
      */
     @Override
     public boolean addEntity(SysOperLog sysOperLog) {
+        //todo 新加 statr
+        Long userId = null;
+        try {
+            userId = SecurityUtils.getUserId();
+        } catch (Exception e) {
+            userId = 0L;
+        }
+        sysOperLog.setUserId(userId);
+        //todo end
         return this.save(sysOperLog);
     }
 }
