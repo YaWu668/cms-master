@@ -128,7 +128,7 @@ public class UserConstants {
      */
     public static final int USERNAME_MIN_LENGTH = 2;
 
-    public static final int USERNAME_MAX_LENGTH = 20;
+    public static final int USERNAME_MAX_LENGTH = 25;
 
     /**
      * 密码长度限制
