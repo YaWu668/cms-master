@@ -255,7 +255,7 @@ public class AdminController {
      */
     @GetMapping("/getCollegeUser")
     @Log(title = "根据学院id,查询人员信息", businessType = BusinessType.OTHER)
-    public Response<PageDTO<CollegeDataVo>> getCollegeUser(@Valid @ModelAttribute  selectByIdCollegeDateDto dto){
+    public Response<PageDTO<CollegeDataVo>> getCollegeUser(  selectByIdCollegeDateDto dto){
         return Response.success(collegeGroupService.getCollegeUser(dto));
     }
 

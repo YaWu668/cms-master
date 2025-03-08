@@ -108,7 +108,7 @@ public class CollegeGroupServiceImpl extends ServiceImpl<CollegeGroupMapper, Col
 //                .eq(CollegeData::getCollegeGroupId, dto.getCollegeGroupId())
 //                .list();
         LambdaQueryWrapper<CollegeData> queryWrapper = new LambdaQueryWrapper<CollegeData>()
-                .eq(CollegeData::getCollegeGroupId, dto.getCollegeGroupId());
+                .eq(CollegeData::getCollegeGroupId, dto.getId());
         Page<CollegeData> page = dto.toMpPageDefaultSortByCreateTimeDesc();
         collegeDataService.page(page, queryWrapper);
 

@@ -27,6 +27,6 @@ public class selectByIdCollegeDateDto extends PageQuery {
      */
     @NotNull(message = "学院组的id不允许为空")
     @Min(value = 1, message = "学院组的id不允许小于1")
-    private Long collegeGroupId;
+    private Long id;
 
 }
