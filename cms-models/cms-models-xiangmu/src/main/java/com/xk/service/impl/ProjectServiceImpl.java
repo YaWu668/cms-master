@@ -1452,6 +1452,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 .eq(projectSelectDto.getUserId() != null, Project::getUserId, projectSelectDto.getUserId())
                 // 年度组 ID
                 .eq(projectSelectDto.getYearGroupId() != null, Project::getYearGroupId, projectSelectDto.getYearGroupId())
+                // todo 年度数据id
+                .eq(projectSelectDto.getYearDataId() != null, Project::getYearDataId, projectSelectDto.getYearDataId())
                 // 指导老师和企业老师 JSON 包含查询
                 .and(projectSelectDto.getTeacherId() != null,wrapper -> wrapper
                         .apply("JSON_CONTAINS(teacher_id, JSON_ARRAY({0}))", projectSelectDto.getTeacherId())

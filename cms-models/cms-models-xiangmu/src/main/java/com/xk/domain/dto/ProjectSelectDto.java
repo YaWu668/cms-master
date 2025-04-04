@@ -58,6 +58,11 @@ public class ProjectSelectDto extends PageQuery {
     private Long memberId;
 
     /**
+     * 批次数据
+     */
+    private Long yearDataId;
+
+    /**
      * 判断用户输入的角色标识符是否正确
      */
     public boolean isRole() {
