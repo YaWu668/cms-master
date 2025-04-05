@@ -97,5 +97,15 @@ public class SysFileController extends BaseController {
         return this.success(sysFileService.viewXmFile(request, response));
     }
 
+    /**
+     * 通过 URL 访问图片（Spring Boot 代理）
+     * @param filePath 文件路径
+     * @param response
+     */
+    @GetMapping("/viewXmPath")
+    public void viewXmByPath(@RequestParam("filePath") String filePath, HttpServletResponse response) {
+        sysFileService.viewXmFile(filePath, response);
+    }
+
 
 }

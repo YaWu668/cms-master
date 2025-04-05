@@ -64,8 +64,8 @@ public class SysLoginService {
         // 判断账号长度是否在范围内
         if (username.length() < UserConstants.USERNAME_MIN_LENGTH
                 || username.length() > UserConstants.USERNAME_MAX_LENGTH) {
-            this.recordLogService.recordLogininfor(username, Constants.LOGIN_FAIL, "用户名不在指定范围", UserConstants.LOGIN);
-            throw new ServiceException("用户名不在指定范围");
+            this.recordLogService.recordLogininfor(username, Constants.LOGIN_FAIL, "用户账号长度不在指定范围", UserConstants.LOGIN);
+            throw new ServiceException("用户账号长度不在指定范围");
         }
 
         // IP黑名单校验

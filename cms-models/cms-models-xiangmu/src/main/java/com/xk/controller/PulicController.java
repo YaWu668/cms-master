@@ -3,6 +3,7 @@ package com.xk.controller;
 import com.cms.common.core.web.domain.Response;
 import com.cms.common.log.annotation.Log;
 import com.cms.common.log.enums.BusinessType;
+import com.xk.client.SysFileClient;
 import com.xk.domain.dto.*;
 
 import com.xk.domain.vo.SearchPersonListVo;
@@ -20,6 +21,7 @@ import com.xk.entity.Role;
 import com.xk.service.*;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Range;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -67,6 +69,18 @@ public class PulicController {
      * 用户服务
      */
     private final UserService userService;
+
+    private final SysFileClient  sysFileClient;
+    /**
+     * 测试调用文件
+     */
+    @GetMapping("/file/download")
+    public Response<byte[]> downloadFile(@RequestParam("filePath") String filePath) {
+        ResponseEntity<byte[]> entity = sysFileClient.downloadFile(filePath);
+        return Response.success();
+    }
+
+
     /**
      * 项目审核
      * @return

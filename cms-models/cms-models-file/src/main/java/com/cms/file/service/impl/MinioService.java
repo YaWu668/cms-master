@@ -191,6 +191,37 @@ public class MinioService implements SysFileService {
         }
     }
 
+    @Override
+    public void viewXmFile(String filePaths, HttpServletResponse response) {
+        // 去除文件路径（去掉 "/viewXm/" 前缀）
+        String filePathName = filePaths.replaceFirst(  "/file/viewXm/", "");
+
+        if (filePathName == null || filePathName.isEmpty() || filePathName.contains("..")) {
+            throw new IllegalArgumentException("文件名无效");
+        }
+
+        String contentType = URLConnection.guessContentTypeFromName(filePathName);
+        if (contentType == null) {
+            contentType = "application/octet-stream";
+        }
+        response.setContentType(contentType);
+
+        try (
+                InputStream inputStream = minioClient.getObject(
+                        GetObjectArgs.builder()
+                                .bucket(minioConfig.getFileBucketName())
+                                .object(filePathName)
+                                .build());
+                ServletOutputStream outputStream = response.getOutputStream()
+        ) {
+            IoUtil.copy(inputStream, outputStream);
+            response.flushBuffer();
+        } catch (Exception e) {
+            throw new ServiceException("文件下载失败: " + e.getMessage());
+        }
+    }
+
+
     /**
      * 时间戳+UUID+原文件名
      * @param originalName

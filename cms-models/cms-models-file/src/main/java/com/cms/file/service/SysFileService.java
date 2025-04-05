@@ -32,4 +32,6 @@ public interface SysFileService {
     String uploadImg(MultipartFile file);
 
     boolean viewXmFile(HttpServletRequest request, HttpServletResponse response);
+
+    void viewXmFile(String filePath, HttpServletResponse response);
 }
