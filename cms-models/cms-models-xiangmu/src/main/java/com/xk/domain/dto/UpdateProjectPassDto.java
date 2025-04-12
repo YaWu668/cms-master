@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -26,11 +27,11 @@ public class UpdateProjectPassDto {
     @NotNull(message = "项目解题状态设置不能为null")
     @Min(value = 3, message = "项目解题状态设置不能小于3")
     @Max(value = 5, message = "项目解题状态设置不能大于5")
-    private Long Status;
+    private Long status;
     /**
      * 结题操作备注
      */
-    @NotNull(message = "结题备注不能为null")
+    @NotBlank(message = "备注不能为空")
     @Length(min=5 ,max = 255, message = "备注长度范围为:5~255")
     private String msg;
 }
