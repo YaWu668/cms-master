@@ -191,12 +191,8 @@ public class PulicController {
     /**
      * 根据项目的id，导出对应项目的word书
      * @param projectId 项目id
-     * @return 返回Base64编码的字符串，前端下载
+     * @return response携带文件字节数组返回
      */
-//    @GetMapping("/exportWord")
-//    public Response<byte[]> exportXmWord(@RequestParam Long projectId) throws Exception {
-//        return projectService.exportXmWord(projectId);
-//    }
     @GetMapping("/exportWord")
     public void exportXmWord(@RequestParam Long projectId, HttpServletResponse response) throws Exception {
         // 调用服务层方法获取文件字节数组

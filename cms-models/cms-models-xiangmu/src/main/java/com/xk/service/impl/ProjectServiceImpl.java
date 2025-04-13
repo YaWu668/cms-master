@@ -1320,7 +1320,13 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         }
     }
 
-    //导出为创业训练项目word
+
+    /**
+     * 导出为创业训练项目word
+     * @param project 项目信息
+     * @return word文件字节数组
+     * @throws Exception 生成word文件失败的错误信息
+     */
     private byte[] exportWordForTypeThree(Project project) throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream inputStream = classLoader.getResourceAsStream("templates/typeThree.docx");
@@ -1369,8 +1375,6 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                     .build();
             // 编译模板并渲染数据
             XWPFTemplate template = XWPFTemplate.compile(inputStream, config).render(wordMap);
-            // 写入文件
-//            template.writeToFile("F:\\galgame\\output3.docx");
             // 将 Word 文档写入 ByteArrayOutputStream
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             template.write(baos);
@@ -1382,7 +1386,12 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         }
     }
 
-    //导出为创业训练项目word
+    /**
+     * 导出为创业训练项目word
+     * @param project 项目信息
+     * @return word文件字节数组
+     * @throws Exception 生成word文件失败的错误信息
+     */
     private byte[] exportWordForTypeTwo(Project project) {
 
         try {
@@ -1426,8 +1435,6 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                     .build();
             // 编译模板并渲染数据
             XWPFTemplate template = XWPFTemplate.compile(inputStream, config).render(wordMap);
-//            // 写入文件
-//            template.writeToFile("F:\\galgame\\output2.docx");
             // 将 Word 文档写入 ByteArrayOutputStream
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             template.write(baos);
@@ -1438,7 +1445,12 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         }
     }
 
-
+    /**
+     * 导出为创新训练项目word
+     * @param project 项目信息
+     * @return word文件字节数组
+     * @throws Exception 生成word文件失败的错误信息
+     */
     private byte[] exportWordForTypeOne(Project project) {
         try {
             //获取模板文件
@@ -1480,8 +1492,6 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                     .build();
             // 编译模板并渲染数据
             XWPFTemplate template = XWPFTemplate.compile(inputStream, config).render(wordMap);
-            // 写入文件
-//            template.writeToFile("F:\\galgame\\output.docx");
             // 将 Word 文档写入 ByteArrayOutputStream
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             template.write(baos);
@@ -1492,7 +1502,12 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         }
     }
 
-    //创新训练项目详细经费预算json转换为实体
+    /**
+     * 创新训练项目详细经费预算json转换为实体
+     * @param budget 详细经费预算json
+     * @param type 经费预算对应的项目类型
+     * @return 详细经费预算实体
+     */
     private static DetailedFundingOneDto getBudget(String budget, Long type) {
         DetailedFundingOneDto detailedFundingOneDto = new DetailedFundingOneDto();
         Gson gson = new Gson();
@@ -1531,7 +1546,10 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return detailedFundingOneDto;
     }
 
-    // 定义类型创业训练项目的详细经费的映射关系
+    /**
+     * 定义类型创业训练项目的详细经费的映射关系
+     * @return 创业训练项目的映射关系map
+     */
     private static Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> getMappingThree() {
         Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> mapping = new HashMap<>();
         mapping.put("1. 业务费", (oneDto, dto) -> {
@@ -1591,7 +1609,10 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return mapping;
     }
 
-    // 定义类型创业训练项目的详细经费的映射关系
+    /**
+     * 定义类型创业训练项目的详细经费的映射关系
+     * @return 创业训练项目的映射关系map
+     */
     private static Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> getMappingTwo() {
         Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> mapping = new HashMap<>();
         mapping.put("1. 业务费", (oneDto, dto) -> {
@@ -1645,7 +1666,10 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return mapping;
     }
 
-    // 定义类型创新训练项目的详细经费的映射关系
+    /**
+     * 定义类型创新训练项目的详细经费的映射关系
+     * @return 创新训练项目的映射关系map
+     */
     private static Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> getMappingOne() {
         Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> mapping = new HashMap<>();
         mapping.put("1. 业务费", (oneDto, dto) -> {
@@ -1706,7 +1730,11 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     }
 
 
-    //提取html文本
+    /**
+     * 提取html文本,把里面所有文本标签进行提取，每一个文本不同的标签会进行换行
+     * @param  html html文本
+     * @return 只带有文本的html
+     */
     private static String extractTextFromHtml(String html) {
         // 解析 HTML
         Document doc = Jsoup.parse(html);
@@ -1728,6 +1756,11 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return extractedText.toString();
     }
 
+    /**
+     * 三个项目中共有的项目信息，除了类型一没有企业导师的信息
+     * @param project 项目信息实体
+     * @return 项目信息map
+     */
     private HashMap<String, Object> getProjectMap(Project project) {
         //把实体类转为map
         HashMap<String, Object> wordMap = convertObjectToHashMap(project);
@@ -1774,7 +1807,11 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return wordMap;
     }
 
-    //获取项目里全部企业老师的具体报名信息
+    /**
+     * 获取当前项目里全部企业老师的具体报名信息
+     * @param project 项目信息实体
+     * @return 一个列表，里面是所有企业导师的报名信息，为key-value形式
+     */
     private List<Map<String, Object>> getAllFirmTeacherId(Project project) {
         List<Map<String, Object>> allFirmTeachers = new ArrayList<>();
         List<Long> projectMembers = getProjectMembersIds(project.getFirmTeacherId());
@@ -1794,7 +1831,11 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return allFirmTeachers;
     }
 
-    //获取项目里全部老师的具体报名信息
+    /**
+     * 获取项目里全部老师的具体报名信息
+     * @param project 项目信息实体
+     * @return 一个列表，里面是所有老师的报名信息，为key-value形式
+     */
     private List<Map<String, Object>> getAllTeachers(Project project) {
         List<Map<String, Object>> allTeachers = new ArrayList<>();
         List<Long> projectMembers = getProjectMembersIds(project.getTeacherId());
@@ -1843,6 +1884,11 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return allStudents;
     }
 
+    /**
+     * 将对象转换为HashMap
+     * @param object 任意对象实体
+     * @return 任意对象实体的HashMap
+     */
     public static HashMap<String, Object> convertObjectToHashMap(Object object) {
         // 创建 ObjectMapper 实例
         ObjectMapper objectMapper = new ObjectMapper();
@@ -1852,6 +1898,10 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return new HashMap<>(map);
     }
 
+    /**
+     * 用于判断当前用户是否有权限导出当前项目的word
+     * @param project 项目信息实体
+     */
     private void isContainsMembers(Project project) {
         //获取用户角色以及id
         UserInfoVo data = sysUserClient.getUserInfo().getData();
@@ -1871,6 +1921,12 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     }
 
     //idJson转换为list
+
+    /**
+     * 将项目信息里的id字符串转换为对应的idl的ist
+     * @param ids 项目信息里的id字符串
+     * @return 包含所有id的list
+     */
     private List<Long> getProjectMembersIds(String ids) {
         Gson gson = new Gson();
         //把数据库的id集合转换为list的id集合
@@ -1878,7 +1934,13 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return Arrays.asList(idArray);
     }
 
-    //创建用于插入word的图片
+
+    /**
+     * 创建用于插入word的图片，此次固定了图片的宽高，如果不固定的话word可能会出现图片过大
+     * @param html html文本
+     * @return 用于插入word的图片对象
+     * @throws IOException 图片获取异常
+     */
     private PictureRenderData getPictureRenderData(String html) {
         //当前html文本的全部图片路径
         String[] extractAllImagePaths = extractAllImagePaths(html);
@@ -1906,7 +1968,11 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
     }
 
-    //传入多个流,垂直拼接成java图片返回
+    /**
+     * 将多个图片流垂直拼接成java图片
+     * @param inputStreams 图片流集合
+     * @return 垂直拼接后的java图片
+     */
     public BufferedImage combineImagesVertically(List<InputStream> inputStreams) {
 
         List<BufferedImage> images = new ArrayList<>();
@@ -1948,6 +2014,11 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return combinedImage;
     }
 
+    /**
+     * 提取html中的所有图片路径
+     * @param html html文本
+     * @return 不包含网络图片的图片路径集合
+     */
     public String[] extractAllImagePaths(String html) {
         List<String> paths = new ArrayList<>();
         try {

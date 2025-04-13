@@ -245,7 +245,6 @@ public interface ProjectService extends IService<Project> {
      * @param projectId 项目id
      * @return 返回文件流，前端下载
      */
-//    Response<byte[]> exportXmWord(Long projectId) throws Exception;
      void exportXmWord(Long projectId, HttpServletResponse response) throws Exception;
 }
 
