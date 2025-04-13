@@ -61,12 +61,15 @@ public class MyScheduledTask {
     }
 
     /**
-     * 当前凌晨4点执行一次
+     * 项目启动时候也一直一次
      */
     @Async
-    @Scheduled(cron = "0 0 4 * * ?")
+//    @Scheduled(cron = "0 0 4 * * ?")`
+    //测试 5分钟执行一次
+    @Scheduled(fixedRate = 300000)
     @Transactional
     public void executeAsyncTask2() {
+        log.info("开始执行定时任务");
         try {
             TaskContext.setTaskContext(true); // 设置为定时任务上下文
             //1.获取项目待结题的项目 项目结束时间<当前日期

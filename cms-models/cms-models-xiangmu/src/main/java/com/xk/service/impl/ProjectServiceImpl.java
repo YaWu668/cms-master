@@ -3236,7 +3236,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * @return true表示成功,false表示失败
      */
     public boolean insertProjectStudnet(ApplyForDTO applyForDTO, Long projectId) {
-        List<StudnetApplys> studnetApplys= BeanCopyUtils.copyBeans(applyForDTO.getStudents(),StudnetApplys.class);
+//        List<StudnetApplys> studnetApplys= BeanCopyUtils.copyBeans(applyForDTO.getStudents(),StudnetApplys.class);
+        List<StudnetApplys> studnetApplys                                            = toStudnetApplysListFromApplyForDTOList(applyForDTO.getStudents());
         //3.1 获取用户id集合 key是用户id value是用户对象
         List<Long> userIds = studnetApplys.stream().map(e -> e.getUserId()).collect(Collectors.toList());
         List<User> users = userService.selectByUserIds(userIds);
@@ -3249,6 +3250,47 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         });
         //插入学生表
         return studnetApplysService.saveBatch(studnetApplys);
+    }
+
+    /**
+     * 将学生报名信息列表转换为学生申请表列表
+     * @param students 学生报名信息列表
+     * @return 学生申请表列表
+     */
+    public List<StudnetApplys> toStudnetApplysListFromApplyForDTOList(List<ApplyForStudent> students) {
+        if (students == null) {
+            return Collections.emptyList();
+        }
+        return students.stream()
+                .map(this::toStudnetApplysFromApplyForDTO)
+                .collect(Collectors.toList());
+    }
+
+
+    /**
+     * 学生报名表转换
+     * @param student
+     * @return
+     */
+    public StudnetApplys toStudnetApplysFromApplyForDTO(ApplyForStudent student) {
+        if (student == null) {
+            return null;
+        }
+        StudnetApplys studnetApplys = new StudnetApplys();
+        studnetApplys.setCollegeGroupId(student.getCollegeGroupId());
+        studnetApplys.setDateOfBirth(student.getDateOfBirth());
+        studnetApplys.setIsPrincipal(student.getIsPrincipal().intValue());
+        studnetApplys.setJob(student.getJob());
+        studnetApplys.setMailbox(student.getMailbox());
+        studnetApplys.setMobilePhone(student.getMobilePhone());
+        studnetApplys.setName(student.getName());
+        studnetApplys.setNation(student.getNation());
+        studnetApplys.setPhone(student.getPhone());
+        studnetApplys.setProfessionalClass(student.getProfessionalClass());
+        studnetApplys.setSex(student.getSex());
+        studnetApplys.setUserName(student.getUserName());
+        studnetApplys.setUserId(student.getUserId());
+        return studnetApplys;
     }
 
 
