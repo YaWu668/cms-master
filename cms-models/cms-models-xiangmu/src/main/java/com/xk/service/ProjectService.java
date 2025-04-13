@@ -13,6 +13,7 @@ import com.xk.domain.vo.student.StudentProjectVo;
 import com.xk.domain.vo.student.StudentVo;
 import com.xk.entity.Project;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -238,5 +239,13 @@ public interface ProjectService extends IService<Project> {
      * @return
      */
     Response updateProjectSpecialistGroup( UpdateProjectSpecialistGroupDto updateProjectSpecialistGroupDto);
+
+    /**
+     * 根据项目id导出对应的word
+     * @param projectId 项目id
+     * @return 返回文件流，前端下载
+     */
+//    Response<byte[]> exportXmWord(Long projectId) throws Exception;
+     void exportXmWord(Long projectId, HttpServletResponse response) throws Exception;
 }
 

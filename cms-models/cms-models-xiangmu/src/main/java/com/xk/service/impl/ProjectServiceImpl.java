@@ -4,10 +4,13 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.nacos.api.remote.response.ResponseCode;
+import com.alibaba.nacos.shaded.com.google.gson.Gson;
+import com.alibaba.nacos.shaded.com.google.gson.reflect.TypeToken;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 
@@ -18,6 +21,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cms.common.core.exception.ServiceException;
 import com.cms.common.core.web.domain.Response;
 import com.cms.common.security.utils.SecurityUtils;
+import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.config.Configure;
+import com.deepoove.poi.data.Pictures;
+import com.deepoove.poi.policy.HackLoopTableRenderPolicy;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xk.client.SysUserClient;
 import com.xk.config.*;
 import com.xk.constant.ProjectConstant;
@@ -43,19 +51,64 @@ import com.xk.mapper.UserMapper;
 import com.xk.service.*;
 import com.xk.utils.BeanCopyUtils;
 import com.xk.utils.BeanUtils;
+import com.xk.utils.ResponseStreamUtil;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.imageio.ImageIO;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import com.deepoove.poi.XWPFTemplate;
+import com.deepoove.poi.config.Configure;
+import com.deepoove.poi.data.PictureRenderData;
+import com.deepoove.poi.data.PictureType;
+import com.deepoove.poi.data.Pictures;
+import com.deepoove.poi.policy.HackLoopTableRenderPolicy;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xk.client.SysFileClient;
+import com.alibaba.nacos.shaded.com.google.gson.Gson;
+import com.alibaba.nacos.shaded.com.google.gson.reflect.TypeToken;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import org.springframework.http.ResponseEntity;
+import javax.imageio.ImageIO;
+import javax.servlet.ServletException;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Type;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.function.BiConsumer;
+import java.util.stream.Stream;
 
 /**
  * 项目表(Project)表服务实现类
@@ -155,6 +208,11 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * 专家组服务
      */
     private final SpecialistGroupService specialistGroupService;
+
+    /**
+     * 文件客户端
+     */
+    private final SysFileClient sysFileClient;
 
 
     /**
@@ -1219,6 +1277,694 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             throw new ServiceException("修改项目专家组失败");
         }
         return Response.success();
+    }
+
+
+    public void exportXmWord(Long projectId, HttpServletResponse response) throws Exception {
+
+        // 获取项目信息，判断项目状态是否可以导出
+        Project project = getProject(projectId);
+        String fileName = project.getName()
+                +"_"
+                +LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日HH时mm分"))
+                +".docx";
+        response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        response.setCharacterEncoding("UTF-8");
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + URLEncoder.encode(fileName, "UTF-8"));
+
+        if (project.getState() != ProjectConstant.PROJECT_STATUS_IN_PROGRESS_VALUE) {
+            throw new ServiceException("项目状态不可以导出word,只有项目在进行中才可以导出word", 444);
+        }
+        // 确认是否是管理员或者是项目老师或者学生，否则不允许导出word
+        isContainsMembers(project);
+        byte[] fileBytes = null;
+        // 判断项目类型,根据3种不同的类型导出不一样的word，1为创新训练项目, 2为创业训练项目, 3为创业实践
+        if (project.getType().equals(ProjectConstant.PROJECT_TYPE_INNOVATION_TRAINING)) {
+            fileBytes = exportWordForTypeOne(project);
+        } else if (project.getType().equals(ProjectConstant.PROJECT_TYPE_STARTUP_TRAINING)) {
+            fileBytes = exportWordForTypeTwo(project);
+        } else if (project.getType().equals(ProjectConstant.PROJECT_TYPE_STARTUP_PRACTICE)) {
+            fileBytes = exportWordForTypeThree(project);
+        }
+        try {
+            if (fileBytes != null) {
+                response.getOutputStream().write(fileBytes);
+                response.getOutputStream().flush();
+            }
+        } finally {
+            try {
+                response.getOutputStream().close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    //导出为创业训练项目word
+    private byte[] exportWordForTypeThree(Project project) throws Exception {
+        ClassLoader classLoader = getClass().getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream("templates/typeThree.docx");
+        try {
+            if (inputStream == null) {
+                inputStream.close();
+                throw new ServiceException("模板文件不存在或路径错误", 444);
+            }
+            //构建通用数据
+            HashMap<String, Object> wordMap = getProjectMap(project);
+            //二：立项依据
+            wordMap.put("cOne", extractTextFromHtml(project.getCOne()));
+            wordMap.put("cTwo", extractTextFromHtml(project.getCTwo()));
+            wordMap.put("cThree", extractTextFromHtml(project.getCThree()));
+            wordMap.put("cFour", extractTextFromHtml(project.getCFour()));
+            wordMap.put("cFive", extractTextFromHtml(project.getCFive()));
+            wordMap.put("cSix", extractTextFromHtml(project.getCSix()));
+            wordMap.put("cSeven", extractTextFromHtml(project.getCSeven()));
+            wordMap.put("cEight", extractTextFromHtml(project.getCEight()));
+            wordMap.put("cNine", extractTextFromHtml(project.getCNine()));
+            wordMap.put("cTen", extractTextFromHtml(project.getCTen()));
+            wordMap.put("cEleven", extractTextFromHtml(project.getCEleven()));
+            //TODO 立项依据的图片,每一个立项依据的图片垂直拼接成一张单独的图片
+            wordMap.put("imageA", getPictureRenderData(project.getCOne()));
+            wordMap.put("imageB", getPictureRenderData(project.getCTwo()));
+            wordMap.put("imageC", getPictureRenderData(project.getCThree()));
+            wordMap.put("imageD", getPictureRenderData(project.getCFour()));
+            wordMap.put("imageE", getPictureRenderData(project.getCFive()));
+            wordMap.put("imageF", getPictureRenderData(project.getCSix()));
+            wordMap.put("imageG", getPictureRenderData(project.getCSeven()));
+            wordMap.put("imageH", getPictureRenderData(project.getCEight()));
+            wordMap.put("imageI", getPictureRenderData(project.getCNine()));
+            wordMap.put("imageJ", getPictureRenderData(project.getCTen()));
+            wordMap.put("imageK", getPictureRenderData(project.getCEleven()));
+            //三、经费预算（单位：元）
+            DetailedFundingOneDto budgetOne = getBudget(project.getBudget(), project.getType());//获取详细经费预算
+            HashMap<String, Object> budgetOneMap = convertObjectToHashMap(budgetOne);//获取详细经费预算map
+            wordMap.putAll(budgetOneMap);
+            // 创建循环行表格渲染策略
+            HackLoopTableRenderPolicy policy = new HackLoopTableRenderPolicy();
+            // 修正绑定错误，将 teacherListb 改为 teacherListB
+            Configure config = Configure.builder()
+                    .bind("studentList", policy)
+                    .bind("teacherListA", policy)
+                    .bind("teacherListB", policy)
+                    .build();
+            // 编译模板并渲染数据
+            XWPFTemplate template = XWPFTemplate.compile(inputStream, config).render(wordMap);
+            // 写入文件
+//            template.writeToFile("F:\\galgame\\output3.docx");
+            // 将 Word 文档写入 ByteArrayOutputStream
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            template.write(baos);
+            inputStream.close();
+            return baos.toByteArray();
+        } catch (IOException e) {
+            inputStream.close();
+            throw new ServiceException("导出失败", 444);
+        }
+    }
+
+    //导出为创业训练项目word
+    private byte[] exportWordForTypeTwo(Project project) {
+
+        try {
+            ClassLoader classLoader = getClass().getClassLoader();
+            InputStream inputStream = classLoader.getResourceAsStream("templates/typeTwo.docx");
+            if (inputStream == null) {
+                throw new ServiceException("模板文件不存在或路径错误", 444);
+            }
+            //构建通用数据
+            HashMap<String, Object> wordMap = getProjectMap(project);
+            //二：立项依据
+            wordMap.put("bOne", extractTextFromHtml(project.getBOne()));
+            wordMap.put("bTwo", extractTextFromHtml(project.getBTwo()));
+            wordMap.put("bThree", extractTextFromHtml(project.getBThree()));
+            wordMap.put("bFour", extractTextFromHtml(project.getBFour()));
+            wordMap.put("bFive", extractTextFromHtml(project.getBFive()));
+            wordMap.put("bSix", extractTextFromHtml(project.getBSix()));
+            wordMap.put("bSeven", extractTextFromHtml(project.getBSeven()));
+            wordMap.put("bEight", extractTextFromHtml(project.getBEight()));
+            // 立项依据的图片,每一个立项依据的图片垂直拼接成一张单独的图片
+            wordMap.put("imageA", getPictureRenderData(project.getBOne()));
+            wordMap.put("imageB", getPictureRenderData(project.getBTwo()));
+            wordMap.put("imageC", getPictureRenderData(project.getBThree()));
+            wordMap.put("imageD", getPictureRenderData(project.getBFour()));
+            wordMap.put("imageE", getPictureRenderData(project.getBFive()));
+            wordMap.put("imageF", getPictureRenderData(project.getBSix()));
+            wordMap.put("imageG", getPictureRenderData(project.getBSeven()));
+            wordMap.put("imageH", getPictureRenderData(project.getBEight()));
+
+            //三、经费预算（单位：元）
+            DetailedFundingOneDto budgetOne = getBudget(project.getBudget(), project.getType());//获取详细经费预算
+            HashMap<String, Object> budgetOneMap = convertObjectToHashMap(budgetOne);//获取详细经费预算map
+            wordMap.putAll(budgetOneMap);
+            // 创建循环行表格渲染策略
+            HackLoopTableRenderPolicy policy = new HackLoopTableRenderPolicy();
+            // 修正绑定错误，将 teacherListb 改为 teacherListB
+            Configure config = Configure.builder()
+                    .bind("studentList", policy)
+                    .bind("teacherListA", policy)
+                    .bind("teacherListB", policy)
+                    .build();
+            // 编译模板并渲染数据
+            XWPFTemplate template = XWPFTemplate.compile(inputStream, config).render(wordMap);
+//            // 写入文件
+//            template.writeToFile("F:\\galgame\\output2.docx");
+            // 将 Word 文档写入 ByteArrayOutputStream
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            template.write(baos);
+            inputStream.close();
+            return baos.toByteArray();
+        } catch (IOException e) {
+            throw new ServiceException("导出失败", 444);
+        }
+    }
+
+
+    private byte[] exportWordForTypeOne(Project project) {
+        try {
+            //获取模板文件
+            ClassLoader classLoader = getClass().getClassLoader();
+            InputStream inputStream = classLoader.getResourceAsStream("templates/typeOne.docx");
+            if (inputStream == null) {
+                throw new ServiceException("模板文件不存在或路径错误", 444);
+            }
+            //构建通用数据
+            HashMap<String, Object> wordMap = getProjectMap(project);
+            //二：立项依据
+            wordMap.put("aOne", extractTextFromHtml(project.getAOne()));
+            wordMap.put("aTwo", extractTextFromHtml(project.getATwo()));
+            wordMap.put("aThree", extractTextFromHtml(project.getAThree()));
+            wordMap.put("aFour", extractTextFromHtml(project.getAFour()));
+            wordMap.put("aFive", extractTextFromHtml(project.getAFive()));
+            wordMap.put("aSix", extractTextFromHtml(project.getASix()));
+            wordMap.put("aSeven", extractTextFromHtml(project.getASeven()));
+            wordMap.put("aEight", extractTextFromHtml(project.getAEight()));
+            // 立项依据的图片,每一个立项依据的图片垂直拼接成一张单独的图片
+            wordMap.put("imageA", getPictureRenderData(project.getAOne()));
+            wordMap.put("imageB", getPictureRenderData(project.getATwo()));
+            wordMap.put("imageC", getPictureRenderData(project.getAThree()));
+            wordMap.put("imageD", getPictureRenderData(project.getAFour()));
+            wordMap.put("imageE", getPictureRenderData(project.getAFive()));
+            wordMap.put("imageF", getPictureRenderData(project.getASix()));
+            wordMap.put("imageG", getPictureRenderData(project.getASeven()));
+            wordMap.put("imageH", getPictureRenderData(project.getAEight()));
+            //三、经费预算（单位：元）
+            DetailedFundingOneDto budgetOne = getBudget(project.getBudget(), project.getType());//获取详细经费预算
+            HashMap<String, Object> budgetOneMap = convertObjectToHashMap(budgetOne);//获取详细经费预算map
+            wordMap.putAll(budgetOneMap);
+            // 创建循环行表格渲染策略
+            HackLoopTableRenderPolicy policy = new HackLoopTableRenderPolicy();
+            // 修正绑定错误，将 teacherListb 改为 teacherListB
+            Configure config = Configure.builder()
+                    .bind("studentList", policy)
+                    .bind("teacherListA", policy)
+                    .build();
+            // 编译模板并渲染数据
+            XWPFTemplate template = XWPFTemplate.compile(inputStream, config).render(wordMap);
+            // 写入文件
+//            template.writeToFile("F:\\galgame\\output.docx");
+            // 将 Word 文档写入 ByteArrayOutputStream
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            template.write(baos);
+            inputStream.close();
+            return baos.toByteArray();
+        } catch (IOException e) {
+            throw new ServiceException("导出失败", 444);
+        }
+    }
+
+    //创新训练项目详细经费预算json转换为实体
+    private static DetailedFundingOneDto getBudget(String budget, Long type) {
+        DetailedFundingOneDto detailedFundingOneDto = new DetailedFundingOneDto();
+        Gson gson = new Gson();
+        Type listType = new TypeToken<List<DetailedFundingDto>>() {
+        }.getType();
+        List<DetailedFundingDto> dtoList = gson.fromJson(budget, listType);
+        // 获取映射关系
+        if (type == 1L) {
+            Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> mapping = getMappingOne();
+            dtoList.forEach(dto -> {
+                BiConsumer<DetailedFundingOneDto, DetailedFundingDto> consumer = mapping.get(dto.getName());
+                System.out.println(dto);
+                if (consumer != null) {
+                    consumer.accept(detailedFundingOneDto, dto);
+                }
+            });
+        } else if (type == 2L) {
+            Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> mapping = getMappingTwo();
+            dtoList.forEach(dto -> {
+                BiConsumer<DetailedFundingOneDto, DetailedFundingDto> consumer = mapping.get(dto.getName());
+                System.out.println(dto);
+                if (consumer != null) {
+                    consumer.accept(detailedFundingOneDto, dto);
+                }
+            });
+        } else if (type == 3L) {
+            Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> mapping = getMappingThree();
+            dtoList.forEach(dto -> {
+                BiConsumer<DetailedFundingOneDto, DetailedFundingDto> consumer = mapping.get(dto.getName());
+                System.out.println(dto);
+                if (consumer != null) {
+                    consumer.accept(detailedFundingOneDto, dto);
+                }
+            });
+        }
+        return detailedFundingOneDto;
+    }
+
+    // 定义类型创业训练项目的详细经费的映射关系
+    private static Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> getMappingThree() {
+        Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> mapping = new HashMap<>();
+        mapping.put("1. 业务费", (oneDto, dto) -> {
+            oneDto.setOneA(dto.getBudgetFunds());
+            oneDto.setOneB(dto.getMainPurpose());
+            oneDto.setOneC(dto.getPreviousStage());
+            oneDto.setOneD(dto.getPostStage());
+        });
+        mapping.put("(1)能源动力费", (oneDto, dto) -> {
+            oneDto.setOneAa(dto.getBudgetFunds());
+            oneDto.setOneBa(dto.getMainPurpose());
+            oneDto.setOneCa(dto.getPreviousStage());
+            oneDto.setOneDa(dto.getPostStage());
+        });
+        mapping.put("(2)会议费", (oneDto, dto) -> {
+            oneDto.setOneAb(dto.getBudgetFunds());
+            oneDto.setOneBb(dto.getMainPurpose());
+            oneDto.setOneCb(dto.getPreviousStage());
+            oneDto.setOneDb(dto.getPostStage());
+        });
+        mapping.put("(3)差旅费", (oneDto, dto) -> {
+            oneDto.setOneAc(dto.getBudgetFunds());
+            oneDto.setOneBc(dto.getMainPurpose());
+            oneDto.setOneCc(dto.getPreviousStage());
+            oneDto.setOneDc(dto.getPostStage());
+        });
+        mapping.put("(4)文献检索费", (oneDto, dto) -> {
+            oneDto.setOneAd(dto.getBudgetFunds());
+            oneDto.setOneBd(dto.getMainPurpose());
+            oneDto.setOneCd(dto.getPreviousStage());
+            oneDto.setOneDd(dto.getPostStage());
+        });
+        mapping.put("(5)论文出版费", (oneDto, dto) -> {
+            oneDto.setOneAe(dto.getBudgetFunds());
+            oneDto.setOneBe(dto.getMainPurpose());
+            oneDto.setOneCe(dto.getPreviousStage());
+            oneDto.setOneDe(dto.getPostStage());
+        });
+        mapping.put("2. 仪器设备购置费", (oneDto, dto) -> {
+            oneDto.setTwoA(dto.getBudgetFunds());
+            oneDto.setTwoB(dto.getMainPurpose());
+            oneDto.setTwoC(dto.getPreviousStage());
+            oneDto.setTwoD(dto.getPostStage());
+        });
+        mapping.put("3. 材料费", (oneDto, dto) -> {
+            oneDto.setThreeA(dto.getBudgetFunds());
+            oneDto.setThreeB(dto.getMainPurpose());
+            oneDto.setThreeC(dto.getPreviousStage());
+            oneDto.setThreeD(dto.getPostStage());
+        });
+        mapping.put("4. 咨询费", (oneDto, dto) -> {
+            oneDto.setThreeA(dto.getBudgetFunds());
+            oneDto.setThreeB(dto.getMainPurpose());
+            oneDto.setThreeC(dto.getPreviousStage());
+            oneDto.setThreeD(dto.getPostStage());
+        });
+        return mapping;
+    }
+
+    // 定义类型创业训练项目的详细经费的映射关系
+    private static Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> getMappingTwo() {
+        Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> mapping = new HashMap<>();
+        mapping.put("1. 业务费", (oneDto, dto) -> {
+            oneDto.setOneA(dto.getBudgetFunds());
+            oneDto.setOneB(dto.getMainPurpose());
+            oneDto.setOneC(dto.getPreviousStage());
+            oneDto.setOneD(dto.getPostStage());
+        });
+        mapping.put("(1)能源动力费", (oneDto, dto) -> {
+            oneDto.setOneAa(dto.getBudgetFunds());
+            oneDto.setOneBa(dto.getMainPurpose());
+            oneDto.setOneCa(dto.getPreviousStage());
+            oneDto.setOneDa(dto.getPostStage());
+        });
+        mapping.put("(2)会议费", (oneDto, dto) -> {
+            oneDto.setOneAb(dto.getBudgetFunds());
+            oneDto.setOneBb(dto.getMainPurpose());
+            oneDto.setOneCb(dto.getPreviousStage());
+            oneDto.setOneDb(dto.getPostStage());
+        });
+        mapping.put("(3)差旅费", (oneDto, dto) -> {
+            oneDto.setOneAc(dto.getBudgetFunds());
+            oneDto.setOneBc(dto.getMainPurpose());
+            oneDto.setOneCc(dto.getPreviousStage());
+            oneDto.setOneDc(dto.getPostStage());
+        });
+        mapping.put("(4)文献检索费", (oneDto, dto) -> {
+            oneDto.setOneAd(dto.getBudgetFunds());
+            oneDto.setOneBd(dto.getMainPurpose());
+            oneDto.setOneCd(dto.getPreviousStage());
+            oneDto.setOneDd(dto.getPostStage());
+        });
+        mapping.put("(5)论文出版费", (oneDto, dto) -> {
+            oneDto.setOneAe(dto.getBudgetFunds());
+            oneDto.setOneBe(dto.getMainPurpose());
+            oneDto.setOneCe(dto.getPreviousStage());
+            oneDto.setOneDe(dto.getPostStage());
+        });
+        mapping.put("2. 仪器设备购置费", (oneDto, dto) -> {
+            oneDto.setTwoA(dto.getBudgetFunds());
+            oneDto.setTwoB(dto.getMainPurpose());
+            oneDto.setTwoC(dto.getPreviousStage());
+            oneDto.setTwoD(dto.getPostStage());
+        });
+        mapping.put("3. 材料费", (oneDto, dto) -> {
+            oneDto.setThreeA(dto.getBudgetFunds());
+            oneDto.setThreeB(dto.getMainPurpose());
+            oneDto.setThreeC(dto.getPreviousStage());
+            oneDto.setThreeD(dto.getPostStage());
+        });
+        return mapping;
+    }
+
+    // 定义类型创新训练项目的详细经费的映射关系
+    private static Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> getMappingOne() {
+        Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> mapping = new HashMap<>();
+        mapping.put("1. 业务费", (oneDto, dto) -> {
+            oneDto.setOneA(dto.getBudgetFunds());
+            oneDto.setOneB(dto.getMainPurpose());
+            oneDto.setOneC(dto.getPreviousStage());
+            oneDto.setOneD(dto.getPostStage());
+        });
+        mapping.put("(1)计算、分析、测试费", (oneDto, dto) -> {
+            oneDto.setOneAa(dto.getBudgetFunds());
+            oneDto.setOneBa(dto.getMainPurpose());
+            oneDto.setOneCa(dto.getPreviousStage());
+            oneDto.setOneDa(dto.getPostStage());
+        });
+        mapping.put("(2)能源动力费", (oneDto, dto) -> {
+            oneDto.setOneAb(dto.getBudgetFunds());
+            oneDto.setOneBb(dto.getMainPurpose());
+            oneDto.setOneCb(dto.getPreviousStage());
+            oneDto.setOneDb(dto.getPostStage());
+        });
+        mapping.put("(3)会议、差旅费", (oneDto, dto) -> {
+            oneDto.setOneAc(dto.getBudgetFunds());
+            oneDto.setOneBc(dto.getMainPurpose());
+            oneDto.setOneCc(dto.getPreviousStage());
+            oneDto.setOneDc(dto.getPostStage());
+        });
+        mapping.put("(4)文献检索费", (oneDto, dto) -> {
+            oneDto.setOneAd(dto.getBudgetFunds());
+            oneDto.setOneBd(dto.getMainPurpose());
+            oneDto.setOneCd(dto.getPreviousStage());
+            oneDto.setOneDd(dto.getPostStage());
+        });
+        mapping.put("(5)论文出版费", (oneDto, dto) -> {
+            oneDto.setOneAe(dto.getBudgetFunds());
+            oneDto.setOneBe(dto.getMainPurpose());
+            oneDto.setOneCe(dto.getPreviousStage());
+            oneDto.setOneDe(dto.getPostStage());
+        });
+        mapping.put("2. 仪器设备购置费", (oneDto, dto) -> {
+            oneDto.setTwoA(dto.getBudgetFunds());
+            oneDto.setTwoB(dto.getMainPurpose());
+            oneDto.setTwoC(dto.getPreviousStage());
+            oneDto.setTwoD(dto.getPostStage());
+        });
+        mapping.put("3. 实验装置试制费", (oneDto, dto) -> {
+            oneDto.setThreeA(dto.getBudgetFunds());
+            oneDto.setThreeB(dto.getMainPurpose());
+            oneDto.setThreeC(dto.getPreviousStage());
+            oneDto.setThreeD(dto.getPostStage());
+        });
+        mapping.put("4. 材料费", (oneDto, dto) -> {
+            oneDto.setFourA(dto.getBudgetFunds());
+            oneDto.setFourB(dto.getMainPurpose());
+            oneDto.setFourC(dto.getPreviousStage());
+            oneDto.setFourD(dto.getPostStage());
+        });
+        return mapping;
+    }
+
+
+    //提取html文本
+    private static String extractTextFromHtml(String html) {
+        // 解析 HTML
+        Document doc = Jsoup.parse(html);
+        // 查找所有的 <p> 标签
+        Elements paragraphs = doc.select("p");
+        StringBuilder extractedText = new StringBuilder();
+
+        for (Element p : paragraphs) {
+            // 处理段落内的文本和 <br> 标签
+            for (int i = 0; i < p.childNodeSize(); i++) {
+                if (p.childNode(i).nodeName().equals("br")) {
+                    extractedText.append("\n");
+                } else {
+                    extractedText.append(p.childNode(i).toString().replaceAll("<[^>]*>", ""));
+                }
+            }
+            extractedText.append("\n\n");
+        }
+        return extractedText.toString();
+    }
+
+    private HashMap<String, Object> getProjectMap(Project project) {
+        //把实体类转为map
+        HashMap<String, Object> wordMap = convertObjectToHashMap(project);
+        //word封面
+        StudnetApplys projectHead = this.studnetApplysService.getOne(new LambdaQueryWrapper<StudnetApplys>()
+                .eq(StudnetApplys::getUserId, project.getUserId())
+                .eq(StudnetApplys::getProjectId, project.getProjectId()));
+        wordMap.put("studentname", projectHead.getName());//项目负责人名字
+        wordMap.put("studentPhone", projectHead.getPhone());//项目负责人联系电话
+        wordMap.put("schoolName", collegeGroupService.getById(projectHead.getCollegeGroupId()).getName());//项目负责人学院组名称
+        wordMap.put("userName", projectHead.getUserName());//项目负责人学号
+        wordMap.put("professionalClass", projectHead.getProfessionalClass());//项目负责人专业班级
+        Long firstTeacherId = getProjectMembersIds(project.getTeacherId()).get(0);
+        TeacherApplys firstTeacher = this.teacherApplysService.list(new LambdaQueryWrapper<TeacherApplys>()
+                        .eq(TeacherApplys::getUserId, firstTeacherId)
+                        .eq(TeacherApplys::getProjectId, project.getProjectId())
+                        .eq(TeacherApplys::getIsTeacher, 0))
+                .get(0);
+        wordMap.put("teacherName", firstTeacher.getName());
+        wordMap.put("teacherPhone", firstTeacher.getPhone());
+        if (!project.getType().equals(ProjectConstant.PROJECT_TYPE_INNOVATION_TRAINING)) {
+            TeacherApplys firstfirmTeacher = this.teacherApplysService.list(new LambdaQueryWrapper<TeacherApplys>()
+                            .eq(TeacherApplys::getUserId, firstTeacherId)
+                            .eq(TeacherApplys::getProjectId, project.getProjectId())
+                            .eq(TeacherApplys::getIsTeacher, 1))
+                    .get(0);
+            wordMap.put("firmTeacherName", firstfirmTeacher.getName());
+            wordMap.put("firmTeacherPhone", firstfirmTeacher.getPhone());
+        }
+        wordMap.put("beginTime", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                .format(LocalDateTime.ofInstant(project.getBeginTime().toInstant(), ZoneId.systemDefault())));//活动的开始时间
+        wordMap.put("endTime", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                .format(LocalDateTime.ofInstant(project.getEndTime().toInstant(), ZoneId.systemDefault())));//活动的结束时间
+        //一：基本情况
+        wordMap.put("beginYear", DateTimeFormatter.ofPattern("yyyy")
+                .format(LocalDateTime.ofInstant(project.getBeginTime().toInstant(), ZoneId.systemDefault())));//活动开始年份
+        wordMap.put("beinMonth", project.getBeginTime().getMonth() + 1);//活动开始月份
+        wordMap.put("endYear", project.getEndTime().getYear() + 1900);//活动结束年份
+        wordMap.put("endMonth", project.getEndTime().getMonth() + 1);//活动结束月份
+        wordMap.put("majorName", userService.getById(project.getUserId()).getMajorName());
+        wordMap.put("studentList", getAllStudents(project));//获得项目所有学生并添加回去map
+        wordMap.put("teacherListA", getAllTeachers(project));//获得项目所有指导老师并添加回去map
+        wordMap.put("teacherListB", getAllFirmTeacherId(project));//获得项目所有指导老师并添加回去map
+        return wordMap;
+    }
+
+    //获取项目里全部企业老师的具体报名信息
+    private List<Map<String, Object>> getAllFirmTeacherId(Project project) {
+        List<Map<String, Object>> allFirmTeachers = new ArrayList<>();
+        List<Long> projectMembers = getProjectMembersIds(project.getFirmTeacherId());
+        projectMembers.forEach(id -> {
+            TeacherApplys projectTeacher = this.teacherApplysService.getOne(new LambdaQueryWrapper<TeacherApplys>()
+                    .eq(TeacherApplys::getUserId, id)
+                    .eq(TeacherApplys::getProjectId, project.getProjectId())
+                    .eq(TeacherApplys::getIsTeacher, 1));
+            Map<String, Object> map = new HashMap<>();
+            map.put("name", projectTeacher.getName());
+            map.put("unit", projectTeacher.getUnit());
+            map.put("post", projectTeacher.getPost());
+            map.put("phone", projectTeacher.getPhone());
+            map.put("mailbox", projectTeacher.getMailbox());
+            allFirmTeachers.add(map);
+        });
+        return allFirmTeachers;
+    }
+
+    //获取项目里全部老师的具体报名信息
+    private List<Map<String, Object>> getAllTeachers(Project project) {
+        List<Map<String, Object>> allTeachers = new ArrayList<>();
+        List<Long> projectMembers = getProjectMembersIds(project.getTeacherId());
+        projectMembers.forEach(id -> {
+            TeacherApplys projectTeacher = this.teacherApplysService.getOne(new LambdaQueryWrapper<TeacherApplys>()
+                    .eq(TeacherApplys::getUserId, id)
+                    .eq(TeacherApplys::getProjectId, project.getProjectId())
+                    .eq(TeacherApplys::getIsTeacher, 0));
+            Map<String, Object> map = new HashMap<>();
+            map.put("name", projectTeacher.getName());
+            map.put("unit", projectTeacher.getUnit());
+            map.put("post", projectTeacher.getPost());
+            map.put("phone", projectTeacher.getPhone());
+            map.put("mailbox", projectTeacher.getMailbox());
+            allTeachers.add(map);
+        });
+        return allTeachers;
+    }
+
+    //获取项目里全部学生的具体报名信息
+    private List<Map<String, Object>> getAllStudents(Project project) {
+        List<Map<String, Object>> allStudents = new ArrayList<>();
+        List<Long> projectMembers = getProjectMembersIds(project.getMemberId());
+        projectMembers.forEach(id -> {
+            StudnetApplys projectStudent = this.studnetApplysService.getOne(new LambdaQueryWrapper<StudnetApplys>()
+                    .eq(StudnetApplys::getUserId, id)
+                    .eq(StudnetApplys::getProjectId, project.getProjectId()));
+            Map<String, Object> map = new HashMap<>();
+            map.put("name", projectStudent.getName());
+            map.put("sex", projectStudent.getSex() == 0L ? "男" : "女");
+            map.put("userName", projectStudent.getUserName());
+            DictData xmItemNation = this.dictDataService.getOne(new LambdaQueryWrapper<DictData>()
+                    .eq(DictData::getDictType, "xm_item_nation")
+                    .eq(DictData::getDictValue, projectStudent.getNation()));
+            map.put("nation", xmItemNation.getDictLabel());
+            map.put("dateOfBirth", projectStudent.getDateOfBirth());
+            map.put("collegeGroupId", collegeGroupService.getById(projectStudent.getCollegeGroupId()).getName());
+            map.put("professionalClass", projectStudent.getProfessionalClass());
+            map.put("phone", projectStudent.getPhone());
+            map.put("mobilePhone", projectStudent.getMobilePhone());
+            map.put("mailbox", projectStudent.getMailbox());
+            map.put("job", projectStudent.getJob());
+            map.put("isPrincipal", projectStudent.getIsPrincipal() == 1 ? "是" : "否");
+            allStudents.add(map);
+        });
+        return allStudents;
+    }
+
+    public static HashMap<String, Object> convertObjectToHashMap(Object object) {
+        // 创建 ObjectMapper 实例
+        ObjectMapper objectMapper = new ObjectMapper();
+        // 将对象转换为 Map
+        Map<String, Object> map = objectMapper.convertValue(object, Map.class);
+        // 创建新的 HashMap 并复制 Map 中的键值对
+        return new HashMap<>(map);
+    }
+
+    private void isContainsMembers(Project project) {
+        //获取用户角色以及id
+        UserInfoVo data = sysUserClient.getUserInfo().getData();
+        Long userId = SecurityUtils.getUserId();
+        //获取用户角色列表
+        Set<String> roles = data.getRoles();
+        //获取项目用户id集合,包括学生id,老师id,指导老师id
+        List<Long> studentIds = getProjectMembersIds(project.getMemberId());
+        List<Long> teacherIds = getProjectMembersIds(project.getTeacherId());
+        List<Long> firmTeacherIds = getProjectMembersIds(project.getFirmTeacherId());
+        List<Long> allIds = Stream.concat(studentIds.stream(), Stream.concat(teacherIds.stream(), firmTeacherIds.stream())).collect(Collectors.toList());
+        //查找id是否存在项目成员里，如果不在则查找用户角色表是否有管理员身份，如果都不符合则不允许导出word
+        if (!allIds.contains(userId) &&
+                roles.stream().noneMatch(role -> role.equalsIgnoreCase(RoleConstant.ADMIN))) {
+            throw new ServiceException("当前用户没有权限导出word", 444);
+        }
+    }
+
+    //idJson转换为list
+    private List<Long> getProjectMembersIds(String ids) {
+        Gson gson = new Gson();
+        //把数据库的id集合转换为list的id集合
+        Long[] idArray = gson.fromJson(ids, Long[].class);
+        return Arrays.asList(idArray);
+    }
+
+    //创建用于插入word的图片
+    private PictureRenderData getPictureRenderData(String html) {
+        //当前html文本的全部图片路径
+        String[] extractAllImagePaths = extractAllImagePaths(html);
+        if (extractAllImagePaths.length == 0){
+            return null;
+        }
+        //获取图片
+        ArrayList<InputStream> inputStreams = new ArrayList<>();
+        for (String extractAllImagePath : extractAllImagePaths) {
+            ResponseEntity<byte[]> responseEntity = this.sysFileClient.downloadFile(extractAllImagePath);
+            if (ObjectUtil.isEmpty(responseEntity)){
+                continue;
+            }
+            try {
+                InputStream inputStream = ResponseStreamUtil.convertResponseToStream(responseEntity);
+                inputStreams.add(inputStream);
+            } catch (ServletException e) {
+                log.error("获取图片异常:{}", e);
+            }
+        }
+        //拼接图片
+        BufferedImage bufferedImage = combineImagesVertically(inputStreams);
+        return Pictures.ofBufferedImage(bufferedImage, PictureType.PNG)
+                .size(500, 500).create();
+
+    }
+
+    //传入多个流,垂直拼接成java图片返回
+    public BufferedImage combineImagesVertically(List<InputStream> inputStreams) {
+
+        List<BufferedImage> images = new ArrayList<>();
+        int totalHeight = 0;
+        int maxWidth = 0;
+
+        // 将 InputStream 转换为 BufferedImage，并计算总高度和最大宽度
+        for (InputStream inputStream : inputStreams) {
+            try {
+                BufferedImage image = ImageIO.read(inputStream);
+                images.add(image);
+                totalHeight += image.getHeight();
+                maxWidth = Math.max(maxWidth, image.getWidth());
+            } catch (IOException e) {
+                log.error("拼接图片异常:{}", e);
+            }
+
+        }
+
+        // 创建一个新的 BufferedImage 对象
+        BufferedImage combinedImage = new BufferedImage(maxWidth, totalHeight, BufferedImage.TYPE_INT_RGB);
+        java.awt.Graphics2D g2d = combinedImage.createGraphics();
+        int currentHeight = 0;
+
+        // 依次绘制每个图imageType = 1片
+        for (BufferedImage image : images) {
+            g2d.drawImage(image, 0, currentHeight, null);
+            currentHeight += image.getHeight();
+        }
+        g2d.dispose();
+
+        for (InputStream inputStream : inputStreams) {
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                log.error("拼接图片异常:{}", e);
+            }
+        }
+        return combinedImage;
+    }
+
+    public String[] extractAllImagePaths(String html) {
+        List<String> paths = new ArrayList<>();
+        try {
+            Document doc = Jsoup.parse(html);
+            Elements images = doc.select("img");
+
+            for (Element img : images) {
+                String src = img.attr("src");
+                // 新增条件：排除以 "http" 或 "https" 开头的路径（区分大小写，严格匹配小写开头）
+                if (!src.isEmpty() && !src.startsWith("http")) {
+                    paths.add(src);
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("解析HTML时发生错误: " + e.getMessage());
+        }
+        return paths.toArray(new String[0]);
     }
 
     private boolean updateProjectTeacher(ApplyForDTO update, Long projectId) {

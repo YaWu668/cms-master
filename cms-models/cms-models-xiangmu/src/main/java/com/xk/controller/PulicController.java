@@ -21,14 +21,19 @@ import com.xk.entity.Role;
 import com.xk.service.*;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Range;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 
@@ -182,5 +187,21 @@ public class PulicController {
     public Response<YearGroupVo> selectByIdYearGroup(Long yearGroupId){
         return yearGroupService.selectByIdYearGroup(yearGroupId);
     }
+
+    /**
+     * 根据项目的id，导出对应项目的word书
+     * @param projectId 项目id
+     * @return 返回Base64编码的字符串，前端下载
+     */
+//    @GetMapping("/exportWord")
+//    public Response<byte[]> exportXmWord(@RequestParam Long projectId) throws Exception {
+//        return projectService.exportXmWord(projectId);
+//    }
+    @GetMapping("/exportWord")
+    public void exportXmWord(@RequestParam Long projectId, HttpServletResponse response) throws Exception {
+        // 调用服务层方法获取文件字节数组
+        projectService.exportXmWord(projectId,response);
+    }
+
 
 }
