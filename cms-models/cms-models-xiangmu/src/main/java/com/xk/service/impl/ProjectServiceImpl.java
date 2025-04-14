@@ -1292,7 +1292,6 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
 
     public void exportXmWord(Long projectId, HttpServletResponse response) throws Exception {
-
         // 获取项目信息，判断项目状态是否可以导出
         Project project = getProject(projectId);
         String fileName = project.getName()
@@ -1303,9 +1302,12 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         response.setCharacterEncoding("UTF-8");
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + URLEncoder.encode(fileName, "UTF-8"));
 
-        if (project.getState() != ProjectConstant.PROJECT_STATUS_IN_PROGRESS_VALUE) {
-            throw new ServiceException("项目状态不可以导出word,只有项目在进行中才可以导出word", 444);
+        // 项目状态校验
+        if (project.getState() == ProjectConstant.PROJECT_STATUS_NOT_PASS_VALUE
+                || project.getState() == ProjectConstant.PROJECT_STATUS_AUDIT_VALUE) {
+            throw new ServiceException("项目:<" + project.getName() + "> 状态没有审核通过，无法导出为 Word 文件");
         }
+
         // 确认是否是管理员或者是项目老师或者学生，否则不允许导出word
 //        isContainsMembers(project);
         byte[] fileBytes = null;
@@ -1317,6 +1319,11 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         } else if (project.getType().equals(ProjectConstant.PROJECT_TYPE_STARTUP_PRACTICE)) {
             fileBytes = exportWordForTypeThree(project);
         }
+
+        if (fileBytes == null) {
+            throw new ServiceException("项目<" + project.getName() + ">读取失败，无法导出为 Word 文件");
+        }
+
         try {
             if (fileBytes != null) {
                 response.getOutputStream().write(fileBytes);
