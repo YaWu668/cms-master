@@ -84,7 +84,7 @@ public class MinioService implements SysFileService {
             String fileName = file.getUrl();
 
             if (StringUtils.isEmpty(fileName)) {
-                throw new ServiceException("文件上传失败!");
+                throw new ServiceException("下载文件失败!");
             }
 
             // 提取桶部分
@@ -112,21 +112,25 @@ public class MinioService implements SysFileService {
         return false;
     }
 
+    @Override
     public boolean checkFileIsExist(String objectName) {
+        String prefix = "/cms-file";
+        if (objectName.startsWith(prefix)) {
+            objectName = objectName.substring(prefix.length());
+        }
+
         try {
             minioClient.statObject(
-                    StatObjectArgs
-                            .builder().
-                            bucket(this.minioConfig.
-                                    getFileBucketName()
-                            )
+                    StatObjectArgs.builder()
+                            .bucket(this.minioConfig.getFileBucketName())
                             .object(objectName)
                             .build()
             );
-        } catch (Exception e) {
-            return false;
+            return true;
+        }  catch (Exception e) {
+//            throw new ServiceException("检查文件是否存在异常:" + e.getMessage());
+            return  false;
         }
-        return true;
     }
 
     @Override

@@ -63,6 +63,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -246,12 +247,11 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         //10.检查报名的学生的学院组是否存在并且是否启用
         isStudentCollegeGroupsEnabled(applyForDTO.getStudents());
         //todo 有空写,验证文件存在通内
-
+        checkFileUrl(applyForDTO.getMaterialsUrl());
         //todo 有空再写,验证用户负责人只有一个项目在进行中才可以申请新的项目&&(同时只有一个是负责人|| 参加项目进行中最多2个)
 
         //todo 有空再写,验证队员和老师参数进行项目最多有2个
 
-        //t
 
         //1.把数据转到实体类当中并写入数据库,插入项目表新增项目
         Long projectId = insertProject(applyForDTO);
@@ -270,7 +270,16 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return Response.success("项目申请成功,等待审核");
     }
 
-
+    /**
+     * 校验文件是否是存在通内
+     * @param fileName 文件名
+     */
+    private void checkFileUrl(String fileName) {
+        Response response = sysFileClient.fileIsNull(fileName);
+        if (response.getCode() != 200){
+            throw new ServiceException("上传的文件不存在系统当中,请检查");
+        }
+    }
 
 
     /**
@@ -1146,6 +1155,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         checkYearGroup(update.getYearGroupId(),update.getYearDataId());
         //2.10.检查报名的学生的学院组是否存在并且是否启用
         isStudentCollegeGroupsEnabled(update.getStudents());
+        // 2.11.检查项目附加的URL地址
+        checkFileUrl(modifyApplyForDTO.getMaterialsUrl());
 
         //3.1先更新项目表
         if(!updateProject(update,projectId)){
@@ -1288,7 +1299,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 +"_"
                 +LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日HH时mm分"))
                 +".docx";
-        response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        response.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
         response.setCharacterEncoding("UTF-8");
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + URLEncoder.encode(fileName, "UTF-8"));
 
@@ -1296,7 +1307,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             throw new ServiceException("项目状态不可以导出word,只有项目在进行中才可以导出word", 444);
         }
         // 确认是否是管理员或者是项目老师或者学生，否则不允许导出word
-        isContainsMembers(project);
+//        isContainsMembers(project);
         byte[] fileBytes = null;
         // 判断项目类型,根据3种不同的类型导出不一样的word，1为创新训练项目, 2为创业训练项目, 3为创业实践
         if (project.getType().equals(ProjectConstant.PROJECT_TYPE_INNOVATION_TRAINING)) {

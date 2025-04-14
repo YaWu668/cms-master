@@ -78,7 +78,11 @@ public class SysFileController extends BaseController {
         return this.success(this.sysFileService.uploadImg(file));
     }
 
-
+    /**
+     * 判断文件是否存在
+     * @param fileName
+     * @return
+     */
     @ApiOperation(value = "判断文件是否存在", notes = "判断文件是否存在", httpMethod = "GET")
     @GetMapping("/fileIsNull")
     public Response fileIsNull(@RequestParam("fileName") String fileName) {

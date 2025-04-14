@@ -61,7 +61,7 @@ public class  ApplyForDTO{
     @NotEmpty(message = "财政拨款的金额不能为空")
     private String fiscalAppropriation;
     /**
-     * 项目附加的URL地址, 提交只能提交压缩包,json格式,[url1,url2]
+     * 项目附加的URL地址, 提交只能提交压缩包
      */
     @NotNull(message = "项目附加的URL地址不能为空")
     @NotEmpty(message = "项目附加的URL地址不能为空")
