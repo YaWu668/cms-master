@@ -1441,7 +1441,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return Response.success();
     }
 
-
+    @Override
     public void exportXmWord(Long projectId, HttpServletResponse response) throws Exception {
         // 获取项目信息，判断项目状态是否可以导出
         Project project = getProject(projectId);
@@ -1480,9 +1480,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
         // 将文件字节写入响应流（仿照方法一的方式）
         try {
-            response.getOutputStream().write(fileBytes);
-            response.getOutputStream().flush();
-        } catch (IOException e) {
+                response.getOutputStream().write(fileBytes);
+                response.getOutputStream().flush();
+            } catch (IOException e) {
             throw new ServiceException("文件下载失败：" + e.getMessage());
         }
     }

@@ -29,8 +29,6 @@ public class AddCollegeUserDto {
     /**
      * 学院人员手机号
      */
-    @NotNull(message = "手机号不能为空")
-    @Pattern(regexp = "^1[3-9]\\d{9}$", message = "手机号格式不正确")
-    @NotEmpty(message = "手机号不能为空")
+    @Pattern(regexp = "^$|^1[3-9]\\\\d{9}$", message = "手机号格式不正确")
     private String phonenumber;
 }
