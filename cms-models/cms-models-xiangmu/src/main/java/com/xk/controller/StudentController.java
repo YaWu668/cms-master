@@ -26,6 +26,15 @@ public class StudentController  {
      */
     private final ProjectService projectService;
 
+    /**
+     * 提交解题文件
+     */
+    @PostMapping("/submit/file")
+    @Log(title = "提交解题文件", businessType = BusinessType.INSERT)
+    public Response submitFile(@RequestBody @Valid SubmitFileDTO submitFileDTO) {
+        return projectService.submitFile(submitFileDTO)?Response.success():Response.error("提交失败");
+    }
+
 
     /**
      * 申请项目

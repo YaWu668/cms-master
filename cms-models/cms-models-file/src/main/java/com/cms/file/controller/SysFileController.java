@@ -111,5 +111,14 @@ public class SysFileController extends BaseController {
         sysFileService.viewXmFile(filePath, response);
     }
 
+    /**
+     * 根据文件对象名称下载文件，适用于 Feign 客户端调用
+     */
+    @GetMapping("/download/Client")
+    public Response<byte[]> downloadFileClient(@RequestParam("objectName") String objectName) {
+        byte[] fileData = sysFileService.downloadFile(objectName);
+        return Response.success(fileData);
+    }
+
 
 }

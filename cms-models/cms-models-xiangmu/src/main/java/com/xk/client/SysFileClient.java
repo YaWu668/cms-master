@@ -15,7 +15,7 @@ public interface SysFileClient {
      * @return
      */
     @GetMapping(value = "/viewXmPath", consumes = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    ResponseEntity<byte[]> downloadFile(@RequestParam("filePath") String filePath);
+    ResponseEntity<byte[]> viewXmByPath(@RequestParam("filePath") String filePath);
 
     /**
      * 判断文件是否存在
@@ -24,4 +24,12 @@ public interface SysFileClient {
      */
     @GetMapping("/fileIsNull")
      Response fileIsNull(@RequestParam("fileName") String fileName);
+
+
+    /**
+     * 根据文件对象名称下载文件，返回 Response 包装的文件二进制数据
+     * 注意：接口 URL、请求方式根据文件模块中 Controller 的实现自行调整
+     */
+    @GetMapping("/download/Client")
+    Response<byte[]> downloadFileClient(@RequestParam("objectName") String objectName);
 }

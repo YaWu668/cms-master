@@ -34,4 +34,11 @@ public interface SysFileService {
     boolean viewXmFile(HttpServletRequest request, HttpServletResponse response);
 
     void viewXmFile(String filePath, HttpServletResponse response);
+    /**
+     * 下载文件内容，返回文件的字节数组
+     *
+     * @param objectName Minio存储文件的对象名称
+     * @return 文件数据的字节数组，下载失败时可抛出异常或返回 null
+     */
+    byte[] downloadFile(String objectName);
 }

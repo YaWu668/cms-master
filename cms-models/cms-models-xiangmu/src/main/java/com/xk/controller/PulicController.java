@@ -81,7 +81,7 @@ public class PulicController {
      */
     @GetMapping("/file/download")
     public Response<byte[]> downloadFile(@RequestParam("filePath") String filePath) {
-        ResponseEntity<byte[]> entity = sysFileClient.downloadFile(filePath);
+        ResponseEntity<byte[]> entity = sysFileClient.viewXmByPath(filePath);
         return Response.success();
     }
 

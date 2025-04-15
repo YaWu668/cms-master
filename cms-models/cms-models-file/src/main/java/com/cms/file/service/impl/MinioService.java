@@ -2,6 +2,8 @@ package com.cms.file.service.impl;
 
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.core.io.IoUtil;
+
+import java.io.ByteArrayOutputStream;
 import java.net.URLConnection;
 import java.io.InputStream;
 import cn.hutool.core.io.IoUtil;
@@ -222,6 +224,35 @@ public class MinioService implements SysFileService {
             response.flushBuffer();
         } catch (Exception e) {
             throw new ServiceException("文件下载失败: " + e.getMessage());
+        }
+    }
+
+
+    @Override
+    public byte[] downloadFile(String objectName) {
+        int indexOfFirstSlash = objectName.indexOf('/', 1);
+        String bucket = objectName.substring(1, indexOfFirstSlash);
+        // 提取文件后面的路径
+        String filePath = objectName.substring(bucket.length() + 2);
+
+
+        try (InputStream is = minioClient.getObject(
+                GetObjectArgs.builder()
+                        .bucket(minioConfig.getFileBucketName())
+                        .object(filePath)
+                        .build());
+             ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            // 使用缓冲区优化下载速度
+            byte[] buffer = new byte[8192];
+            int len;
+            while ((len = is.read(buffer)) != -1) {
+                baos.write(buffer, 0, len);
+            }
+            return baos.toByteArray();
+        } catch (Exception e) {
+            e.printStackTrace();
+            // 根据业务需求，可进一步封装异常信息
+            throw new ServiceException("Minio 文件下载失败:"+e.getMessage());
         }
     }
 

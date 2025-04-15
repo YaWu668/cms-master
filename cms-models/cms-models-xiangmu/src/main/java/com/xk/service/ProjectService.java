@@ -24,6 +24,21 @@ import java.util.List;
  */
 public interface ProjectService extends IService<Project> {
     /**
+     * 批量下载指定项目的文件（支持结题材料或附加材料），并打包成 zip 压缩包通过响应返回。
+     *
+     * @param projectIds 项目 ID 列表
+     * @param fileType   文件类型（1：结题材料；2：附加材料）
+     * @param response   HttpServletResponse，用于将 zip 包输出给客户端
+     */
+    void downloadProjectsFile(List<Long> projectIds, int fileType, HttpServletResponse response);
+    /**
+     * 提交文件
+     * @param submitFileDTO
+     * @return
+     */
+    boolean submitFile( SubmitFileDTO submitFileDTO);
+
+    /**
      * 申请项目
      * @param applyForDTO
      * @return
@@ -246,5 +261,7 @@ public interface ProjectService extends IService<Project> {
      * @return 返回文件流，前端下载
      */
      void exportXmWord(Long projectId, HttpServletResponse response) throws Exception;
+
+
 }
 

@@ -8,6 +8,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.nacos.api.remote.response.ResponseCode;
 import com.alibaba.nacos.shaded.com.google.gson.Gson;
 import com.alibaba.nacos.shaded.com.google.gson.reflect.TypeToken;
@@ -18,6 +19,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.cms.common.core.enums.HttpStatusResponse;
 import com.cms.common.core.exception.ServiceException;
 import com.cms.common.core.web.domain.Response;
 import com.cms.common.security.utils.SecurityUtils;
@@ -44,6 +46,7 @@ import com.xk.domain.dto.ProjectAuditDto;
 import com.xk.domain.vo.detail.*;
 import com.xk.domain.vo.student.StudentVo;
 import com.xk.entity.*;
+import com.xk.enums.ProjectStatusEnum;
 import com.xk.mapper.ProjectMapper;
 import com.xk.mapper.StudnetApplysMapper;
 import com.xk.mapper.TeacherApplysMapper;
@@ -52,6 +55,7 @@ import com.xk.service.*;
 import com.xk.utils.BeanCopyUtils;
 import com.xk.utils.BeanUtils;
 import com.xk.utils.ResponseStreamUtil;
+import com.xk.utils.ZipUtils;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpHeaders;
@@ -80,6 +84,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -215,6 +222,150 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      */
     private final SysFileClient sysFileClient;
 
+
+    /**
+     * 批量下载指定项目的文件（支持结题材料或附加材料），并打包成 zip 压缩包通过响应返回。
+     *
+     * @param projectIds 项目 ID 列表
+     * @param fileType   文件类型（1：结题材料；2：附加材料）
+     * @param response   HttpServletResponse，用于将 zip 包输出给客户端
+     */
+    @Override
+    public void downloadProjectsFile(List<Long> projectIds, int fileType, HttpServletResponse response) {
+        // 从数据库查询项目列表
+        List<Project> projectList = this.listByIds(projectIds);
+
+        if (CollUtil.isEmpty(projectList) || projectList.size() != projectIds.size()){
+            throw new ServiceException("查询出来的项目数量:"+projectList.size()+"与要导出项目的数量:"+projectIds.size()+"不一致");
+        }
+        // 用于存放所有需打包的文件，key 是 zip 中的路径（如：项目名/文件名），value 是文件字节内容
+        Map<String, byte[]> filesMap = new ConcurrentHashMap<>();
+
+        // 用多线程异步下载所有文件
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+        //记录不存文件的路径
+        List<String> errorMsg = new CopyOnWriteArrayList<>();
+
+        for (Project project : projectList) {
+            // 获取文件名列表（以英文逗号分隔的字符串）
+            String fileName = fileType == 1 ? project.getConcludeUrl() : project.getMaterialsUrl();
+            if (fileName == null || fileName.isEmpty()){
+                errorMsg.add("项目:"+project.getName()+"的文件不存在,文件的URL"+fileName+"\n");
+            }
+            //校验文件是否存在
+            Response isNull = sysFileClient.fileIsNull(fileName);
+            if(isNull.getCode() != 200){
+                errorMsg.add("项目:"+project.getName()+"的文件不存在,文件的URL"+fileName+"\n");
+            }
+
+            // 将英文逗号分隔的字符串分割为列表，并过滤掉空白项
+//            List<String> fileNames = Arrays.stream(fileUrlsRaw.split(","))
+//                    .map(String::trim)
+//                    .filter(s -> !s.isEmpty())
+//                    .collect(Collectors.toList());
+
+            // 清理项目名称（避免 zip 内部路径中出现非法字符）
+            String projectFolder = project.getName().replaceAll("[\\\\/:*?\"<>|]", "_");
+
+            // 对每个文件进行异步下载
+//            for (String fileName : fileNames) {
+            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+                try {
+                    // 假设 fileName 就是文件存储时的唯一标识（objectName）
+                    Response<byte[]> fileResp = sysFileClient.downloadFileClient(fileName);
+                    if (fileResp != null
+                        && fileResp.getCode() == HttpStatusResponse.SUCCESS.getCode()
+                        && fileResp.getData() != null) {
+
+                        // 构造 zip 内部路径（例如：项目A/附件1.pdf）
+                        String zipEntryPath = projectFolder + "/" + extractFileName(fileName);
+                        filesMap.put(zipEntryPath, fileResp.getData());
+                    }else{
+                        errorMsg.add("项目:"+project.getName()+"的文件下载失败,文件的URL"+fileName+"\n");
+                    }
+                } catch (Exception e) {
+                    errorMsg.add("文件下载异常: " + e.getMessage());
+                }
+            });
+            futures.add(future);
+//            }
+        }
+
+        //不存在文件校验
+        if(CollUtil.isNotEmpty(errorMsg)){
+            throw new ServiceException("以下项目的文件存在错误:"+String.join("",errorMsg));
+        }
+
+        // 等待所有异步任务完成
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+
+        //不存在文件校验
+        if(CollUtil.isNotEmpty(errorMsg)){
+            throw new ServiceException("以下项目的文件存在错误:"+String.join("",errorMsg));
+        }
+        // 压缩所有文件为 zip 包
+        byte[] zipBytes = ZipUtils.compress(filesMap);
+
+        // 设置响应头并输出 zip 文件内容
+        try {
+            response.setContentType("application/zip");
+            String encodedFileName = URLEncoder.encode("项目文件打包下载.zip", "UTF-8");
+            response.setHeader("Content-Disposition", "attachment; filename*=UTF-8''" + encodedFileName);
+            response.getOutputStream().write(zipBytes);
+            response.getOutputStream().flush();
+        } catch (Exception e) {
+            throw new ServiceException("文件下载失败"+e.getMessage());
+        }
+    }
+
+    /**
+     * 提取文件名
+     * @param path 文件路径 : /cms-file/yyyy/MM/dd/filename
+     * @return 返回结果: filename
+     */
+    public  String extractFileName(String path) {
+        if (path == null || path.isEmpty()) {
+            throw new ServiceException("路径不能为空");
+        }
+
+        // 正则匹配固定格式 /cms-file/yyyy/MM/dd/ 后接文件名
+        String regex = "^/cms-file/\\d{4}/\\d{2}/\\d{2}/(.+)$";
+        if (path.matches(regex)) {
+            // 提取文件名部分
+            return path.replaceFirst("^/cms-file/\\d{4}/\\d{2}/\\d{2}/", "");
+        } else {
+            throw new ServiceException("文件路径格式非法，应为 /cms-file/yyyy/MM/dd/filename");
+        }
+    }
+
+
+
+
+    @Override
+    @Transactional
+    public boolean submitFile(SubmitFileDTO submitFileDTO) {
+        //1.校验项目存在
+        Project byId = this.getById(submitFileDTO.getProblemId());
+        if (byId == null) {
+            throw new ServiceException("项目不存在");
+        }
+        //2.判断项目是否属于当前用户
+        if (!byId.getUserId().equals(SecurityUtils.getUserId())) {
+            throw new ServiceException("提交解题文件只能负责人进行提交,你没有权限进行提交");
+        }
+        //2.校验项目状态为进行中
+        if (byId.getState() != ProjectConstant.PROJECT_STATUS_IN_PROGRESS_VALUE) {
+            throw new ServiceException("项目状态不是进行中，不能提交");
+        }
+        //3.校验提交文件存在项目当中
+        Response isNull = sysFileClient.fileIsNull(submitFileDTO.getFileURL());
+        if (isNull.getCode() != 200) {
+            throw new ServiceException("请检查你提交解题文件是否提交成功,系统没有查询到您提交解题文件");
+        }
+        //4.提交文件
+        byId.setConcludeUrl(submitFileDTO.getFileURL());
+        return  this.updateById(byId);
+    }
 
     /**
      * 申请项目
@@ -1298,9 +1449,12 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 +"_"
                 +LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日HH时mm分"))
                 +".docx";
+        // 设置响应头：保持Word文件MIME类型
         response.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-        response.setCharacterEncoding("UTF-8");
-        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + URLEncoder.encode(fileName, "UTF-8"));
+
+        // 使用RFC 5987 编码方式设置文件名
+        String encodedFileName = URLEncoder.encode(fileName, "UTF-8");
+        response.setHeader("Content-Disposition", "attachment; filename*=UTF-8''" + encodedFileName);
 
         // 项目状态校验
         if (project.getState() == ProjectConstant.PROJECT_STATUS_NOT_PASS_VALUE
@@ -1324,17 +1478,12 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             throw new ServiceException("项目<" + project.getName() + ">读取失败，无法导出为 Word 文件");
         }
 
+        // 将文件字节写入响应流（仿照方法一的方式）
         try {
-            if (fileBytes != null) {
-                response.getOutputStream().write(fileBytes);
-                response.getOutputStream().flush();
-            }
-        } finally {
-            try {
-                response.getOutputStream().close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            response.getOutputStream().write(fileBytes);
+            response.getOutputStream().flush();
+        } catch (IOException e) {
+            throw new ServiceException("文件下载失败：" + e.getMessage());
         }
     }
 
@@ -1968,7 +2117,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         //获取图片
         ArrayList<InputStream> inputStreams = new ArrayList<>();
         for (String extractAllImagePath : extractAllImagePaths) {
-            ResponseEntity<byte[]> responseEntity = this.sysFileClient.downloadFile(extractAllImagePath);
+            ResponseEntity<byte[]> responseEntity = this.sysFileClient.viewXmByPath(extractAllImagePath);
             if (ObjectUtil.isEmpty(responseEntity)){
                 continue;
             }

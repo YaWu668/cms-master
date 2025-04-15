@@ -13,7 +13,9 @@ import com.xk.service.StudnetApplysService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 教师
@@ -28,6 +30,22 @@ public class TeacherController {
      */
     private final StudnetApplysService studnetApplysService;
     private final ProjectService projectService;
+
+    /**
+     * 批量下载指定项目的文件（支持结题材料或附加材料），并打包成 zip 压缩包通过响应返回。
+     *
+     * @param projectIds 项目 ID 列表
+     * @param fileType   文件类型（1：结题材料；2：附加材料）
+     * @param response   HttpServletResponse，用于将 zip 包输出给客户端
+     */
+    @GetMapping("/download")
+    public Response downloadFiles(@RequestParam("projectIds") @NotNull List<Long> projectIds,
+                                          @RequestParam("fileType") @NotNull Integer fileType,
+                                          HttpServletResponse response){
+
+        projectService.downloadProjectsFile(projectIds, fileType, response);
+        return Response.success("完成请求");
+    }
 
     /**
      * 获取教师绑定的所有学生列表

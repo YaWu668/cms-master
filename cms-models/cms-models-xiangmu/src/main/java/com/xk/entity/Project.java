@@ -147,7 +147,7 @@ public class Project extends  BaseEntity  {
     private String creativityCollegeOpinion;
     //项目附加的URL地址, 提交只能提交压缩包
     private String materialsUrl;
-    //项目结题文件url, 只能提交压缩包 示例: [URL1, URL2]
+    //项目结题文件url, 只能提交压缩包
     private String concludeUrl;
     //当前项目审核状态进度, 看nacos配置角色审核项目顺序, 从1开始, 1代表需要序号为角色进行审核, 如果当前序号为0代表审核完毕
     private Long auditStatus;
