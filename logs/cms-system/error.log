@@ -1,48 +1,131 @@
-22:44:46.142 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
-22:44:46.261 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 6.2.5.Final
-22:44:46.798 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
-22:44:46.799 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
-22:44:54.659 [main] WARN  c.a.c.n.c.NacosPropertySourceBuilder - [loadNacosData,87] - Ignore the empty nacos configuration and get it based on dataId[cms-system] & group[cms-project]
-22:44:54.846 [main] WARN  c.a.c.n.c.NacosPropertySourceBuilder - [loadNacosData,87] - Ignore the empty nacos configuration and get it based on dataId[cms-system.yml] & group[cms-project]
-22:44:55.136 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource {name='bootstrapProperties-cms-system-guoA.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-system.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-system,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-application-guoA.yml,cms-project'}]
-22:44:55.160 [main] INFO  c.c.s.CmsSystemApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "guoA"
-22:44:58.337 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [multipleStoresDetected,262] - Multiple Spring Data modules found, entering strict repository configuration mode
-22:44:58.344 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,132] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-22:44:58.398 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,201] - Finished Spring Data repository scanning in 26 ms. Found 0 Redis repository interfaces.
-22:44:58.885 [main] INFO  o.s.c.c.s.GenericScope - [setSerializationId,283] - BeanFactory id=be3f3d72-f416-336a-814b-b2a307ff1bed
-22:44:59.632 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'com.cms.common.redis.config.RedisConfig' of type [com.cms.common.redis.config.RedisConfig$$EnhancerBySpringCGLIB$$c697e6a3] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-22:45:00.499 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [initialize,108] - Tomcat initialized with port(s): 10240 (http)
-22:45:00.522 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Initializing ProtocolHandler ["http-nio-10240"]
-22:45:00.526 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
-22:45:00.526 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.83]
-22:45:00.816 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
-22:45:00.816 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - [prepareWebApplicationContext,292] - Root WebApplicationContext: initialization completed in 5557 ms
-22:45:05.565 [main] INFO  c.z.h.HikariDataSource - [getConnection,110] - HikariPool-1 - Starting...
-22:45:07.609 [main] INFO  c.z.h.HikariDataSource - [getConnection,123] - HikariPool-1 - Start completed.
-22:45:13.574 [main] INFO  c.a.c.s.SentinelWebMvcConfigurer - [addInterceptors,52] - [Sentinel Starter] register SentinelWebInterceptor with urlPatterns: [/**].
-22:45:16.031 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-22:45:17.224 [main] INFO  o.s.b.a.e.w.EndpointLinksResolver - [<init>,58] - Exposing 1 endpoint(s) beneath base path '/actuator'
-22:45:18.317 [main] INFO  o.s.c.o.FeignClientFactoryBean - [getTarget,418] - For 'cms-system' URL not provided. Will try picking an instance via load-balancing.
-22:45:21.376 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-22:45:21.568 [main] WARN  o.s.c.l.c.LoadBalancerCacheAutoConfiguration$LoadBalancerCaffeineWarnLogger - [logWarning,83] - Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
-22:45:21.740 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Starting ProtocolHandler ["http-nio-10240"]
-22:45:21.793 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [start,220] - Tomcat started on port(s): 10240 (http) with context path ''
-22:45:21.863 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
-22:45:21.864 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
-22:45:23.119 [main] INFO  c.a.c.n.r.NacosServiceRegistry - [register,76] - nacos registry, cms-project cms-system 192.168.159.1:10240 register finished
-22:45:25.383 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-22:45:26.613 [main] INFO  c.c.s.CmsSystemApplication - [logStarted,61] - Started CmsSystemApplication in 43.369 seconds (JVM running for 50.014)
-22:45:26.712 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-system-guoA.yml, group=cms-project
-22:45:26.713 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-system, group=cms-project
-22:45:26.713 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-system.yml, group=cms-project
-22:45:27.047 [RMI TCP Connection(5)-10.8.0.20] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
-22:45:27.048 [RMI TCP Connection(5)-10.8.0.20] INFO  o.s.w.s.DispatcherServlet - [initServletBean,525] - Initializing Servlet 'dispatcherServlet'
-22:45:27.050 [RMI TCP Connection(5)-10.8.0.20] INFO  o.s.w.s.DispatcherServlet - [initServletBean,547] - Completed initialization in 2 ms
-23:29:19.868 [Thread-8] WARN  c.a.n.c.h.HttpClientBeanHolder - [shutdown,102] - [HttpClientBeanHolder] Start destroying common HttpClient
-23:29:19.869 [Thread-21] WARN  c.a.n.c.n.NotifyCenter - [shutdown,136] - [NotifyCenter] Start destroying Publisher
-23:29:19.869 [Thread-21] WARN  c.a.n.c.n.NotifyCenter - [shutdown,153] - [NotifyCenter] Destruction of the end
-23:29:19.873 [Thread-8] WARN  c.a.n.c.h.HttpClientBeanHolder - [shutdown,111] - [HttpClientBeanHolder] Destruction of the end
-23:29:20.711 [SpringApplicationShutdownHook] INFO  c.a.c.n.r.NacosServiceRegistry - [deregister,95] - De-registering from Nacos Server now...
-23:29:20.821 [SpringApplicationShutdownHook] INFO  c.a.c.n.r.NacosServiceRegistry - [deregister,115] - De-registration finished.
-23:29:21.009 [SpringApplicationShutdownHook] INFO  c.z.h.HikariDataSource - [close,350] - HikariPool-1 - Shutdown initiated...
-23:29:22.808 [SpringApplicationShutdownHook] INFO  c.z.h.HikariDataSource - [close,352] - HikariPool-1 - Shutdown completed.
+00:28:47.869 [Thread-30] WARN  c.a.n.c.n.NotifyCenter - [shutdown,136] - [NotifyCenter] Start destroying Publisher
+00:28:47.869 [Thread-10] WARN  c.a.n.c.h.HttpClientBeanHolder - [shutdown,102] - [HttpClientBeanHolder] Start destroying common HttpClient
+00:28:47.885 [Thread-30] WARN  c.a.n.c.n.NotifyCenter - [shutdown,153] - [NotifyCenter] Destruction of the end
+00:28:47.886 [Thread-10] WARN  c.a.n.c.h.HttpClientBeanHolder - [shutdown,111] - [HttpClientBeanHolder] Destruction of the end
+14:08:04.692 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
+14:08:04.801 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 6.2.5.Final
+14:08:05.237 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+14:08:05.237 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+14:08:21.007 [main] WARN  c.a.c.n.c.NacosPropertySourceBuilder - [loadNacosData,87] - Ignore the empty nacos configuration and get it based on dataId[cms-system] & group[cms-project]
+14:08:21.195 [main] WARN  c.a.c.n.c.NacosPropertySourceBuilder - [loadNacosData,87] - Ignore the empty nacos configuration and get it based on dataId[cms-system.yml] & group[cms-project]
+14:08:21.388 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource {name='bootstrapProperties-cms-system-guoA.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-system.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-system,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-application-guoA.yml,cms-project'}]
+14:08:21.404 [main] INFO  c.c.s.CmsSystemApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "guoA"
+14:08:23.148 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [multipleStoresDetected,262] - Multiple Spring Data modules found, entering strict repository configuration mode
+14:08:23.154 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,132] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+14:08:23.196 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,201] - Finished Spring Data repository scanning in 21 ms. Found 0 Redis repository interfaces.
+14:08:23.674 [main] INFO  o.s.c.c.s.GenericScope - [setSerializationId,283] - BeanFactory id=be3f3d72-f416-336a-814b-b2a307ff1bed
+14:08:24.418 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'com.cms.common.redis.config.RedisConfig' of type [com.cms.common.redis.config.RedisConfig$$EnhancerBySpringCGLIB$$d4f3b2e4] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+14:08:25.222 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [initialize,108] - Tomcat initialized with port(s): 10240 (http)
+14:08:25.245 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Initializing ProtocolHandler ["http-nio-10240"]
+14:08:25.248 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
+14:08:25.249 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.83]
+14:08:25.528 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
+14:08:25.528 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - [prepareWebApplicationContext,292] - Root WebApplicationContext: initialization completed in 4070 ms
+14:08:35.669 [main] INFO  c.z.h.HikariDataSource - [getConnection,110] - HikariPool-1 - Starting...
+14:08:37.268 [main] INFO  c.z.h.HikariDataSource - [getConnection,123] - HikariPool-1 - Start completed.
+14:08:47.056 [main] INFO  c.a.c.s.SentinelWebMvcConfigurer - [addInterceptors,52] - [Sentinel Starter] register SentinelWebInterceptor with urlPatterns: [/**].
+14:08:52.307 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
+14:08:56.817 [main] INFO  o.s.b.a.e.w.EndpointLinksResolver - [<init>,58] - Exposing 1 endpoint(s) beneath base path '/actuator'
+14:08:57.033 [main] WARN  o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - [refresh,599] - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'requestInterceptor' defined in com.cms.common.security.feign.FeignAutoConfiguration: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [feign.RequestInterceptor]: Factory method 'requestInterceptor' threw exception; nested exception is java.lang.NoClassDefFoundError: com/cms/common/security/feign/FeignRequestInterceptor
+14:08:57.195 [main] INFO  c.z.h.HikariDataSource - [close,350] - HikariPool-1 - Shutdown initiated...
+14:08:58.295 [main] INFO  c.z.h.HikariDataSource - [close,352] - HikariPool-1 - Shutdown completed.
+14:08:58.298 [main] INFO  o.a.c.c.StandardService - [log,173] - Stopping service [Tomcat]
+14:08:58.339 [main] INFO  o.s.b.a.l.ConditionEvaluationReportLoggingListener - [logMessage,136] - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+14:08:58.466 [main] ERROR o.s.b.SpringApplication - [reportFailure,818] - Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'requestInterceptor' defined in com.cms.common.security.feign.FeignAutoConfiguration: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [feign.RequestInterceptor]: Factory method 'requestInterceptor' threw exception; nested exception is java.lang.NoClassDefFoundError: com/cms/common/security/feign/FeignRequestInterceptor
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:646)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:477)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1352)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1195)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:582)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:336)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:334)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:209)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:955)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:932)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:591)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:147)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:732)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:409)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:308)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1300)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1289)
+	at com.cms.system.CmsSystemApplication.main(CmsSystemApplication.java:15)
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [feign.RequestInterceptor]: Factory method 'requestInterceptor' threw exception; nested exception is java.lang.NoClassDefFoundError: com/cms/common/security/feign/FeignRequestInterceptor
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:185)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:641)
+	... 19 common frames omitted
+Caused by: java.lang.NoClassDefFoundError: com/cms/common/security/feign/FeignRequestInterceptor
+	at com.cms.common.security.feign.FeignAutoConfiguration.requestInterceptor(FeignAutoConfiguration.java:17)
+	at com.cms.common.security.feign.FeignAutoConfiguration$$EnhancerBySpringCGLIB$$3fd959df.CGLIB$requestInterceptor$0(<generated>)
+	at com.cms.common.security.feign.FeignAutoConfiguration$$EnhancerBySpringCGLIB$$3fd959df$$FastClassBySpringCGLIB$$92d0b8b7.invoke(<generated>)
+	at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:244)
+	at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:331)
+	at com.cms.common.security.feign.FeignAutoConfiguration$$EnhancerBySpringCGLIB$$3fd959df.requestInterceptor(<generated>)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:154)
+	... 20 common frames omitted
+Caused by: java.lang.ClassNotFoundException: com.cms.common.security.feign.FeignRequestInterceptor
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:387)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:418)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:352)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:351)
+	... 31 common frames omitted
+14:08:58.509 [Thread-9] WARN  c.a.n.c.h.HttpClientBeanHolder - [shutdown,102] - [HttpClientBeanHolder] Start destroying common HttpClient
+14:08:58.510 [Thread-26] WARN  c.a.n.c.n.NotifyCenter - [shutdown,136] - [NotifyCenter] Start destroying Publisher
+14:08:58.511 [Thread-26] WARN  c.a.n.c.n.NotifyCenter - [shutdown,153] - [NotifyCenter] Destruction of the end
+14:10:11.811 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
+14:10:11.891 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 6.2.5.Final
+14:10:12.238 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+14:10:12.239 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+14:10:24.883 [main] WARN  c.a.c.n.c.NacosPropertySourceBuilder - [loadNacosData,87] - Ignore the empty nacos configuration and get it based on dataId[cms-system] & group[cms-project]
+14:10:25.092 [main] WARN  c.a.c.n.c.NacosPropertySourceBuilder - [loadNacosData,87] - Ignore the empty nacos configuration and get it based on dataId[cms-system.yml] & group[cms-project]
+14:10:25.280 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource {name='bootstrapProperties-cms-system-guoA.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-system.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-system,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-application-guoA.yml,cms-project'}]
+14:10:25.292 [main] INFO  c.c.s.CmsSystemApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "guoA"
+14:10:26.704 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [multipleStoresDetected,262] - Multiple Spring Data modules found, entering strict repository configuration mode
+14:10:26.709 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,132] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+14:10:26.745 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,201] - Finished Spring Data repository scanning in 16 ms. Found 0 Redis repository interfaces.
+14:10:27.134 [main] INFO  o.s.c.c.s.GenericScope - [setSerializationId,283] - BeanFactory id=be3f3d72-f416-336a-814b-b2a307ff1bed
+14:10:27.782 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'com.cms.common.redis.config.RedisConfig' of type [com.cms.common.redis.config.RedisConfig$$EnhancerBySpringCGLIB$$b4c43cc8] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+14:10:28.466 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [initialize,108] - Tomcat initialized with port(s): 10240 (http)
+14:10:28.484 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Initializing ProtocolHandler ["http-nio-10240"]
+14:10:28.487 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
+14:10:28.487 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/9.0.83]
+14:10:28.748 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
+14:10:28.749 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - [prepareWebApplicationContext,292] - Root WebApplicationContext: initialization completed in 3417 ms
+14:10:35.431 [main] INFO  c.z.h.HikariDataSource - [getConnection,110] - HikariPool-1 - Starting...
+14:10:36.885 [main] INFO  c.z.h.HikariDataSource - [getConnection,123] - HikariPool-1 - Start completed.
+14:10:43.130 [main] INFO  c.a.c.s.SentinelWebMvcConfigurer - [addInterceptors,52] - [Sentinel Starter] register SentinelWebInterceptor with urlPatterns: [/**].
+14:10:47.392 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
+14:10:50.818 [main] INFO  o.s.b.a.e.w.EndpointLinksResolver - [<init>,58] - Exposing 1 endpoint(s) beneath base path '/actuator'
+14:10:51.841 [main] INFO  o.s.c.o.FeignClientFactoryBean - [getTarget,418] - For 'cms-system' URL not provided. Will try picking an instance via load-balancing.
+14:10:56.657 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
+14:10:56.777 [main] WARN  o.s.c.l.c.LoadBalancerCacheAutoConfiguration$LoadBalancerCaffeineWarnLogger - [logWarning,83] - Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+14:10:56.916 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Starting ProtocolHandler ["http-nio-10240"]
+14:10:56.953 [main] INFO  o.s.b.w.e.t.TomcatWebServer - [start,220] - Tomcat started on port(s): 10240 (http) with context path ''
+14:10:57.001 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+14:10:57.002 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+14:10:57.723 [main] INFO  c.a.c.n.r.NacosServiceRegistry - [register,76] - nacos registry, cms-project cms-system 192.168.159.1:10240 register finished
+14:11:01.620 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
+14:11:02.641 [main] INFO  c.c.s.CmsSystemApplication - [logStarted,61] - Started CmsSystemApplication in 55.173 seconds (JVM running for 58.973)
+14:11:02.708 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-system-guoA.yml, group=cms-project
+14:11:02.709 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-system, group=cms-project
+14:11:02.710 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-system.yml, group=cms-project
+14:11:06.787 [RMI TCP Connection(3)-10.8.0.20] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+14:11:06.788 [RMI TCP Connection(3)-10.8.0.20] INFO  o.s.w.s.DispatcherServlet - [initServletBean,525] - Initializing Servlet 'dispatcherServlet'
+14:11:06.790 [RMI TCP Connection(3)-10.8.0.20] INFO  o.s.w.s.DispatcherServlet - [initServletBean,547] - Completed initialization in 2 ms
+17:19:42.338 [Thread-23] WARN  c.a.n.c.n.NotifyCenter - [shutdown,136] - [NotifyCenter] Start destroying Publisher
+17:19:42.338 [Thread-8] WARN  c.a.n.c.h.HttpClientBeanHolder - [shutdown,102] - [HttpClientBeanHolder] Start destroying common HttpClient
+17:19:42.370 [Thread-23] WARN  c.a.n.c.n.NotifyCenter - [shutdown,153] - [NotifyCenter] Destruction of the end
+17:19:42.380 [Thread-8] WARN  c.a.n.c.h.HttpClientBeanHolder - [shutdown,111] - [HttpClientBeanHolder] Destruction of the end
+17:19:45.486 [SpringApplicationShutdownHook] INFO  c.a.c.n.r.NacosServiceRegistry - [deregister,95] - De-registering from Nacos Server now...
+17:19:45.692 [SpringApplicationShutdownHook] INFO  c.a.c.n.r.NacosServiceRegistry - [deregister,115] - De-registration finished.
+17:19:46.033 [SpringApplicationShutdownHook] INFO  c.z.h.HikariDataSource - [close,350] - HikariPool-1 - Shutdown initiated...
+17:19:47.958 [SpringApplicationShutdownHook] INFO  c.z.h.HikariDataSource - [close,352] - HikariPool-1 - Shutdown completed.

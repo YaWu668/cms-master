@@ -116,6 +116,9 @@ public class MinioService implements SysFileService {
 
     @Override
     public boolean checkFileIsExist(String objectName) {
+        if (StringUtils.isEmpty(objectName)) {
+            return false;
+        }
         String prefix = "/cms-file";
         if (objectName.startsWith(prefix)) {
             objectName = objectName.substring(prefix.length());

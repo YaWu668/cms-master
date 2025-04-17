@@ -1,55 +1,176 @@
-22:44:50.559 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
-22:44:50.645 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 6.2.5.Final
-22:44:51.242 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
-22:44:51.243 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
-22:44:59.037 [main] WARN  c.a.c.n.c.NacosPropertySourceBuilder - [loadNacosData,87] - Ignore the empty nacos configuration and get it based on dataId[cms-gateway] & group[cms-project]
-22:44:59.205 [main] WARN  c.a.c.n.c.NacosPropertySourceBuilder - [loadNacosData,87] - Ignore the empty nacos configuration and get it based on dataId[cms-gateway.yml] & group[cms-project]
-22:44:59.468 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource {name='bootstrapProperties-cms-gateway-guoA.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-gateway.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-gateway,cms-project'}]
-22:44:59.487 [main] INFO  c.c.g.CmsGatewayApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "guoA"
-22:45:01.084 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [multipleStoresDetected,262] - Multiple Spring Data modules found, entering strict repository configuration mode
-22:45:01.091 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,132] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-22:45:01.124 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,201] - Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
-22:45:01.519 [main] INFO  o.s.c.c.s.GenericScope - [setSerializationId,283] - BeanFactory id=5b318ce4-04d7-3ff9-aceb-296dd7053f80
-22:45:02.012 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'com.cms.common.redis.config.RedisConfig' of type [com.cms.common.redis.config.RedisConfig$$EnhancerBySpringCGLIB$$1b7d67c2] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-22:45:02.071 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration' of type [org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-22:45:02.072 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration$ReactorDeferringLoadBalancerFilterConfig' of type [org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration$ReactorDeferringLoadBalancerFilterConfig] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-22:45:02.075 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'reactorDeferringLoadBalancerExchangeFilterFunction' of type [org.springframework.cloud.client.loadbalancer.reactive.DeferringLoadBalancerExchangeFilterFunction] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-22:45:07.963 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-22:45:08.735 [main] INFO  c.a.c.s.g.s.SentinelSCGAutoConfiguration - [sentinelGatewayFilter,144] - [Sentinel SpringCloudGateway] register SentinelGatewayFilter with order: -2147483648
-22:45:11.270 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-22:45:12.149 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [After]
-22:45:12.149 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Before]
-22:45:12.150 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Between]
-22:45:12.150 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Cookie]
-22:45:12.150 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Header]
-22:45:12.150 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Host]
-22:45:12.151 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Method]
-22:45:12.151 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Path]
-22:45:12.151 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Query]
-22:45:12.151 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [ReadBody]
-22:45:12.152 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [RemoteAddr]
-22:45:12.152 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [XForwardedRemoteAddr]
-22:45:12.152 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Weight]
-22:45:12.152 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [CloudFoundryRouteService]
-22:45:12.558 [main] INFO  o.s.b.a.e.w.EndpointLinksResolver - [<init>,58] - Exposing 1 endpoint(s) beneath base path '/actuator'
-22:45:14.861 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-22:45:15.083 [main] INFO  c.a.c.s.g.s.SentinelSCGAutoConfiguration - [sentinelGatewayBlockExceptionHandler,134] - [Sentinel SpringCloudGateway] register SentinelGatewayBlockExceptionHandler
-22:45:15.546 [main] WARN  o.s.c.l.c.LoadBalancerCacheAutoConfiguration$LoadBalancerCaffeineWarnLogger - [logWarning,83] - Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
-22:45:16.127 [main] INFO  o.s.b.w.e.n.NettyWebServer - [start,111] - Netty started on port 8081
-22:45:18.102 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-22:45:20.123 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
-22:45:20.167 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
-22:45:20.167 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
-22:45:21.312 [main] INFO  c.a.c.n.r.NacosServiceRegistry - [register,76] - nacos registry, cms-project cms-gateway 192.168.159.1:8081 register finished
-22:45:22.688 [main] INFO  c.a.c.n.d.GatewayLocatorHeartBeatPublisher - [start,64] - Start nacos gateway locator heartBeat task scheduler.
-22:45:22.719 [main] INFO  c.c.g.CmsGatewayApplication - [logStarted,61] - Started CmsGatewayApplication in 34.884 seconds (JVM running for 43.271)
-22:45:22.732 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-gateway, group=cms-project
-22:45:22.733 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-gateway.yml, group=cms-project
-22:45:22.741 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-gateway-guoA.yml, group=cms-project
-22:51:35.401 [reactor-http-nio-2] ERROR c.c.g.h.GatewayExceptionHandler - [handle,48] - [网关异常处理]请求路径:/admin/getCollegedetailedList,异常信息:404 NOT_FOUND
-23:29:19.877 [Thread-8] WARN  c.a.n.c.h.HttpClientBeanHolder - [shutdown,102] - [HttpClientBeanHolder] Start destroying common HttpClient
-23:29:19.879 [Thread-19] WARN  c.a.n.c.n.NotifyCenter - [shutdown,136] - [NotifyCenter] Start destroying Publisher
-23:29:19.882 [Thread-19] WARN  c.a.n.c.n.NotifyCenter - [shutdown,153] - [NotifyCenter] Destruction of the end
-23:29:19.882 [Thread-8] WARN  c.a.n.c.h.HttpClientBeanHolder - [shutdown,111] - [HttpClientBeanHolder] Destruction of the end
-23:29:19.896 [SpringApplicationShutdownHook] INFO  c.a.c.n.r.NacosServiceRegistry - [deregister,95] - De-registering from Nacos Server now...
-23:29:20.064 [SpringApplicationShutdownHook] INFO  c.a.c.n.r.NacosServiceRegistry - [deregister,115] - De-registration finished.
+14:07:44.130 [main] INFO  c.a.n.c.e.SearchableProperties - [sortPropertySourceDefaultOrder,197] - properties search order:PROPERTIES->JVM->ENV->DEFAULT_SETTING
+14:07:44.215 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 6.2.5.Final
+14:07:44.776 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+14:07:44.777 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+14:08:03.361 [main] WARN  c.a.c.n.c.NacosPropertySourceBuilder - [loadNacosData,87] - Ignore the empty nacos configuration and get it based on dataId[cms-gateway] & group[cms-project]
+14:08:03.446 [main] WARN  c.a.c.n.c.NacosPropertySourceBuilder - [loadNacosData,87] - Ignore the empty nacos configuration and get it based on dataId[cms-gateway.yml] & group[cms-project]
+14:08:03.620 [main] INFO  o.s.c.b.c.PropertySourceBootstrapConfiguration - [doInitialize,134] - Located property source: [BootstrapPropertySource {name='bootstrapProperties-cms-gateway-guoA.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-gateway.yml,cms-project'}, BootstrapPropertySource {name='bootstrapProperties-cms-gateway,cms-project'}]
+14:08:03.632 [main] INFO  c.c.g.CmsGatewayApplication - [logStartupProfileInfo,638] - The following 1 profile is active: "guoA"
+14:08:05.228 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [multipleStoresDetected,262] - Multiple Spring Data modules found, entering strict repository configuration mode
+14:08:05.235 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,132] - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+14:08:05.273 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - [registerRepositoriesIn,201] - Finished Spring Data repository scanning in 11 ms. Found 0 Redis repository interfaces.
+14:08:05.702 [main] INFO  o.s.c.c.s.GenericScope - [setSerializationId,283] - BeanFactory id=489ae115-5268-302f-adb1-9f6bd08288b0
+14:08:06.217 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'com.cms.common.redis.config.RedisConfig' of type [com.cms.common.redis.config.RedisConfig$$EnhancerBySpringCGLIB$$a986f103] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+14:08:06.267 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration' of type [org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+14:08:06.269 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration$ReactorDeferringLoadBalancerFilterConfig' of type [org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration$ReactorDeferringLoadBalancerFilterConfig] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+14:08:06.271 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - [postProcessAfterInitialization,376] - Bean 'reactorDeferringLoadBalancerExchangeFilterFunction' of type [org.springframework.cloud.client.loadbalancer.reactive.DeferringLoadBalancerExchangeFilterFunction] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+14:08:16.429 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
+14:08:17.050 [main] INFO  c.a.c.s.g.s.SentinelSCGAutoConfiguration - [sentinelGatewayFilter,144] - [Sentinel SpringCloudGateway] register SentinelGatewayFilter with order: -2147483648
+14:08:21.934 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
+14:08:25.563 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [After]
+14:08:25.564 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Before]
+14:08:25.564 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Between]
+14:08:25.564 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Cookie]
+14:08:25.565 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Header]
+14:08:25.565 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Host]
+14:08:25.565 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Method]
+14:08:25.566 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Path]
+14:08:25.566 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Query]
+14:08:25.566 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [ReadBody]
+14:08:25.566 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [RemoteAddr]
+14:08:25.566 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [XForwardedRemoteAddr]
+14:08:25.567 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [Weight]
+14:08:25.567 [main] INFO  o.s.c.g.r.RouteDefinitionRouteLocator - [lambda$initFactories$1,89] - Loaded RoutePredicateFactory [CloudFoundryRouteService]
+14:08:25.984 [main] INFO  o.s.b.a.e.w.EndpointLinksResolver - [<init>,58] - Exposing 1 endpoint(s) beneath base path '/actuator'
+14:08:31.584 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
+14:08:31.891 [main] INFO  c.a.c.s.g.s.SentinelSCGAutoConfiguration - [sentinelGatewayBlockExceptionHandler,134] - [Sentinel SpringCloudGateway] register SentinelGatewayBlockExceptionHandler
+14:08:32.534 [main] WARN  o.s.c.l.c.LoadBalancerCacheAutoConfiguration$LoadBalancerCaffeineWarnLogger - [logWarning,83] - Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+14:08:33.409 [main] INFO  o.s.b.w.e.n.NettyWebServer - [start,111] - Netty started on port 8081
+14:08:38.765 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
+14:08:45.262 [main] INFO  o.s.c.c.u.InetUtils - [convertAddress,170] - Cannot determine local hostname
+14:08:45.317 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.impl.NacosClientAuthServiceImpl success.
+14:08:45.318 [main] INFO  c.a.n.p.a.s.c.ClientAuthPluginManager - [init,56] - [ClientAuthPluginManager] Load ClientAuthService com.alibaba.nacos.client.auth.ram.RamClientAuthServiceImpl success.
+14:08:46.158 [main] INFO  c.a.c.n.r.NacosServiceRegistry - [register,76] - nacos registry, cms-project cms-gateway 192.168.159.1:8081 register finished
+14:08:47.456 [main] INFO  c.a.c.n.d.GatewayLocatorHeartBeatPublisher - [start,64] - Start nacos gateway locator heartBeat task scheduler.
+14:08:47.498 [main] INFO  c.c.g.CmsGatewayApplication - [logStarted,61] - Started CmsGatewayApplication in 68.613 seconds (JVM running for 73.402)
+14:08:47.522 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-gateway, group=cms-project
+14:08:47.524 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-gateway.yml, group=cms-project
+14:08:47.528 [main] INFO  c.a.c.n.r.NacosContextRefresher - [registerNacosListener,129] - [Nacos Config] Listening config: dataId=cms-gateway-guoA.yml, group=cms-project
+16:17:36.333 [reactor-http-nio-3] ERROR c.c.g.f.AuthFilter - [unauthorizedResponse,145] - [鉴权异常处理]请求路径: /xm/public/exportWord
+16:17:37.386 [reactor-http-nio-3] ERROR c.c.g.h.GatewayExceptionHandler - [handle,48] - [网关异常处理]请求路径:/favicon.ico,异常信息:404 NOT_FOUND
+16:46:30.571 [reactor-http-nio-3] ERROR o.s.w.s.a.HttpWebHandlerAdapter - [handleUnresolvedError,308] - [b62f0687-75] Error [reactor.netty.http.client.PrematureCloseException: Connection prematurely closed DURING response] for HTTP GET "/xm/teacher/download?projectIds=55,56,57&fileType=2", but ServerHttpResponse already committed (200 OK)
+16:46:30.576 [reactor-http-nio-3] ERROR r.n.h.s.HttpServerOperations - [error,324] - [b62f0687-1, L:/127.0.0.1:8081 - R:/127.0.0.1:64661] Error finishing response. Closing connection
+reactor.netty.http.client.PrematureCloseException: Connection prematurely closed DURING response
+	Suppressed: reactor.core.publisher.FluxOnAssembly$OnAssemblyException: 
+Assembly trace from producer [reactor.core.publisher.FluxMap] :
+	reactor.core.publisher.Flux.map(Flux.java:6389)
+	reactor.netty.ReactorNetty.publisherOrScalarMap(ReactorNetty.java:570)
+Error has been observed at the following site(s):
+	*________________Flux.map ⇢ at reactor.netty.ReactorNetty.publisherOrScalarMap(ReactorNetty.java:570)
+	|_          Flux.doOnNext ⇢ at reactor.netty.ByteBufFlux.retain(ByteBufFlux.java:321)
+	|_               Flux.map ⇢ at org.springframework.cloud.gateway.filter.NettyWriteResponseFilter.lambda$filter$1(NettyWriteResponseFilter.java:87)
+	|_         Mono.doOnError ⇢ at org.springframework.http.server.reactive.AbstractServerHttpResponse.writeWith(AbstractServerHttpResponse.java:241)
+	*_______________Flux.from ⇢ at org.springframework.http.server.reactive.ReactorServerHttpResponse.toByteBufs(ReactorServerHttpResponse.java:123)
+	|_               Flux.map ⇢ at org.springframework.http.server.reactive.ReactorServerHttpResponse.toByteBufs(ReactorServerHttpResponse.java:123)
+	*__________Mono.thenEmpty ⇢ at reactor.netty.ReactorNetty$OutboundThen.<init>(ReactorNetty.java:746)
+	*_________Flux.concatWith ⇢ at org.springframework.http.server.reactive.AbstractServerHttpResponse.doCommit(AbstractServerHttpResponse.java:297)
+	|_              Flux.then ⇢ at org.springframework.http.server.reactive.AbstractServerHttpResponse.doCommit(AbstractServerHttpResponse.java:300)
+	*______________Mono.defer ⇢ at org.springframework.cloud.gateway.filter.NettyWriteResponseFilter.filter(NettyWriteResponseFilter.java:69)
+	*_______________Mono.then ⇢ at org.springframework.cloud.gateway.filter.NettyWriteResponseFilter.filter(NettyWriteResponseFilter.java:69)
+	|_        Mono.doOnCancel ⇢ at org.springframework.cloud.gateway.filter.NettyWriteResponseFilter.filter(NettyWriteResponseFilter.java:101)
+	|_         Mono.doOnError ⇢ at org.springframework.cloud.gateway.filter.NettyWriteResponseFilter.filter(NettyWriteResponseFilter.java:102)
+	*______________Mono.defer ⇢ at org.springframework.cloud.gateway.handler.FilteringWebHandler$DefaultGatewayFilterChain.filter(FilteringWebHandler.java:113)
+	*______________Mono.defer ⇢ at org.springframework.cloud.gateway.handler.FilteringWebHandler$DefaultGatewayFilterChain.filter(FilteringWebHandler.java:113)
+	*______________Mono.defer ⇢ at org.springframework.cloud.gateway.handler.FilteringWebHandler$DefaultGatewayFilterChain.filter(FilteringWebHandler.java:113)
+	|_         Mono.transform ⇢ at com.alibaba.csp.sentinel.adapter.gateway.sc.SentinelGatewayFilter.filter(SentinelGatewayFilter.java:83)
+	*______________Mono.defer ⇢ at org.springframework.cloud.gateway.handler.FilteringWebHandler$DefaultGatewayFilterChain.filter(FilteringWebHandler.java:113)
+	|_         Mono.doFinally ⇢ at org.springframework.cloud.gateway.filter.RemoveCachedBodyFilter.filter(RemoveCachedBodyFilter.java:35)
+	*______________Mono.defer ⇢ at org.springframework.cloud.gateway.handler.FilteringWebHandler$DefaultGatewayFilterChain.filter(FilteringWebHandler.java:113)
+	*_______________Mono.then ⇢ at org.springframework.web.reactive.result.SimpleHandlerAdapter.handle(SimpleHandlerAdapter.java:46)
+	*____________Mono.flatMap ⇢ at org.springframework.web.reactive.DispatcherHandler.handle(DispatcherHandler.java:153)
+	|_           Mono.flatMap ⇢ at org.springframework.web.reactive.DispatcherHandler.handle(DispatcherHandler.java:154)
+	*______________Mono.defer ⇢ at org.springframework.web.server.handler.DefaultWebFilterChain.filter(DefaultWebFilterChain.java:119)
+	|_             checkpoint ⇢ springfox.boot.starter.autoconfigure.SwaggerUiWebFluxConfiguration$CustomWebFilter [DefaultWebFilterChain]
+	*______________Mono.defer ⇢ at org.springframework.web.server.handler.DefaultWebFilterChain.filter(DefaultWebFilterChain.java:119)
+	|_             checkpoint ⇢ org.springframework.web.cors.reactive.CorsWebFilter [DefaultWebFilterChain]
+	*______________Mono.defer ⇢ at org.springframework.web.server.handler.DefaultWebFilterChain.filter(DefaultWebFilterChain.java:119)
+	|_             checkpoint ⇢ org.springframework.cloud.gateway.filter.WeightCalculatorWebFilter [DefaultWebFilterChain]
+	*______________Mono.defer ⇢ at org.springframework.web.server.handler.DefaultWebFilterChain.filter(DefaultWebFilterChain.java:119)
+	|_          Mono.doOnEach ⇢ at org.springframework.boot.actuate.metrics.web.reactive.server.MetricsWebFilter.filter(MetricsWebFilter.java:87)
+	|_        Mono.doOnCancel ⇢ at org.springframework.boot.actuate.metrics.web.reactive.server.MetricsWebFilter.filter(MetricsWebFilter.java:88)
+	*__Mono.transformDeferred ⇢ at org.springframework.boot.actuate.metrics.web.reactive.server.MetricsWebFilter.filter(MetricsWebFilter.java:82)
+	|_             checkpoint ⇢ org.springframework.boot.actuate.metrics.web.reactive.server.MetricsWebFilter [DefaultWebFilterChain]
+	*______________Mono.defer ⇢ at org.springframework.web.server.handler.DefaultWebFilterChain.filter(DefaultWebFilterChain.java:119)
+	|_     Mono.onErrorResume ⇢ at org.springframework.web.server.handler.ExceptionHandlingWebHandler.handle(ExceptionHandlingWebHandler.java:77)
+	|_     Mono.onErrorResume ⇢ at org.springframework.web.server.handler.ExceptionHandlingWebHandler.handle(ExceptionHandlingWebHandler.java:77)
+	|_     Mono.onErrorResume ⇢ at org.springframework.web.server.handler.ExceptionHandlingWebHandler.handle(ExceptionHandlingWebHandler.java:77)
+	|_     Mono.onErrorResume ⇢ at org.springframework.web.server.handler.ExceptionHandlingWebHandler.handle(ExceptionHandlingWebHandler.java:77)
+	|_       Mono.doOnSuccess ⇢ at org.springframework.web.server.adapter.HttpWebHandlerAdapter.handle(HttpWebHandlerAdapter.java:249)
+	|_     Mono.onErrorResume ⇢ at org.springframework.web.server.adapter.HttpWebHandlerAdapter.handle(HttpWebHandlerAdapter.java:250)
+	*______________Mono.error ⇢ at org.springframework.web.server.handler.ExceptionHandlingWebHandler$CheckpointInsertingHandler.handle(ExceptionHandlingWebHandler.java:98)
+	|_             checkpoint ⇢ HTTP GET "/xm/teacher/download?projectIds=55,56,57&fileType=2" [ExceptionHandlingWebHandler]
+	*______________Mono.error ⇢ at com.alibaba.csp.sentinel.adapter.gateway.sc.exception.SentinelGatewayBlockExceptionHandler.handle(SentinelGatewayBlockExceptionHandler.java:53)
+	*______________Mono.error ⇢ at com.cms.gateway.handler.GatewayExceptionHandler.handle(GatewayExceptionHandler.java:34)
+	*______________Mono.error ⇢ at org.springframework.web.server.handler.ResponseStatusExceptionHandler.handle(ResponseStatusExceptionHandler.java:68)
+	*______________Mono.error ⇢ at org.springframework.web.server.adapter.HttpWebHandlerAdapter.handleUnresolvedError(HttpWebHandlerAdapter.java:310)
+	*_______________Mono.then ⇢ at org.springframework.web.server.adapter.HttpWebHandlerAdapter.handle(HttpWebHandlerAdapter.java:251)
+	|_         Mono.doOnError ⇢ at org.springframework.http.server.reactive.ReactorHttpHandlerAdapter.apply(ReactorHttpHandlerAdapter.java:66)
+	|_       Mono.doOnSuccess ⇢ at org.springframework.http.server.reactive.ReactorHttpHandlerAdapter.apply(ReactorHttpHandlerAdapter.java:67)
+	*____Mono.deferContextual ⇢ at reactor.netty.http.server.HttpServer$HttpServerHandle.onStateChange(HttpServer.java:1105)
+Original Stack Trace:
+16:46:47.511 [reactor-http-nio-5] ERROR o.s.w.s.a.HttpWebHandlerAdapter - [handleUnresolvedError,308] - [5843e84e-76] Error [reactor.netty.http.client.PrematureCloseException: Connection prematurely closed DURING response] for HTTP GET "/xm/teacher/download?projectIds=55,56,57&fileType=2", but ServerHttpResponse already committed (200 OK)
+16:46:47.514 [reactor-http-nio-5] ERROR r.n.h.s.HttpServerOperations - [error,324] - [5843e84e-1, L:/127.0.0.1:8081 - R:/127.0.0.1:64700] Error finishing response. Closing connection
+reactor.netty.http.client.PrematureCloseException: Connection prematurely closed DURING response
+	Suppressed: reactor.core.publisher.FluxOnAssembly$OnAssemblyException: 
+Assembly trace from producer [reactor.core.publisher.FluxMap] :
+	reactor.core.publisher.Flux.map(Flux.java:6389)
+	reactor.netty.ReactorNetty.publisherOrScalarMap(ReactorNetty.java:570)
+Error has been observed at the following site(s):
+	*________________Flux.map ⇢ at reactor.netty.ReactorNetty.publisherOrScalarMap(ReactorNetty.java:570)
+	|_          Flux.doOnNext ⇢ at reactor.netty.ByteBufFlux.retain(ByteBufFlux.java:321)
+	|_               Flux.map ⇢ at org.springframework.cloud.gateway.filter.NettyWriteResponseFilter.lambda$filter$1(NettyWriteResponseFilter.java:87)
+	|_         Mono.doOnError ⇢ at org.springframework.http.server.reactive.AbstractServerHttpResponse.writeWith(AbstractServerHttpResponse.java:241)
+	*_______________Flux.from ⇢ at org.springframework.http.server.reactive.ReactorServerHttpResponse.toByteBufs(ReactorServerHttpResponse.java:123)
+	|_               Flux.map ⇢ at org.springframework.http.server.reactive.ReactorServerHttpResponse.toByteBufs(ReactorServerHttpResponse.java:123)
+	*__________Mono.thenEmpty ⇢ at reactor.netty.ReactorNetty$OutboundThen.<init>(ReactorNetty.java:746)
+	*_________Flux.concatWith ⇢ at org.springframework.http.server.reactive.AbstractServerHttpResponse.doCommit(AbstractServerHttpResponse.java:297)
+	|_              Flux.then ⇢ at org.springframework.http.server.reactive.AbstractServerHttpResponse.doCommit(AbstractServerHttpResponse.java:300)
+	*______________Mono.defer ⇢ at org.springframework.cloud.gateway.filter.NettyWriteResponseFilter.filter(NettyWriteResponseFilter.java:69)
+	*_______________Mono.then ⇢ at org.springframework.cloud.gateway.filter.NettyWriteResponseFilter.filter(NettyWriteResponseFilter.java:69)
+	|_        Mono.doOnCancel ⇢ at org.springframework.cloud.gateway.filter.NettyWriteResponseFilter.filter(NettyWriteResponseFilter.java:101)
+	|_         Mono.doOnError ⇢ at org.springframework.cloud.gateway.filter.NettyWriteResponseFilter.filter(NettyWriteResponseFilter.java:102)
+	*______________Mono.defer ⇢ at org.springframework.cloud.gateway.handler.FilteringWebHandler$DefaultGatewayFilterChain.filter(FilteringWebHandler.java:113)
+	*______________Mono.defer ⇢ at org.springframework.cloud.gateway.handler.FilteringWebHandler$DefaultGatewayFilterChain.filter(FilteringWebHandler.java:113)
+	*______________Mono.defer ⇢ at org.springframework.cloud.gateway.handler.FilteringWebHandler$DefaultGatewayFilterChain.filter(FilteringWebHandler.java:113)
+	|_         Mono.transform ⇢ at com.alibaba.csp.sentinel.adapter.gateway.sc.SentinelGatewayFilter.filter(SentinelGatewayFilter.java:83)
+	*______________Mono.defer ⇢ at org.springframework.cloud.gateway.handler.FilteringWebHandler$DefaultGatewayFilterChain.filter(FilteringWebHandler.java:113)
+	|_         Mono.doFinally ⇢ at org.springframework.cloud.gateway.filter.RemoveCachedBodyFilter.filter(RemoveCachedBodyFilter.java:35)
+	*______________Mono.defer ⇢ at org.springframework.cloud.gateway.handler.FilteringWebHandler$DefaultGatewayFilterChain.filter(FilteringWebHandler.java:113)
+	*_______________Mono.then ⇢ at org.springframework.web.reactive.result.SimpleHandlerAdapter.handle(SimpleHandlerAdapter.java:46)
+	*____________Mono.flatMap ⇢ at org.springframework.web.reactive.DispatcherHandler.handle(DispatcherHandler.java:153)
+	|_           Mono.flatMap ⇢ at org.springframework.web.reactive.DispatcherHandler.handle(DispatcherHandler.java:154)
+	*______________Mono.defer ⇢ at org.springframework.web.server.handler.DefaultWebFilterChain.filter(DefaultWebFilterChain.java:119)
+	|_             checkpoint ⇢ springfox.boot.starter.autoconfigure.SwaggerUiWebFluxConfiguration$CustomWebFilter [DefaultWebFilterChain]
+	*______________Mono.defer ⇢ at org.springframework.web.server.handler.DefaultWebFilterChain.filter(DefaultWebFilterChain.java:119)
+	|_             checkpoint ⇢ org.springframework.web.cors.reactive.CorsWebFilter [DefaultWebFilterChain]
+	*______________Mono.defer ⇢ at org.springframework.web.server.handler.DefaultWebFilterChain.filter(DefaultWebFilterChain.java:119)
+	|_             checkpoint ⇢ org.springframework.cloud.gateway.filter.WeightCalculatorWebFilter [DefaultWebFilterChain]
+	*______________Mono.defer ⇢ at org.springframework.web.server.handler.DefaultWebFilterChain.filter(DefaultWebFilterChain.java:119)
+	|_          Mono.doOnEach ⇢ at org.springframework.boot.actuate.metrics.web.reactive.server.MetricsWebFilter.filter(MetricsWebFilter.java:87)
+	|_        Mono.doOnCancel ⇢ at org.springframework.boot.actuate.metrics.web.reactive.server.MetricsWebFilter.filter(MetricsWebFilter.java:88)
+	*__Mono.transformDeferred ⇢ at org.springframework.boot.actuate.metrics.web.reactive.server.MetricsWebFilter.filter(MetricsWebFilter.java:82)
+	|_             checkpoint ⇢ org.springframework.boot.actuate.metrics.web.reactive.server.MetricsWebFilter [DefaultWebFilterChain]
+	*______________Mono.defer ⇢ at org.springframework.web.server.handler.DefaultWebFilterChain.filter(DefaultWebFilterChain.java:119)
+	|_     Mono.onErrorResume ⇢ at org.springframework.web.server.handler.ExceptionHandlingWebHandler.handle(ExceptionHandlingWebHandler.java:77)
+	|_     Mono.onErrorResume ⇢ at org.springframework.web.server.handler.ExceptionHandlingWebHandler.handle(ExceptionHandlingWebHandler.java:77)
+	|_     Mono.onErrorResume ⇢ at org.springframework.web.server.handler.ExceptionHandlingWebHandler.handle(ExceptionHandlingWebHandler.java:77)
+	|_     Mono.onErrorResume ⇢ at org.springframework.web.server.handler.ExceptionHandlingWebHandler.handle(ExceptionHandlingWebHandler.java:77)
+	|_       Mono.doOnSuccess ⇢ at org.springframework.web.server.adapter.HttpWebHandlerAdapter.handle(HttpWebHandlerAdapter.java:249)
+	|_     Mono.onErrorResume ⇢ at org.springframework.web.server.adapter.HttpWebHandlerAdapter.handle(HttpWebHandlerAdapter.java:250)
+	*______________Mono.error ⇢ at org.springframework.web.server.handler.ExceptionHandlingWebHandler$CheckpointInsertingHandler.handle(ExceptionHandlingWebHandler.java:98)
+	|_             checkpoint ⇢ HTTP GET "/xm/teacher/download?projectIds=55,56,57&fileType=2" [ExceptionHandlingWebHandler]
+	*______________Mono.error ⇢ at com.alibaba.csp.sentinel.adapter.gateway.sc.exception.SentinelGatewayBlockExceptionHandler.handle(SentinelGatewayBlockExceptionHandler.java:53)
+	*______________Mono.error ⇢ at com.cms.gateway.handler.GatewayExceptionHandler.handle(GatewayExceptionHandler.java:34)
+	*______________Mono.error ⇢ at org.springframework.web.server.handler.ResponseStatusExceptionHandler.handle(ResponseStatusExceptionHandler.java:68)
+	*______________Mono.error ⇢ at org.springframework.web.server.adapter.HttpWebHandlerAdapter.handleUnresolvedError(HttpWebHandlerAdapter.java:310)
+	*_______________Mono.then ⇢ at org.springframework.web.server.adapter.HttpWebHandlerAdapter.handle(HttpWebHandlerAdapter.java:251)
+	|_         Mono.doOnError ⇢ at org.springframework.http.server.reactive.ReactorHttpHandlerAdapter.apply(ReactorHttpHandlerAdapter.java:66)
+	|_       Mono.doOnSuccess ⇢ at org.springframework.http.server.reactive.ReactorHttpHandlerAdapter.apply(ReactorHttpHandlerAdapter.java:67)
+	*____Mono.deferContextual ⇢ at reactor.netty.http.server.HttpServer$HttpServerHandle.onStateChange(HttpServer.java:1105)
+Original Stack Trace:
+17:19:42.318 [Thread-24] WARN  c.a.n.c.n.NotifyCenter - [shutdown,136] - [NotifyCenter] Start destroying Publisher
+17:19:42.319 [Thread-10] WARN  c.a.n.c.h.HttpClientBeanHolder - [shutdown,102] - [HttpClientBeanHolder] Start destroying common HttpClient
+17:19:42.330 [Thread-24] WARN  c.a.n.c.n.NotifyCenter - [shutdown,153] - [NotifyCenter] Destruction of the end
+17:19:42.341 [Thread-10] WARN  c.a.n.c.h.HttpClientBeanHolder - [shutdown,111] - [HttpClientBeanHolder] Destruction of the end
+17:19:42.577 [SpringApplicationShutdownHook] INFO  c.a.c.n.r.NacosServiceRegistry - [deregister,95] - De-registering from Nacos Server now...
+17:19:42.623 [SpringApplicationShutdownHook] INFO  c.a.c.n.r.NacosServiceRegistry - [deregister,115] - De-registration finished.

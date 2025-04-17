@@ -39,12 +39,11 @@ public class TeacherController {
      * @param response   HttpServletResponse，用于将 zip 包输出给客户端
      */
     @GetMapping("/download")
-    public Response downloadFiles(@RequestParam("projectIds") @NotNull List<Long> projectIds,
+    public void downloadFiles(@RequestParam("projectIds") @NotNull List<Long> projectIds,
                                           @RequestParam("fileType") @NotNull Integer fileType,
                                           HttpServletResponse response){
 
         projectService.downloadProjectsFile(projectIds, fileType, response);
-        return Response.success("完成请求");
     }
 
     /**

@@ -249,13 +249,15 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         for (Project project : projectList) {
             // 获取文件名列表（以英文逗号分隔的字符串）
             String fileName = fileType == 1 ? project.getConcludeUrl() : project.getMaterialsUrl();
-            if (fileName == null || fileName.isEmpty()){
-                errorMsg.add("项目:"+project.getName()+"的文件不存在,文件的URL"+fileName+"\n");
+            if (fileName == null || StrUtil.isBlank(fileName)){
+                errorMsg.add("项目:"+project.getName()+"的文件不存在,文件的URL:为空不存在\n");
+                continue;
             }
             //校验文件是否存在
             Response isNull = sysFileClient.fileIsNull(fileName);
             if(isNull.getCode() != 200){
-                errorMsg.add("项目:"+project.getName()+"的文件不存在,文件的URL"+fileName+"\n");
+                errorMsg.add("项目:"+project.getName()+"的文件不存在,文件的URL:"+(StrUtil.isBlank(fileName)?"为空不存在":fileName)+"\n");
+                continue;
             }
 
             // 将英文逗号分隔的字符串分割为列表，并过滤掉空白项

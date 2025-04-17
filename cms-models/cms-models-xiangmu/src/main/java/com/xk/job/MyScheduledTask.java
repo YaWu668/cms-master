@@ -45,8 +45,8 @@ public class MyScheduledTask {
     /**
      * 测试使用自动填充,来区分定时任务
      */
-    @Async
-    @Scheduled(fixedRate = 50000)
+//    @Async
+//    @Scheduled(fixedRate = 50000)
     public void executeAsyncTask() {
         try {
             TaskContext.setTaskContext(true); // 设置为定时任务上下文
@@ -66,7 +66,7 @@ public class MyScheduledTask {
     @Async
 //    @Scheduled(cron = "0 0 4 * * ?")`
     //测试 5分钟执行一次
-    @Scheduled(fixedRate = 300000)
+    @Scheduled(cron = "0 0 * * * *")
     @Transactional
     public void executeAsyncTask2() {
         log.info("开始执行定时任务");

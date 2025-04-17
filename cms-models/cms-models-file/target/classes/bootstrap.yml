@@ -9,27 +9,27 @@ spring:
     name: cms-file
   profiles:
     # 环境配置
-    active: guoA
+    active: guotest
   cloud:
     nacos:
       # 服务注册、配置拉取地址
       server-addr: 172.20.0.7:8848
       # 注册中心配置,作用: 1.服务发现 2.配置中心
       discovery:
-        namespace: guoA #todo 开发时候,这里特殊根据自己配置的命名空间来进行填写
+        namespace: guotest #todo 开发时候,这里特殊根据自己配置的命名空间来进行填写
         group: cms-project
         username: guoDev
         password: QuJi@21612002.
       # 配置中心配置 ,作用: 1.动态刷新配置 2.配置分发
       config:
-        namespace: guoA
+        namespace: guotest
         group: cms-project
         # 配置文件格式
         file-extension: yml
         # 共享配置
         shared-configs:
-          - data-id: application-guoA.yml
+          - data-id: application-guotest.yml
             group: cms-project
-            namespace: guoA
+            namespace: guotest
         username: guoDev
         password: QuJi@21612002.
