@@ -74,19 +74,31 @@ public class AdminController {
     private Response testResponse(@RequestBody @Valid TestDto  testDto){
         return Response.success(testDto);
     }
-//----------------批量导出
+
+//----------------批量导出和导入
     /**
      * 根据年度组id导出项目
      * @param yearGroupId 年度组id
      * @param response 响应
      * @return
      */
-@GetMapping("/download/project")
-public Response<?> downloadProject(@RequestParam("yearGroupId") @NotNull Long yearGroupId,
-                                HttpServletResponse response){
-    return projectService.downloadProject(yearGroupId,response)?Response.success() : Response.error("导出失败");
-}
+    @GetMapping("/download/project")
+    public Response<?> downloadProject(@RequestParam("yearGroupId") @NotNull Long yearGroupId,
+                                    HttpServletResponse response){
+        return projectService.downloadProject(yearGroupId,response)?Response.success() : Response.error("导出失败");
+    }
 
+    /**
+     * 项目批量绑定项目编号
+     * @param file
+     * @return
+     */
+ /*   @PutMapping("/batchBing/number")
+    public Response batchBingNumber(@RequestParam("file") MultipartFile file){
+        List<BatchBingNumberDto> dtoList =projectService.readBatchBingNumberDto(file);
+        return projectService.batchBingNumber(dtoList)?
+                Response.success() : Response.error("批量绑定失败");
+    }*/
 
 
 //-------------------------------------------------------

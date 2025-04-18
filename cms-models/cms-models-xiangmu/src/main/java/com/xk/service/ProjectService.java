@@ -12,6 +12,7 @@ import com.xk.domain.vo.detail.DetailProjectVo;
 import com.xk.domain.vo.student.StudentProjectVo;
 import com.xk.domain.vo.student.StudentVo;
 import com.xk.entity.Project;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -270,7 +271,11 @@ public interface ProjectService extends IService<Project> {
      */
      void exportXmWord(Long projectId, HttpServletResponse response) throws Exception;
 
-
-
+    /**
+     * 读取项目批量绑定项目编号
+     * @param file
+     * @return 绑定参数集合
+     */
+    List<BatchBingNumberDto> readBatchBingNumberDto(MultipartFile file);
 }
 

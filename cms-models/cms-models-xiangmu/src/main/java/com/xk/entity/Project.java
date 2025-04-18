@@ -25,6 +25,10 @@ public class Project extends  BaseEntity  {
     //项目ID
     @TableId
     private Long projectId;
+    /**
+     * 项目编号
+     */
+    private String projectNumber;
     //项目名称
     private String name;
     //负责人的id, 确定负责人

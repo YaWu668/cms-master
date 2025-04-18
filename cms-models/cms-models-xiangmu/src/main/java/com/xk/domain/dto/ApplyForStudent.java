@@ -64,8 +64,8 @@ public class ApplyForStudent {
     /**
      * 专业班级,(用户自己输入)
      */
-    @NotNull(message = "专业班级不能为空")
     @NotEmpty(message = "专业班级不能为空")
+    @Pattern(regexp = "^([1-9]\\d)级([\\u4e00-\\u9fa5]{2,})(0[1-9]|[1-9]\\d)班$\n", message = "专业班级格式不正确!!! 正确格式:21级计算机科学与技术03班")
     private String professionalClass;
     /**
      * 性别

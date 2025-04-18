@@ -21,6 +21,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cms.common.core.enums.HttpStatusResponse;
 import com.cms.common.core.exception.ServiceException;
+import com.cms.common.core.utils.ExcelUtils;
 import com.cms.common.core.web.domain.Response;
 import com.cms.common.security.utils.SecurityUtils;
 import com.deepoove.poi.XWPFTemplate;
@@ -105,6 +106,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import java.awt.image.BufferedImage;
@@ -424,6 +427,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 //        isYearGroupIdExistAndYearDataIsEnable(applyForDTO.getYearGroupId(),applyForDTO.getYearDataId());
         //10.检查报名的学生的学院组是否存在并且是否启用
         isStudentCollegeGroupsEnabled(applyForDTO.getStudents());
+        //11.项目名称不可以重复
+        checkProjectName(applyForDTO);
         //todo 有空写,验证文件存在通内
         checkFileUrl(applyForDTO.getMaterialsUrl());
         //todo 有空再写,验证用户负责人只有一个项目在进行中才可以申请新的项目&&(同时只有一个是负责人|| 参加项目进行中最多2个)
@@ -446,6 +451,20 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             throw new ServiceException("项目进行表插入失败,请检查",444);
         }
         return Response.success("项目申请成功,等待审核");
+    }
+
+    /**
+     * 项目名称重复校验
+     * @param applyForDTO
+     */
+    private void checkProjectName(ApplyForDTO applyForDTO) {
+        Long count = this.lambdaQuery()
+                .eq(Project::getName, applyForDTO.getName())
+                .select(Project::getName)
+                .count();
+        if (count > 0) {
+            throw new ServiceException("项目名称重复,请修改,当前项目名称数量:"+count);
+        }
     }
 
     /**
@@ -807,9 +826,38 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * @return 基本情况vo
      */
     public Elementary convertElementaryInfo(Project project) {
-        Elementary elementary = BeanCopyUtils.copyBean(project, Elementary.class);
+        Elementary elementary = toElementaryFromProject(project);
         elementary.setBeginTime(DateUtil.formatDateTime(project.getBeginTime()))//立项时间
                 .setEndTime(DateUtil.formatDateTime(project.getEndTime()));//结束时间
+        return elementary;
+    }
+
+    /**
+     * Project 转 Elementary
+     * @param project
+     * @return
+     */
+    public static Elementary toElementaryFromProject(Project project) {
+        if (project == null) {
+            return null;
+        }
+        Elementary elementary = new Elementary();
+        elementary.setProjectId(project.getProjectId());
+        elementary.setProjectNumber(project.getProjectNumber());
+        elementary.setName(project.getName());
+        elementary.setCollegeGroupId(project.getCollegeGroupId());
+        elementary.setYearGroupId(project.getYearGroupId());
+        elementary.setYearDataId(project.getYearDataId());
+        elementary.setType(project.getType());
+        elementary.setProjectRank(project.getProjectRank());
+        elementary.setSubjectCategory(project.getSubjectCategory());
+        elementary.setCategory(project.getCategory());
+        elementary.setProjectSource(project.getProjectSource());
+        elementary.setProjectSynopsis(project.getProjectSynopsis());
+        elementary.setPrincipalExperience(project.getPrincipalExperience());
+        elementary.setTeacherExperience(project.getTeacherExperience());
+        elementary.setFirmTeacherExperience(project.getFirmTeacherExperience());
+        elementary.setTeacherSupport(project.getTeacherSupport());
         return elementary;
     }
 
@@ -1250,7 +1298,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     public boolean calibrationBasicInformation(BasicInformationDTO basicInformationDTO,String msg) {
         //1.信息拷贝
         ApplyForDTO dto = BeanCopyUtils.copyBean(basicInformationDTO, ApplyForDTO.class);
-
+        //1.校验项目名是否重复
+        checkProjectName(dto);
         //2.字典数据校验
         checkAddProjectDictData(dto);
         //3.校验学院是否存在和启用
@@ -1259,6 +1308,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         checkYearGroup(dto.getYearGroupId(), dto.getYearDataId());
         //5.附件4之外的需要企业老师的支持
         teachersSupport(dto);
+
         return true;
     }
 
@@ -1515,6 +1565,120 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             } catch (IOException e) {
             throw new ServiceException("文件下载失败：" + e.getMessage());
         }
+    }
+
+    @Override
+    public List<BatchBingNumberDto> readBatchBingNumberDto(MultipartFile file) {
+        //1.文件读 去空和去重复校验
+        List<BatchBingNumberDto> dtoList = readBatchBingNumberDtoFile(file);
+        //1.校验编号全部不存在数据库当中
+
+        //2查询全部编号 转为set集合
+        Set<String> numberSet = this.lambdaQuery().in(Project::getProjectNumber, dtoList.stream().map(BatchBingNumberDto::getProjectNumber).collect(Collectors.toList()))
+                .select(Project::getProjectNumber)
+                .list()
+                .stream()
+                .map(Project::getProjectNumber)
+                .collect(Collectors.toSet());
+        //3.根据项目名称查询全部项目
+        List<Project> projectList = this.lambdaQuery().in(Project::getName, dtoList.stream().map(BatchBingNumberDto::getName).collect(Collectors.toList()))
+                .list();
+
+        //项目List转为map key 为项目名称 value为项目对象
+        Map<String, Project> projectMap = projectList
+                .stream()
+                .collect(Collectors.toMap(Project::getName, e -> e));
+
+
+        //4.错误信息记录
+        List<String> errorList = new ArrayList<>();
+
+        for (int i = 0; i < dtoList.size(); i++) {
+            BatchBingNumberDto dto = dtoList.get(i);
+
+            //当前行错误信息
+            List<String> error = new ArrayList<>();
+
+            //1.校验编号不存在系统
+            if (numberSet.contains(dto.getProjectNumber())) {
+                error.add("编号:《"+dto.getProjectNumber()+"》已经存在,不要重复绑定");
+            }
+            //2.校验项目不存在 和 项目没有绑定编号
+            if (!projectMap.containsKey(dto.getName())) {
+                error.add("项目名称:《"+dto.getName()+"》不存在,请检查");
+            }else{
+                //校验当前项目有没有绑定项目编号
+
+            }
+
+        }
+        return dtoList;
+    }
+
+    private static List<BatchBingNumberDto> readBatchBingNumberDtoFile(MultipartFile file) {
+        //1.读取文件
+        List<BatchBingNumberDto> list = null;
+        try {
+             list = ExcelUtils.read(file, BatchBingNumberDto.class);
+        } catch (Exception e) {
+            throw new ServiceException("解析Execl失败");
+        }
+        if(CollUtil.isEmpty(list)){
+            throw new ServiceException("当前Execl没有读取到如何束脚");
+        }
+
+        //2.1校验数据 项目编号或者项目名称重复
+        HashMap<String, Long> numberMap = new HashMap<>(); //项目编号集合 记录项目编号 key 为项目编号 value 为第一个匹配到的项目编号的起始位置
+        HashMap<String, Long> nameMap = new HashMap<>(); //项目名称集合 记录项目名称 key 为项目名称 value 为第一个匹配到的项目名称的起始位置
+
+        //2.2 错误信息集合
+        List<String> errorList = new ArrayList<>();
+
+        //2.3 遍历数据
+        for (int i =0; i < list.size(); i++){
+
+            BatchBingNumberDto dto = list.get(i);
+
+            //当前行的错误信息集合
+            List<String> error = new ArrayList<>();
+
+
+            //2.3.1 为空判断 默认不为空
+            boolean isNumberNUllist = false; //编号不为空
+            boolean isNameNUllist = false; //名称不为空
+
+            if (StrUtil.isBlank(dto.getProjectNumber())){
+                isNumberNUllist = true;
+                error.add("项目编号不能为空");
+
+            }
+            if (StrUtil.isBlank(dto.getName())){
+                isNameNUllist = true;
+                error.add("项目名称不能为空");
+            }
+            //2.3.2 去重校验
+            if(!isNumberNUllist && numberMap.containsKey(dto.getProjectNumber())){
+                error.add("项目编号:"+dto.getProjectNumber()+"重复,第一次出现是:"+numberMap.get(dto.getProjectNumber())+"行");
+            }else if (!isNumberNUllist){ //不为空,第一次出现添加集合当中
+                numberMap.put(dto.getProjectNumber(), (long) (i+2));
+            }
+            if(!isNameNUllist && nameMap.containsKey(dto.getName())){
+                error.add("项目名称:"+dto.getName()+"重复,第一次出现是:"+nameMap.get(dto.getName())+"行");
+            }else if (!isNameNUllist){ //不为空,第一次出现添加集合当中
+                nameMap.put(dto.getName(), (long) (i+2));
+            }
+            //2.3.3 错误信息
+            if(CollUtil.isNotEmpty(error)){
+                errorList.add("第" + (i + 2) + "行：" + CollUtil.join(error, ","));
+            }
+        }
+        //3.错误信息校验
+        if(CollUtil.isNotEmpty(errorList)){
+            throw new ServiceException("数据错误信息:"+CollUtil.join(errorList,";\n"));
+        }
+
+
+        return list;
     }
 
 
@@ -2452,6 +2616,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
         //4.2提前添加查询
         queryWrapper
+                .like(projectSelectDto.getProjectNumber() != null,Project::getProjectNumber,projectSelectDto.getProjectNumber())
                 //项目名称 模糊
                 .like(StrUtil.isNotBlank(projectSelectDto.getName()), Project::getName, projectSelectDto.getName())
                 //项目级别
