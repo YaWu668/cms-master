@@ -223,6 +223,31 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     private final SysFileClient sysFileClient;
 
 
+    @Override
+    public boolean downloadProject(Long yearGroupId, HttpServletResponse response) {
+        //1.获取年度并且进行校验是否存在
+        YearGroup yearGroup = yearGroupService.getById(yearGroupId);
+        if(ObjectUtil.isEmpty(yearGroup)){
+            throw new ServiceException("年度组不存在");
+        }
+        //2.根据年度组id获取全部年度数据
+        List<YearData> yearDataList = yearDataService.lambdaQuery()
+                .eq(YearData::getYearGroupId, yearGroup.getYearGroupId())
+                .list();
+        //3.根据年度组id获取全部项目
+        List<Project> projectList = this.lambdaQuery()
+                .eq(Project::getYearGroupId, yearGroupId)
+                .list();
+        //4.获取学生报名集合 key:项目id vlaue:学生报名集合
+
+        //6.获取老师报名集合 key:项目id vlaue:老师报名集合
+
+        //7.获取项目类型 和 项目基本的字典数据
+
+        //8.数据封装
+        return false;
+    }
+
     /**
      * 批量下载指定项目的文件（支持结题材料或附加材料），并打包成 zip 压缩包通过响应返回。
      *
@@ -616,10 +641,12 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      */
     public void convertProjectFiles(DetailProjectVo projectVo, Project project) {
         //结题文件
-        JSONArray array = JSONUtil.parseArray(project.getConcludeUrl());
-        List<String> concludeUrl = JSONUtil.toList(array, String.class);
+//        JSONArray array = JSONUtil.parseArray(project.getConcludeUrl());
+//        List<String> concludeUrl = JSONUtil.toList(array, String.class);
+        ArrayList<String> list = new ArrayList<>();
+        list.add(project.getConcludeUrl());
         //todo 申请文件改话,这里也要改
-        projectVo.setConcludeUrl(concludeUrl)
+        projectVo.setConcludeUrl(list)
                 .setMaterialsUrl(project.getMaterialsUrl());
 
     }
@@ -1223,6 +1250,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     public boolean calibrationBasicInformation(BasicInformationDTO basicInformationDTO,String msg) {
         //1.信息拷贝
         ApplyForDTO dto = BeanCopyUtils.copyBean(basicInformationDTO, ApplyForDTO.class);
+
         //2.字典数据校验
         checkAddProjectDictData(dto);
         //3.校验学院是否存在和启用

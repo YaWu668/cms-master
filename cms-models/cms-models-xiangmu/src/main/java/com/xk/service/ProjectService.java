@@ -15,6 +15,7 @@ import com.xk.entity.Project;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -23,6 +24,13 @@ import java.util.List;
  * @author yawu
  */
 public interface ProjectService extends IService<Project> {
+    /**
+     * 根据年度组id导出项目
+     * @param yearGroupId 年度组id
+     * @param response
+     * @return
+     */
+    boolean downloadProject( Long yearGroupId, HttpServletResponse response);
     /**
      * 批量下载指定项目的文件（支持结题材料或附加材料），并打包成 zip 压缩包通过响应返回。
      *
@@ -261,6 +269,7 @@ public interface ProjectService extends IService<Project> {
      * @return 返回文件流，前端下载
      */
      void exportXmWord(Long projectId, HttpServletResponse response) throws Exception;
+
 
 
 }

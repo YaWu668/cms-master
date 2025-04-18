@@ -41,9 +41,6 @@ public class ApplyForStudent {
     /**
      * 手机
      */
-    @NotNull(message = "学生的手机不能为空")
-    @NotEmpty(message = "学生的手机不能为空")
-    @Pattern(regexp = "^((13[0-9])|(14[5,7,9])|(15[^4,\\D])|(16[6])|(17[0-8])|(18[0-9])|(19[1,8,9]))\\d{8}", message = "学生的手机号码格式不正确!!! ")
     private String mobilePhone;
     /**
      * 名字
@@ -61,6 +58,8 @@ public class ApplyForStudent {
     /**
      * 联系电话
      */
+    @NotNull(message = "联系电话不能为空")
+    @Pattern(regexp = "^((13[0-9])|(14[5,7,9])|(15[^4,\\D])|(16[6])|(17[0-8])|(18[0-9])|(19[1,8,9]))\\d{8}", message = "联系电话格式不正确!!! ")
     private String phone;
     /**
      * 专业班级,(用户自己输入)

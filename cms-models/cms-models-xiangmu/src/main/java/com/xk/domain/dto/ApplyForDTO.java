@@ -3,6 +3,7 @@ package com.xk.domain.dto;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.xk.check.annotations.RichText;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,14 +25,17 @@ public class  ApplyForDTO{
     /**
      * a,b,c 三选一
      */
+    @Valid
     private ApplyForA a;
     /**
      * a,b,c 三选一
      */
+    @Valid
     private ApplyForB b;
     /**
      * a,b,c 三选一
      */
+    @Valid
     private ApplyForC c;
     /**
      * 详细经费预算, 没有设计业务, 前端发什么样子json, 就存储什么样子
@@ -52,6 +56,7 @@ public class  ApplyForDTO{
     /**
      * 企业老师科研情况，仅创新训练类型项目可为 NULL,可选相
      */
+    @RichText
     private String firmTeacherExperience;
     /**
      * 财政拨款的金额(钱)
@@ -71,12 +76,15 @@ public class  ApplyForDTO{
      */
     @NotNull(message = "项目名称不能为空")
     @NotEmpty(message = "项目名称不能为空")
+    @RichText
+    @Pattern(regexp = "[\\\\\\\\/:*?\\\"<>|]" ,message = "项目名称格式不正确,下禁止的字符: \\ / : * ? \" < > |")
     private String name;
     /**
      * 负责人曾经参与科研的情况
      */
     @NotNull(message = "负责人曾经参与科研的情况不能为空")
     @NotEmpty(message = "负责人曾经参与科研的情况不能为空")
+    @RichText
     private String principalExperience;
     /**
      * 项目来源,字典没有定
@@ -88,6 +96,7 @@ public class  ApplyForDTO{
      */
     @NotNull(message = "项目简介不能为空")
     @NotEmpty(message = "项目简介不能为空")
+    @RichText
     private String projectSynopsis;
     /**
      * 项目级别 1为国家级
@@ -119,6 +128,7 @@ public class  ApplyForDTO{
      */
     @NotNull(message = "指导老师科研情况不能为空")
     @NotEmpty(message = "指导老师科研情况不能为空")
+    @RichText
     private String teacherExperience;
     /**
      * 老师
@@ -132,6 +142,7 @@ public class  ApplyForDTO{
      */
     @NotNull(message = "指导老师和企业老师对项目的支持情况不能为空")
     @NotEmpty(message = "指导老师和企业老师对项目的支持情况不能为空")
+    @RichText
     private String teacherSupport;
     /**
      * 申请金额合计

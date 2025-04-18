@@ -25,13 +25,16 @@ public class BasisForTheProjectDTO {
     /**
      * a,b,c 三选一
      */
+    @Valid
     private ApplyForA a;
     /**
      * a,b,c 三选一
      */
+    @Valid
     private ApplyForB b;
     /**
      * a,b,c 三选一
      */
+    @Valid
     private ApplyForC c;
 }
