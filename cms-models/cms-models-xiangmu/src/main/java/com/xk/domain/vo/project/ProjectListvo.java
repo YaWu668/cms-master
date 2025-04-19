@@ -15,6 +15,10 @@ public class ProjectListvo {
      */
     private Long category;
     /**
+     * 项目编号
+     */
+    private String projectNumber;
+    /**
      * 学院组的id
      */
     private Long collegeGroupId;

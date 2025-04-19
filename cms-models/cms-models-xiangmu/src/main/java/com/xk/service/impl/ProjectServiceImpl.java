@@ -1567,10 +1567,49 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         }
     }
 
+
+
     @Override
-    public List<BatchBingNumberDto> readBatchBingNumberDto(MultipartFile file) {
+    @Transactional
+    public boolean batchBingNumber(MultipartFile file) {
         //1.文件读 去空和去重复校验
         List<BatchBingNumberDto> dtoList = readBatchBingNumberDtoFile(file);
+        //2.校验编号不存在系统当中,校验项目存在系统当中,校验项目都没有重复绑定
+        List<Project> projectList = checkEXISTAndRightData(dtoList);
+        //3.项目进行编号绑定
+        return updateNumber(projectList, dtoList);
+    }
+
+    /**
+     * 项目进行编号绑定
+     * @param projectList 项目集合
+     * @param dtoList 编号集合
+     * @return
+     */
+    private boolean updateNumber(List<Project> projectList, List<BatchBingNumberDto> dtoList) {
+        //1.项目转为map key:项目名称 value:项目对象
+        Map<String, Project> projectMap = projectList
+                .stream()
+                .collect(Collectors.toMap(Project::getName, e -> e));
+
+        //2.遍历导入数据,写入项目编号
+        dtoList.forEach(e->{
+            //获取对应项目对象
+            Project project = projectMap.get(e.getName());
+            //写入项目编号
+            project.setProjectNumber(e.getProjectNumber());
+        });
+        //3.更新数据库
+        return this.updateBatchById(projectList);
+    }
+
+    /**
+     * 校验编号不存在系统当中,校验项目存在系统当中,校验项目都没有重复绑定<br>
+     * 操作数据库校验
+     * @param dtoList 导入数据
+     * @return 返回需要绑定项目集合
+     */
+    private List<Project> checkEXISTAndRightData(List<BatchBingNumberDto> dtoList) {
         //1.校验编号全部不存在数据库当中
 
         //2查询全部编号 转为set集合
@@ -1603,18 +1642,35 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             if (numberSet.contains(dto.getProjectNumber())) {
                 error.add("编号:《"+dto.getProjectNumber()+"》已经存在,不要重复绑定");
             }
-            //2.校验项目不存在 和 项目没有绑定编号
+            //2.1校验项目不存在 和 项目没有绑定编号
             if (!projectMap.containsKey(dto.getName())) {
                 error.add("项目名称:《"+dto.getName()+"》不存在,请检查");
             }else{
-                //校验当前项目有没有绑定项目编号
-
+                //2.2校验当前项目有没有绑定项目编号
+                Project project = projectMap.get(dto.getName());
+                if(StrUtil.isNotBlank(project.getProjectNumber())){
+                    error.add("项目名称:《"+dto.getName()+"》已经绑定了项目编号:《"+project.getProjectNumber()+"》,请检查");
+                }
             }
 
+            //3.当前行有错误信息进行记录
+            if (CollUtil.isNotEmpty(error)) {
+                errorList.add("第" + (i + 2) + "行："+CollUtil.join(error,","));
+            }
         }
-        return dtoList;
+        //5.判断错误信息集合有数据抛出异常
+        if (CollUtil.isNotEmpty(errorList)) {
+            throw new ServiceException("数据错误异常:"+CollUtil.join(errorList,";\n"));
+        }
+
+        return projectList;
     }
 
+    /**
+     * 读取导入文件,校验去空,去重校验
+     * @param file
+     * @return 导入数据
+     */
     private static List<BatchBingNumberDto> readBatchBingNumberDtoFile(MultipartFile file) {
         //1.读取文件
         List<BatchBingNumberDto> list = null;

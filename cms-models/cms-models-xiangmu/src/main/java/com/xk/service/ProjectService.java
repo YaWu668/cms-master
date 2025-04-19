@@ -271,11 +271,13 @@ public interface ProjectService extends IService<Project> {
      */
      void exportXmWord(Long projectId, HttpServletResponse response) throws Exception;
 
+
+
     /**
-     * 读取项目批量绑定项目编号
+     * 绑定项目编号
      * @param file
-     * @return 绑定参数集合
+     * @return
      */
-    List<BatchBingNumberDto> readBatchBingNumberDto(MultipartFile file);
+    boolean batchBingNumber(MultipartFile file);
 }
 

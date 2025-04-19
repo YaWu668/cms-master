@@ -93,12 +93,11 @@ public class AdminController {
      * @param file
      * @return
      */
- /*   @PutMapping("/batchBing/number")
+    @PutMapping("/batchBing/number")
     public Response batchBingNumber(@RequestParam("file") MultipartFile file){
-        List<BatchBingNumberDto> dtoList =projectService.readBatchBingNumberDto(file);
-        return projectService.batchBingNumber(dtoList)?
+        return projectService.batchBingNumber(file)?
                 Response.success() : Response.error("批量绑定失败");
-    }*/
+    }
 
 
 //-------------------------------------------------------
