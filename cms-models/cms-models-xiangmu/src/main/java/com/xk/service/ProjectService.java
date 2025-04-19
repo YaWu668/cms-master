@@ -31,7 +31,7 @@ public interface ProjectService extends IService<Project> {
      * @param response
      * @return
      */
-    boolean downloadProject( Long yearGroupId, HttpServletResponse response);
+    boolean downloadProject(List<Long> projectIds, HttpServletResponse response);
     /**
      * 批量下载指定项目的文件（支持结题材料或附加材料），并打包成 zip 压缩包通过响应返回。
      *

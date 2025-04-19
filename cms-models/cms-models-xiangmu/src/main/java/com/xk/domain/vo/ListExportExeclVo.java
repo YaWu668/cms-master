@@ -1,4 +1,4 @@
-package com.xk.domain.vo.Execl;
+package com.xk.domain.vo;
 
 import com.alibaba.excel.annotation.ExcelProperty;
 import lombok.Data;
@@ -9,7 +9,8 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class ListExportVo {
+public class ListExportExeclVo {
+
     /**
      * 序号
      */
@@ -100,39 +101,4 @@ public class ListExportVo {
      */
     @ExcelProperty(value = "结题状态", index = 17)
     private String state;
-
-
-    //----下面数据方便数据封装的不用导出操作
-    /**
-     * 项目类型  (字典)示例: 1为创新训练项目, 2为创业训练项目, 3为创业实践
-     */
-    private Long type;
-
-    /**
-     * 项目级别 (字典)示例 : 1为国家级, 2为区级(省级),3为校级
-     */
-    private Long projectRank;
-    /**
-     * 学院组的id
-     */
-    private Long collegeGroupId;
-
-    /**
-     * 年度组的id
-     */
-    private Long yearGroupId;
-
-    /**
-     * 年度数据的id
-     */
-    private Long yearDataId;
-
-    /**
-     * 负责人的id, 确定负责人
-     */
-    private Long userId;
-    /**
-     * 项目id
-     */
-    private Long projectId;
 }

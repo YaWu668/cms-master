@@ -83,9 +83,9 @@ public class AdminController {
      * @return
      */
     @GetMapping("/download/project")
-    public Response<?> downloadProject(@RequestParam("yearGroupId") @NotNull Long yearGroupId,
+    public Response<?> downloadProject(@RequestParam("projectIds") @NotNull List<Long> projectIds,
                                     HttpServletResponse response){
-        return projectService.downloadProject(yearGroupId,response)?Response.success() : Response.error("导出失败");
+        return projectService.downloadProject(projectIds,response)?Response.success() : Response.error("导出失败");
     }
 
     /**

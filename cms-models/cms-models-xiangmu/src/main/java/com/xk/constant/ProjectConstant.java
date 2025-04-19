@@ -51,4 +51,12 @@ public class ProjectConstant {
      */
     public static final Long COLLEGE_GROUP_STATUS_NORMAL = 0L;
     public static final Long COLLEGE_GROUP_STATUS_DISABLE = 1L;
+
+    /**
+     * 数据字典类型：项目级别: xm_item_rank 项目类型:xm_item_type
+     */
+    public static final String DICT_TYPE_PROJECT_RANK = "xm_item_rank";//项目级别
+    public static final String DICT_TYPE_PROJECT_TYPE = "xm_item_type";//项目类型
+
+
 }
