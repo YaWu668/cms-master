@@ -99,6 +99,15 @@ public class AdminController {
                 Response.success() : Response.error("批量绑定失败");
     }
 
+    /**
+     * 获取项目绑定项目编号Execl模板
+     */
+    @GetMapping("/getProjectNumberTemplate")
+    public Response getProjectNumberTemplate(HttpServletResponse response){
+        return projectService.getProjectNumberTemplate(response)?
+                Response.success() : Response.error("获取模板失败");
+    }
+
 
 //-------------------------------------------------------
 

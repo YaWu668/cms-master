@@ -1580,6 +1580,16 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return updateNumber(projectList, dtoList);
     }
 
+    @Override
+    public boolean getProjectNumberTemplate(HttpServletResponse response) {
+        try {
+            ExcelUtils.write(response, "项目编号绑定模板", "模板", BatchBingNumberDto.class, new  ArrayList<>());
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * 项目进行编号绑定
      * @param projectList 项目集合

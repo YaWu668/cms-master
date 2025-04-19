@@ -279,5 +279,12 @@ public interface ProjectService extends IService<Project> {
      * @return
      */
     boolean batchBingNumber(MultipartFile file);
+
+    /**
+     * 获取项目编号模板
+     * @param response
+     * @return
+     */
+    boolean getProjectNumberTemplate(HttpServletResponse response);
 }
 
