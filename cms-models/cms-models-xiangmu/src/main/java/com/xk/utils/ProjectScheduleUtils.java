@@ -13,10 +13,10 @@ public class ProjectScheduleUtils {
 
     public static void main(String[] args) {
         // 创建测试数据
-        List<ProjectSchedule> projectSchedules = new ArrayList<>();
-        projectSchedules.add(new ProjectSchedule(1L, 101L, -1L, 1L, "初始状态"));
-        projectSchedules.add(new ProjectSchedule(2L, 101L, 1L, 2L, "审核中"));
-        projectSchedules.add(new ProjectSchedule(3L, 101L, 2L, 3L, "已完成"));
+//        List<ProjectSchedule> projectSchedules = new ArrayList<>();
+//        projectSchedules.add(new ProjectSchedule(1L, 101L, -1L, 1L, "初始状态"));
+//        projectSchedules.add(new ProjectSchedule(2L, 101L, 1L, 2L, "审核中"));
+//        projectSchedules.add(new ProjectSchedule(3L, 101L, 2L, 3L, "已完成"));
 
         // 测试获取最后一个节点的方法
 //        ProjectSchedule lastSchedule = ProjectScheduleUtils.getLastByProjectId(101L, projectSchedules);
@@ -28,15 +28,15 @@ public class ProjectScheduleUtils {
 //            System.out.println("未找到最后一个节点");
 //        }
         // 测试获取指定节点的方法
-        ProjectSchedule node = getNodeByIndex(101L, projectSchedules, 2L);
-
-        // 打印结果
-        if (node != null) {
-            System.out.println("指定节点的内容: " + node.getContent());
-        } else {
-            System.out.println("未找到指定节点");
-        }
-
+//        ProjectSchedule node = getNodeByIndex(101L, projectSchedules, 2L);
+//
+//        // 打印结果
+//        if (node != null) {
+//            System.out.println("指定节点的内容: " + node.getContent());
+//        } else {
+//            System.out.println("未找到指定节点");
+//        }
+        System.out.println("更换之后的学生列表：\n姓名:张三/学号:1001/专业班级:20级软件工程03班/所在学院:双创学院/项目中的分工:后端开发/联系电话:18778402307/邮箱:2623899@qq.com/成员类型:第一主持人\n更换之前的学生列表：\n姓名:张三/学号:1001/专业班级:21级计算机科学与技术03班/所在学院:双创学院/项目中的分工:后端开发/联系电话:18778402307/邮箱:2623899@qq.com/成员类型:第一主持人\n\n\n更换之后的老师的列表：\n姓名:张三/单位:信息工程学院/职位:讲师/联系电话:19987656756/邮箱:1998765675616@qq.com/成员类型:指导老师\n更换之前的老师的列表：\n姓名:张三/单位:信息工程学院/职位:讲师/联系电话:19987656756/邮箱:1998765675616@qq.com/成员类型:指导老师\n");
 
     }
 

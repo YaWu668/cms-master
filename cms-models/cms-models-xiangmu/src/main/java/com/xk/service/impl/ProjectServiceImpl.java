@@ -2030,10 +2030,11 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         //2.校验用户(老师和学生)都存在
         isStuentAndTeacherExist(data);
         //3.校验负责人是不是排列第一个,并且第一个id要和申请人id一致
-        checkPrincipal(data);
+//        checkPrincipal(data);  ChangeUserDto.getPrincipalUserId()方法已经获取到负责人id已经进行判断过了
         //4.校验报名人数,有老师和学生
         data.setType(project.getType()); //这里校验需要项目类型,进行写入
         checkStuentAndTeacher(data);
+
         //5.更新项目
         updateProjectInfo(changeUserDto, project);
         //6.更新学生报名表
@@ -2102,7 +2103,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         }
         //3.新增的老师展示字符串
         StringBuilder newTeacherString = new StringBuilder();
-        newTeacherString.append("更换之前的老师的列表：\n");
+        newTeacherString.append("\n\n更换之后的老师的列表：\n");
         for (ApplyForTeacher t : changeUserDto.getTeachers()) {
             newTeacherString.append(String.format("姓名:%s/单位:%s/职位:%s/联系电话:%s/邮箱:%s/成员类型:%s\n",
                     t.getName(),
@@ -2110,7 +2111,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                     t.getPost(),
                     t.getPhone(),
                     t.getMailbox(),
-                    t.getIsTeacher() != null && t.getIsTeacher() == 1 ? "指导老师" : "企业老师"
+                    t.getIsTeacher() != null && t.getIsTeacher() == 0 ? "指导老师" : "企业老师"
             ));
         }
         //4.老的老师展示字符串
@@ -2123,7 +2124,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                     t.getPost(),
                     t.getPhone(),
                     t.getMailbox(),
-                    t.getIsTeacher() != null && t.getIsTeacher() == 1 ? "指导老师" : "企业老师"
+                    t.getIsTeacher() != null && t.getIsTeacher() == 0 ? "指导老师" : "企业老师"
             ));
         }
 
