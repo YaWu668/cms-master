@@ -13,6 +13,7 @@ import com.alibaba.nacos.api.remote.response.ResponseCode;
 import com.alibaba.nacos.shaded.com.google.gson.Gson;
 import com.alibaba.nacos.shaded.com.google.gson.reflect.TypeToken;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -2011,6 +2012,242 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         }
         return true;
     }
+
+    @Override
+    @Transactional
+    public boolean changeUser(ChangeUserDto changeUserDto) {
+        //0.校验项目存在
+        Project project = this.getById(changeUserDto.getProjectId());
+        if (project == null) {
+            throw new ServiceException("项目不存在");
+        }
+        if(project.getState().equals( ProjectConstant.PROJECT_STATUS_NOT_PASS_VALUE_2 )
+                || project.getState().equals( ProjectConstant.PROJECT_STATUS_PASS_VALUE) ){
+            throw new ServiceException("项目状态为待审核或者审核通过，无法修改人员");
+        }
+        //1.数据拷贝到 申请项目dto类 进行老师和学生的参数校验
+        ApplyForDTO data = toApplyForDTOFromChangeUserDto(changeUserDto);
+        //2.校验用户(老师和学生)都存在
+        isStuentAndTeacherExist(data);
+        //3.校验负责人是不是排列第一个,并且第一个id要和申请人id一致
+        checkPrincipal(data);
+        //4.校验报名人数,有老师和学生
+        data.setType(project.getType()); //这里校验需要项目类型,进行写入
+        checkStuentAndTeacher(data);
+        //5.更新项目
+        updateProjectInfo(changeUserDto, project);
+        //6.更新学生报名表
+        List<StudnetApplys> oldStudentsApplyList = updateStudentApplications(project, data);
+        //7.更新老师报名表
+        List<TeacherApplys> oldTeacherApplysList = updateTeacherApplys(project, data);
+        //8.更换成员记录进度表
+        return updateProjectScheduleWithUserChanges(changeUserDto, oldStudentsApplyList, oldTeacherApplysList, project);
+
+    }
+
+    /**
+     * 更新项目进度记录以反映用户变更<br>
+     * 该方法主要用于当项目成员（学生和教师）发生变化时，记录这些变化到项目进度表中<br><br>
+     *
+     * @param changeUserDto 包含变更后学生和教师信息的DTO
+     * @param oldStudentsApplyList 变更前的学生申请列表
+     * @param oldTeacherApplysList 变更前的教师申请列表
+     * @param project 项目对象，包含项目ID等信息
+     * @return 返回项目进度记录是否成功保存
+     */
+    private boolean updateProjectScheduleWithUserChanges(ChangeUserDto changeUserDto, List<StudnetApplys> oldStudentsApplyList, List<TeacherApplys> oldTeacherApplysList, Project project) {
+        //0.学院组信息
+        Map<Long, CollegeGroup> collegeGroupMap =
+                // 根据学院id查询学院列表
+                collegeGroupService.lambdaQuery()
+                .in(CollegeGroup::getCollegeGroupId
+                        , changeUserDto.getStudents().stream()
+                                .map(e -> e.getCollegeGroupId())
+                                .collect(Collectors.toList())
+                )
+                .list()
+                .stream()
+                        //把查询结果转换 为map key:学院id value:学院对象
+                .collect(Collectors.toMap(CollegeGroup::getCollegeGroupId, e -> e));
+
+        //1.新增的学生展示字符串
+        StringBuilder newStudentString = new StringBuilder();
+        newStudentString.append("更换之后的学生列表：\n");
+        for (ApplyForStudent s : changeUserDto.getStudents()) {
+            newStudentString.append(String.format("姓名:%s/学号:%s/专业班级:%s/所在学院:%s/项目中的分工:%s/联系电话:%s/邮箱:%s/成员类型:%s\n",
+                    s.getName(),
+                    s.getUserName(),
+                    s.getProfessionalClass(),
+                    collegeGroupMap.get(s.getCollegeGroupId()).getName(),
+                    s.getJob(),
+                    s.getPhone(),
+                    s.getMailbox(),
+                    s.getIsPrincipal() != null && s.getIsPrincipal() == 1 ? "第一主持人" : "成员"
+            ));
+        }
+        //2.老的学生展示字符串
+        StringBuilder oldStudentString = new StringBuilder();
+        oldStudentString.append("更换之前的学生列表：\n");
+        for (StudnetApplys s : oldStudentsApplyList) {
+            oldStudentString.append(String.format("姓名:%s/学号:%s/专业班级:%s/所在学院:%s/项目中的分工:%s/联系电话:%s/邮箱:%s/成员类型:%s\n",
+                    s.getName(),
+                    s.getUserName(),
+                    s.getProfessionalClass(),
+                    collegeGroupMap.get(s.getCollegeGroupId()).getName(),
+                    s.getJob(),
+                    s.getPhone(),
+                    s.getMailbox(),
+                    s.getIsPrincipal() != null && s.getIsPrincipal() == 1 ? "第一主持人" : "成员"
+            ));
+        }
+        //3.新增的老师展示字符串
+        StringBuilder newTeacherString = new StringBuilder();
+        newTeacherString.append("更换之前的老师的列表：\n");
+        for (ApplyForTeacher t : changeUserDto.getTeachers()) {
+            newTeacherString.append(String.format("姓名:%s/单位:%s/职位:%s/联系电话:%s/邮箱:%s/成员类型:%s\n",
+                    t.getName(),
+                    t.getUnit(),
+                    t.getPost(),
+                    t.getPhone(),
+                    t.getMailbox(),
+                    t.getIsTeacher() != null && t.getIsTeacher() == 1 ? "指导老师" : "企业老师"
+            ));
+        }
+        //4.老的老师展示字符串
+        StringBuilder oldTeacherString = new StringBuilder();
+        oldTeacherString.append("更换之前的老师的列表：\n");
+        for (TeacherApplys t : oldTeacherApplysList) {
+            oldTeacherString.append(String.format("姓名:%s/单位:%s/职位:%s/联系电话:%s/邮箱:%s/成员类型:%s\n",
+                    t.getName(),
+                    t.getUnit(),
+                    t.getPost(),
+                    t.getPhone(),
+                    t.getMailbox(),
+                    t.getIsTeacher() != null && t.getIsTeacher() == 1 ? "指导老师" : "企业老师"
+            ));
+        }
+
+        //获取当前项目最后一个进度记录表
+        ProjectSchedule lastByProjectId = projectScheduleService.getLastByProjectId(project.getProjectId());
+
+        // 合并所有内容
+        String fullContent = new StringBuilder()
+                .append(newStudentString)
+                .append(oldStudentString)
+                .append(newTeacherString)
+                .append(oldTeacherString)
+                .toString();
+
+        ProjectSchedule newSchedule = new ProjectSchedule()
+                .setProjectId(project.getProjectId())
+                .setRootId(lastByProjectId.getProjectScheduleId())
+                .setUserId(SecurityUtils.getUserId())
+                .setContent(fullContent);
+        return projectScheduleService.save(newSchedule);
+    }
+
+
+    /**
+     * 更新项目信息方法<br><br>
+     *
+     * 本方法主要用于根据用户变更信息更新项目详情，包括项目负责人、成员、指导老师和企业老师的信息
+     *
+     * @param changeUserDto 用户变更信息对象，包含需要更新的项目人员信息
+     * @param project 项目对象，需要更新的项目实例
+     * @throws ServiceException 如果更新项目失败，抛出服务异常
+     */
+    private void updateProjectInfo(ChangeUserDto changeUserDto, Project project) {
+        //1.获取负责人的id
+        Long userId = changeUserDto.getPrincipalUserId();
+        //2.获取成员的id集合字符串 [id1,id2]
+        String studentUserIdJsonArray = changeUserDto.getStudentUserIdJsonArray();
+        //3.1 获取指导老师的id集合字符串 [id1,id2]
+        String teacherUserIdJsonArray = changeUserDto.getTeacherUserIdJsonArray();
+        //3.2 获取企业老师的id集合字符串 [id1,id2]
+        String firmTeacherJsonArray = changeUserDto.getFirmTeacherJsonArray();
+        //5.更新项目表
+        project.setUserId(userId)
+                .setMemberId(studentUserIdJsonArray)
+                .setTeacherId(teacherUserIdJsonArray)
+                .setFirmTeacherId(firmTeacherJsonArray);
+        if(!this.updateById(project)){
+            throw  new  ServiceException("更新项目失败");
+        }
+    }
+
+    /**
+     * 更新学生项目申请信息
+     * 此方法先删除项目当前的所有学生申请记录，然后插入新的申请信息
+     *
+     * @param project 包含项目ID的项目对象，用于标识需要更新申请信息的项目
+     * @param data 包含新的学生申请信息的数据传输对象
+     * @return  List<StudnetApplys> 返回已经删除的学生报名列表(老的报名表)
+     * @throws ServiceException 如果删除或插入操作失败，则抛出服务异常
+     */
+    private List<StudnetApplys> updateStudentApplications(Project project, ApplyForDTO data) {
+        //1.删除原本报名表
+        List<StudnetApplys> oldStudnetApplys = studnetApplysService.lambdaQuery()
+                .eq(StudnetApplys::getProjectId, project.getProjectId())
+                .list();
+        boolean removeStudnetApplys = studnetApplysService.remove(new LambdaQueryWrapper<StudnetApplys>()
+                .in(StudnetApplys::getStudnetApplyId,
+                        oldStudnetApplys.stream()
+                                .map(StudnetApplys::getStudnetApplyId)
+                                .collect(Collectors.toList())
+                )
+        );
+
+        if(!removeStudnetApplys){
+            throw  new  ServiceException("删除项目报名表失败");
+        }
+        //2.查询新的学生报名表
+        if(!insertProjectStudnet(data, project.getProjectId())){
+            throw new ServiceException("插入学生表失败,请检查");
+        }
+        return  oldStudnetApplys;
+    }
+
+    /**
+     * 更新项目相关的教师申请记录
+     * 此方法先删除项目当前的教师申请记录，然后插入新的教师申请记录
+     *
+     * @param project 包含项目ID的项目对象，用于识别和操作相关的教师申请记录
+     * @param data 包含新教师申请信息的数据传输对象，用于插入新的教师申请记录
+     * @return  List<TeacherApplys> 返回已经删除的教师报名列表(老的报名表)
+     * @throws ServiceException 如果删除或插入操作失败，则抛出服务异常
+     */
+    private List<TeacherApplys> updateTeacherApplys(Project project, ApplyForDTO data) {
+        //1.删除老师原本报名表
+        List<TeacherApplys> oldTeacherApplys = teacherApplysService.lambdaQuery()
+                .eq(TeacherApplys::getProjectId, project.getProjectId())
+                .list();
+        boolean removeTeacherApplys = teacherApplysService.remove(new LambdaQueryWrapper<TeacherApplys>()
+                .in(TeacherApplys::getTeacherApplyId,
+                        oldTeacherApplys.stream()
+                                .map(TeacherApplys::getTeacherApplyId)
+                                .collect(Collectors.toList())
+                )
+        );
+        if(!removeTeacherApplys){
+            throw  new  ServiceException("删除项目报名表失败");
+        }
+        //2.插入老师表
+        if(!insertProjectTeacher(data, project.getProjectId())){
+            throw new ServiceException("插入老师表失败,请检查");
+        }
+        return  oldTeacherApplys;
+    }
+
+    public  ApplyForDTO toApplyForDTOFromChangeUserDto(ChangeUserDto changeUserDto) {
+        if (changeUserDto == null) {
+            return null;
+        }
+        ApplyForDTO applyForDTO = new ApplyForDTO();
+        applyForDTO.setStudents(changeUserDto.getStudents());
+        applyForDTO.setTeachers(changeUserDto.getTeachers());
+        return applyForDTO;
+    }
+
 
     /**
      * 项目进行编号绑定
@@ -4159,7 +4396,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      */
     public boolean insertProjectStudnet(ApplyForDTO applyForDTO, Long projectId) {
 //        List<StudnetApplys> studnetApplys= BeanCopyUtils.copyBeans(applyForDTO.getStudents(),StudnetApplys.class);
-        List<StudnetApplys> studnetApplys                                            = toStudnetApplysListFromApplyForDTOList(applyForDTO.getStudents());
+        List<StudnetApplys> studnetApplys = toStudnetApplysListFromApplyForDTOList(applyForDTO.getStudents());
         //3.1 获取用户id集合 key是用户id value是用户对象
         List<Long> userIds = studnetApplys.stream().map(e -> e.getUserId()).collect(Collectors.toList());
         List<User> users = userService.selectByUserIds(userIds);
@@ -4511,8 +4748,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         List<Long> teacherId =applyForDTO.getTeachers().stream()
                 .map(ApplyForTeacher::getUserId)
                 .collect(Collectors.toList());
-        //校验学生是否存在
-        studentId.stream().forEach(id -> {
+        //1.校验学生是否存在
+       /* studentId.stream().forEach(id -> {
             if (!isUserExist(id)){
                 List<ApplyForStudent> students = applyForDTO.getStudents().stream()
                         .filter(studentBean -> studentBean.getUserId().equals(id))
@@ -4521,9 +4758,37 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 students.stream().forEach(student -> result.append(student.getName()).append("，"));
                 throw new ServiceException(result.toString(),444);
             }
+        });*/
+        //错误结果集
+        List<String> erroeList = new ArrayList<>();
+
+        //1.1根据学生id获取学生用户 map集合 key:userId vlaue:用户集合
+        Map<Long, User> stuentMap = userService.lambdaQuery().in(User::getUserId, studentId).list()
+                .stream()
+                .collect(Collectors.toMap(User::getUserId, e -> e));
+        //2.遍历传入学生参数校验是否存在数据库和名字是否正确
+        applyForDTO.getStudents().forEach(dto->{
+            if (!stuentMap.containsKey(dto.getUserId())) {//不存在记录
+                erroeList.add("学号:"+dto.getUserName()+"/姓名:"+dto.getName()+"不存在数据库\n");
+            }else {//校验名字 和 学号 是否正确
+                User user = stuentMap.get(dto.getUserId());
+                if(!user.getNickName().equals(dto.getName())){
+                    erroeList.add("学号:"+dto.getUserName()+"/姓名:"+dto.getName()+"与数据库中的姓名不一致,数据库存储名字为:"+user.getNickName()+"\n");
+                }
+                if(!user.getUserName().equals(dto.getUserName())){
+                    erroeList.add("学号:"+dto.getUserName()+"/姓名:"+dto.getName()+"与数据库中的学号不一致,数据库存储学号为:"+user.getUserName()+"\n");
+                }
+
+            }
         });
-        //校验老师是否存在
-        teacherId.forEach(id -> {
+        if (CollUtil.isNotEmpty(erroeList)) {
+            throw new ServiceException("传入的学生参错误:"+StrUtil.join(",", erroeList));
+        }
+
+
+
+        //2.校验老师是否存在
+       /* teacherId.forEach(id -> {
             if (!isUserExist(id)) {
                 List<ApplyForTeacher> teachers = applyForDTO.getTeachers().stream()
                         .filter(teacherBean -> teacherBean.getUserId().equals(id))
@@ -4532,7 +4797,27 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 teachers.forEach(teacher -> result.append(teacher.getName()).append("，"));
                 throw new ServiceException(result.toString());
             }
+        });*/
+
+        //2.1 根据教师id获取教师用户 map集合 key:userId vlaue:用户集合
+        Map<Long, User> teacherMap = userService.lambdaQuery().in(User::getUserId, teacherId).list()
+                .stream()
+                .collect(Collectors.toMap(User::getUserId, e -> e));
+
+        //2.2 遍历传入教师参数校验是否存在数据库和名字是否正确
+        applyForDTO.getTeachers().forEach(dto->{
+            if (!teacherMap.containsKey(dto.getUserId())) {//不存在记录
+                erroeList.add("姓名:"+dto.getName()+"不存在数据库\n");
+            }else {//校验名字  是否正确
+                User user = teacherMap.get(dto.getUserId());
+                if(!user.getNickName().equals(dto.getName())){
+                    erroeList.add("姓名:"+dto.getName()+"与数据库中的姓名不一致,数据库存储名字为:"+user.getNickName()+"\n");
+                }
+            }
         });
+        if (CollUtil.isNotEmpty(erroeList)) {
+            throw new ServiceException("传入的指导老师参错误:"+StrUtil.join(",", erroeList));
+        }
 
         //1.必须存在一个指导老师
         long teacherCount = applyForDTO.getTeachers().stream()
@@ -4542,7 +4827,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             throw new ServiceException("必须存在一个指导老师");
         }
 
-        //验证 学生学号是否和id对应,先根据id批量查询用户信息
+       /* //验证 学生学号是否和id对应,先根据id批量查询用户信息
         userService.listByIds(studentId).stream().forEach(user -> {
             //转换用户ID和学号
             Map<Long, String> map = applyForDTO.getStudents().stream()
@@ -4556,9 +4841,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             if(!user.getUserName().equals(userName)){
                 throw new ServiceException("当前用户的学号:"+userName+"与数据库中不一致,当前用户的id:"+user.getUserId()+"不一致,请联系管理员");
             }
-        });
+        });*/
 
-        //todo 校验名字是否和账号对应
+
 
     }
 

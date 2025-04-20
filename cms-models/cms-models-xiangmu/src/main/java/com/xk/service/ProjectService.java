@@ -286,5 +286,13 @@ public interface ProjectService extends IService<Project> {
      * @return
      */
     boolean getProjectNumberTemplate(HttpServletResponse response);
+
+    /**
+     * 更换人员
+     * @param changeUserDto
+     * @return
+     */
+    boolean changeUser( ChangeUserDto changeUserDto);
+
 }
 

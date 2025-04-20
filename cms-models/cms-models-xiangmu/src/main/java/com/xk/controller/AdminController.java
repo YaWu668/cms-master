@@ -74,11 +74,19 @@ public class AdminController {
     private Response testResponse(@RequestBody @Valid TestDto  testDto){
         return Response.success(testDto);
     }
-
+    /**
+     * 更换人员(直接覆盖原本)
+     */
+    @PutMapping("/changeUser")
+    @Log(title = "更换人员", businessType = BusinessType.UPDATE)
+    public Response changeUser(@RequestBody @Valid ChangeUserDto changeUserDto){
+        return projectService.changeUser(changeUserDto)?
+                Response.success() : Response.error("更换人员失败");
+    }
 //----------------批量导出和导入
     /**
-     * 根据年度组id导出项目
-     * @param yearGroupId 年度组id
+     * 根据项目id导出项目聚合数据
+     * @param projectIds 年度组id
      * @param response 响应
      * @return
      */
