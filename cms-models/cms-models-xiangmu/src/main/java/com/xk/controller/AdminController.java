@@ -5,6 +5,7 @@ import com.cms.common.core.web.domain.Response;
 import com.cms.common.log.annotation.Log;
 import com.cms.common.log.enums.BusinessType;
 import com.xk.domain.dto.*;
+import com.xk.domain.vo.Execl.ListExportVo;
 import com.xk.domain.vo.admin.UserListVo;
 import com.xk.domain.vo.group.CollegeDataVo;
 import com.xk.domain.vo.group.CollegeDetailedLisVo;
@@ -84,8 +85,33 @@ public class AdminController {
                 Response.success() : Response.error("更换人员失败");
     }
 //----------------批量导出和导入
+
     /**
-     * 根据项目id导出项目聚合数据
+     * 根据项目id导出项目学分
+     * @param projectIds 项目id
+     * @param response 响应
+     * @return
+     */
+    @GetMapping("/exportProjectNumber")
+    @Log(title = "根据项目id导出项目学分", businessType = BusinessType.OTHER)
+    public Response<?> exportProjectNumber(@RequestParam("projectIds") @NotNull List<Long> projectIds,
+                                             HttpServletResponse response){
+        return projectService.exportProjectNumber(projectIds,response)
+                ?Response.success() : Response.error("导出失败");
+    }
+
+    /**
+     * 根据年度id导出项目聚合数据
+     */
+    @GetMapping("/download/year")
+    @Log(title = "根据年度id导出项目聚合数据", businessType = BusinessType.OTHER)
+    public Response<?> downloadYear(Long yearId,
+                                    HttpServletResponse response){
+        return projectService.downloadYear(yearId,response)?Response.success() : Response.error("导出失败");
+    }
+
+    /**
+     * 根据项目id导出项目信息列表
      * @param projectIds 年度组id
      * @param response 响应
      * @return
@@ -93,7 +119,8 @@ public class AdminController {
     @GetMapping("/download/project")
     public Response<?> downloadProject(@RequestParam("projectIds") @NotNull List<Long> projectIds,
                                     HttpServletResponse response){
-        return projectService.downloadProject(projectIds,response)?Response.success() : Response.error("导出失败");
+        List<ListExportVo> voList = projectService.getDownloadProject(projectIds);
+        return projectService.exportProjectinfoList(voList,response)?Response.success() : Response.error("导出失败");
     }
 
     /**

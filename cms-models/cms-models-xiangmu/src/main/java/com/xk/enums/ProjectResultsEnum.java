@@ -5,24 +5,20 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 项目状态枚举类
+ * 项目状态对应的评审结果
  */
 @Getter
 @AllArgsConstructor
-public enum ProjectStatusEnum {
-    NOT_PASS(0L, "未通过审核"),
-    AUDITING(1L, "审核中"),
-    IN_PROGRESS(2L, "项目进行中"),
-    PENDING(3L, "待结题"),
-    PASS(4L, "通过结题"),
-    NOT_PASS_FINAL(5L, "不通过结题");
+public enum  ProjectResultsEnum {
+    IN_PROGRESS(2L, "暂缓"),
+    PENDING(3L, "暂缓"),
+    PASS(4L, "合格"),
+    NOT_PASS_FINAL(5L, "暂缓");
 
     private final long value;
     private final String description;
-
-    // 根据 value 获取枚举
-    public static ProjectStatusEnum fromValue(long value) {
-        for (ProjectStatusEnum status : values()) {
+    public static ProjectResultsEnum fromValue(long value) {
+        for (ProjectResultsEnum status : values()) {
             if (status.getValue() == value) {
                 return status;
             }

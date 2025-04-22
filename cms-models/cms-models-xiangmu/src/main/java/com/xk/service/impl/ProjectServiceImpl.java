@@ -37,7 +37,10 @@ import com.xk.constant.ProjectConstant;
 import com.xk.constant.RoleConstant;
 import com.xk.domain.dto.*;
 
+import com.xk.domain.vo.Execl.ExportProjectNumberExeclVo;
 import com.xk.domain.vo.Execl.ListExportVo;
+import com.xk.domain.vo.Execl.ProjectStatistics;
+
 import com.xk.domain.vo.ListExportExeclVo;
 import com.xk.domain.vo.api.UserInfoVo;
 import com.xk.domain.vo.detail.*;
@@ -51,6 +54,7 @@ import com.xk.domain.dto.ProjectAuditDto;
 import com.xk.domain.vo.detail.*;
 import com.xk.domain.vo.student.StudentVo;
 import com.xk.entity.*;
+import com.xk.enums.ProjectResultsEnum;
 import com.xk.enums.ProjectStatusEnum;
 import com.xk.mapper.*;
 import com.xk.service.*;
@@ -124,6 +128,8 @@ import java.util.stream.Stream;
 
 import static com.xk.constant.ProjectConstant.DICT_TYPE_PROJECT_RANK;
 import static com.xk.constant.ProjectConstant.DICT_TYPE_PROJECT_TYPE;
+import static com.xk.enums.ProjectStatusEnum.AUDITING;
+import static com.xk.enums.ProjectStatusEnum.NOT_PASS;
 
 /**
  * 项目表(Project)表服务实现类
@@ -213,6 +219,11 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     private final DictDataMapper  dyeDataMapper;
 
     /**
+     * 项目的mapper
+     */
+    private final ProjectMapper baseMapper;
+
+    /**
      * 审核意见服务
      */
     private final AuditOpinionService auditOpinionService;
@@ -236,7 +247,82 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
 
     @Override
-    public boolean downloadProject(List<Long> projectIds, HttpServletResponse response) {
+    public boolean exportProjectNumber(List<Long> projectIds, HttpServletResponse response) {
+        List<ListExportVo> voList = getDownloadProject(projectIds);
+        //过滤项目状态值,不有符合有违规就抛出异常
+        List<ListExportVo> errorList = voList.stream().filter(e -> {
+            ProjectStatusEnum statusEnum = ProjectStatusEnum.fromValue(e.getStateValue());
+            if (statusEnum == NOT_PASS || statusEnum == AUDITING) {
+                return true;
+            } else {
+                return false;
+            }
+        }).collect(Collectors.toList());
+
+        List<String> errorMsg = new ArrayList<>();
+        if(CollUtil.isNotEmpty(errorList)){
+            errorList.forEach(e -> {
+                ProjectStatusEnum statusEnum = ProjectStatusEnum.fromValue(e.getStateValue());
+                errorMsg.add("项目编号：" + e.getProjectNumber() +"项目名称："+e.getProjectName()+ "，状态为：" + statusEnum.getDescription() + "，不能导出");
+            });
+        }
+        if(CollUtil.isNotEmpty(errorMsg)){
+            throw new ServiceException("下列项目状态不可以导出:"+errorMsg.toString());
+        }
+
+        try {
+            List<ExportProjectNumberExeclVo> resultsList = toExportProjectNumberExeclVoListFromListExportVoList(voList);
+            ExcelUtils.write(response, "项目学分列表", "项目学分列表", ExportProjectNumberExeclVo.class, resultsList);
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
+    }
+    public List<ExportProjectNumberExeclVo> toExportProjectNumberExeclVoListFromListExportVoList(List<ListExportVo> list){
+        return list.stream()
+                .map(this::toExportProjectNumberExeclVoFromListExportVo)
+                .collect(Collectors.toList());
+    }
+    /**
+     * 将ListExportVo对象转换为ExportProjectNumberExeclVo对象
+     * 此方法用于在导出项目编号到Excel时，将从数据库获取的数据转换为适合导出的格式
+     *
+     * @param listExportVo 包含项目信息的ListExportVo对象，用于转换
+     * @return 返回一个ExportProjectNumberExeclVo对象，包含经过转换后适合导出到Excel的项目信息
+     */
+    public  ExportProjectNumberExeclVo toExportProjectNumberExeclVoFromListExportVo(ListExportVo listExportVo) {
+        if (listExportVo == null) {
+            return null;
+        }
+        ExportProjectNumberExeclVo exportProjectNumberExeclVo = new ExportProjectNumberExeclVo();
+        exportProjectNumberExeclVo.setSerialNumber(listExportVo.getSerialNumber());
+
+        exportProjectNumberExeclVo.setProjectNumber(listExportVo.getProjectNumber());
+        exportProjectNumberExeclVo.setProjectName(listExportVo.getProjectName());
+        exportProjectNumberExeclVo.setProjectType(listExportVo.getProjectType());
+
+        exportProjectNumberExeclVo.setPrincipalName(listExportVo.getPrincipalName());
+        exportProjectNumberExeclVo.setPrincipalNumber(listExportVo.getPrincipalNumber());
+
+        exportProjectNumberExeclVo.setOtherMembers(listExportVo.getOtherMembers());
+        exportProjectNumberExeclVo.setTeacherName(listExportVo.getTeacherName());
+
+        exportProjectNumberExeclVo.setProjectPeriod(listExportVo.getProjectPeriod());
+        exportProjectNumberExeclVo.setBatch(listExportVo.getBatch());
+        //评审结果
+        exportProjectNumberExeclVo.setState(ProjectResultsEnum.fromValue(listExportVo.getStateValue()).getDescription());
+        if(ProjectStatusEnum.PASS == ProjectStatusEnum.fromValue(listExportVo.getStateValue())){
+            //获取项目对象类型的分数设置
+            Map<Long, String> projectTypeMap = xmStudnetProperties.getProjectType();
+            exportProjectNumberExeclVo.setCredits(projectTypeMap.get(listExportVo.getStateValue()));
+        }else{
+            exportProjectNumberExeclVo.setCredits("无");
+        }
+
+        return exportProjectNumberExeclVo;
+    }
+    @Override
+    public   List<ListExportVo> getDownloadProject(List<Long> projectIds) {
         //1.根据项目id集合进行获取项目集合
         List<Project> projectList = selectByProjectIds(projectIds);
         //2.根据项目集合获取年度组集合
@@ -303,16 +389,28 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         for (int i = 0; i < voList.size(); i++) {
             voList.get(i).setSerialNumber((long) (i + 1));
         }
-        //6.封装文件信息
+
+
+        return voList;
+    }
+
+    @Override
+    public boolean exportProjectinfoList(List<ListExportVo> voList, HttpServletResponse response) {
+
         try {
             List<ListExportExeclVo> list = toListExportExeclVoListFromListExportVoList(voList);
             ExcelUtils.write(response, "项目信息表", "项目信息表", ListExportExeclVo.class, list);
         } catch (IOException e) {
             throw new ServiceException("导出失败"+e.getMessage());
         }
-        return true;
+        return false;
     }
 
+     /**
+     * 将ListExportVo集合转换为ListExportExeclVo集合
+     * @param projectList
+     * @return
+     */
     private List<ListExportExeclVo> toListExportExeclVoListFromListExportVoList(List<ListExportVo> projectList) {
         return projectList.stream()
                 .map(this::toListExportExeclVoFormListExportVo)
@@ -522,6 +620,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         listExportVo.setYearDataId(project.getYearDataId());
         listExportVo.setUserId(project.getUserId());
         listExportVo.setProjectId(project.getProjectId());
+        listExportVo.setStateValue(project.getState());
         return listExportVo;
     }
 
@@ -2044,6 +2143,20 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         //8.更换成员记录进度表
         return updateProjectScheduleWithUserChanges(changeUserDto, oldStudentsApplyList, oldTeacherApplysList, project);
 
+    }
+
+    @Override
+    public boolean downloadYear(Long yearId, HttpServletResponse response) {
+        ProjectStatistics vo = baseMapper.getProjectStatistics(yearId);
+        if (vo != null) {
+            try {
+                ExcelUtils.write(response, "项目统计", "统计", ProjectStatistics.class, Arrays.asList(vo));
+            } catch (IOException e) {
+                return false;
+            }
+            return true;
+        }
+        throw new ServiceException("该年度没有数据");
     }
 
     /**

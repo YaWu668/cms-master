@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.cms.common.core.web.domain.Response;
 import com.xk.domain.dto.*;
 
+import com.xk.domain.vo.Execl.ListExportVo;
 import com.xk.domain.vo.detail.DetailProjectVo;
 import com.xk.domain.vo.project.ProjectListvo;
 
@@ -12,6 +13,7 @@ import com.xk.domain.vo.detail.DetailProjectVo;
 import com.xk.domain.vo.student.StudentProjectVo;
 import com.xk.domain.vo.student.StudentVo;
 import com.xk.entity.Project;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -26,12 +28,26 @@ import java.util.List;
  */
 public interface ProjectService extends IService<Project> {
     /**
-     * 根据年度组id导出项目
-     * @param yearGroupId 年度组id
+     * 根据项目id导出项目学分
+     * @param projectIds 项目id集合
      * @param response
      * @return
      */
-    boolean downloadProject(List<Long> projectIds, HttpServletResponse response);
+    boolean exportProjectNumber( List<Long> projectIds, HttpServletResponse response);
+    /**
+     * 根据年度组id导出项目的
+     * @param projectIds 项目id集合
+     * @return
+     */
+    List<ListExportVo> getDownloadProject(List<Long> projectIds);
+
+    /**
+     * 导出项目信息列表
+     * @param voList 项目信息列表
+     * @param response
+     * @return
+     */
+    boolean exportProjectinfoList(List<ListExportVo> voList, HttpServletResponse response);
     /**
      * 批量下载指定项目的文件（支持结题材料或附加材料），并打包成 zip 压缩包通过响应返回。
      *
@@ -293,6 +309,15 @@ public interface ProjectService extends IService<Project> {
      * @return
      */
     boolean changeUser( ChangeUserDto changeUserDto);
+
+    /**
+     * 根据年度id导出项目集合信息
+     * @param yearId
+     * @param response
+     * @return
+     */
+    boolean downloadYear(Long yearId, HttpServletResponse response);
+
 
 }
 

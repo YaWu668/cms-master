@@ -135,4 +135,8 @@ public class ListExportVo {
      * 项目id
      */
     private Long projectId;
+    /**
+     * 项目状态
+     */
+    private Long stateValue;
 }
