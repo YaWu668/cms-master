@@ -13,6 +13,10 @@ import java.util.List;
 @lombok.Data
 public class ProjectSelectDto extends PageQuery {
     /**
+     * 项目编号
+     */
+    private String projectNumber;
+    /**
      * 项目名字搜索
      */
     private String name;

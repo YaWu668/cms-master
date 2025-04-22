@@ -14,6 +14,7 @@ import com.alibaba.nacos.api.remote.response.ResponseCode;
 import com.alibaba.nacos.shaded.com.google.gson.Gson;
 import com.alibaba.nacos.shaded.com.google.gson.reflect.TypeToken;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -22,8 +23,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cms.common.core.enums.HttpStatusResponse;
 import com.cms.common.core.exception.ServiceException;
+import com.cms.common.core.utils.ExcelUtils;
 import com.cms.common.core.web.domain.Response;
 import com.cms.common.security.utils.SecurityUtils;
+import com.cms.system.api.domain.pojo.SysDictData;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.Pictures;
@@ -35,6 +38,11 @@ import com.xk.constant.ProjectConstant;
 import com.xk.constant.RoleConstant;
 import com.xk.domain.dto.*;
 
+import com.xk.domain.vo.Execl.ExportProjectNumberExeclVo;
+import com.xk.domain.vo.Execl.ListExportVo;
+import com.xk.domain.vo.Execl.ProjectStatistics;
+
+import com.xk.domain.vo.ListExportExeclVo;
 import com.xk.domain.vo.api.UserInfoVo;
 import com.xk.domain.vo.detail.*;
 import com.xk.domain.vo.project.ProjectListvo;
@@ -47,6 +55,7 @@ import com.xk.domain.dto.ProjectAuditDto;
 import com.xk.domain.vo.detail.*;
 import com.xk.domain.vo.student.StudentVo;
 import com.xk.entity.*;
+import com.xk.enums.ProjectResultsEnum;
 import com.xk.enums.ProjectStatusEnum;
 import com.xk.mapper.*;
 import com.xk.service.*;
@@ -110,6 +119,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import java.awt.image.BufferedImage;
@@ -122,6 +133,11 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
+
+import static com.xk.constant.ProjectConstant.DICT_TYPE_PROJECT_RANK;
+import static com.xk.constant.ProjectConstant.DICT_TYPE_PROJECT_TYPE;
+import static com.xk.enums.ProjectStatusEnum.AUDITING;
+import static com.xk.enums.ProjectStatusEnum.NOT_PASS;
 
 /**
  * 项目表(Project)表服务实现类
@@ -206,6 +222,16 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     private final SpecialistDataService specialistDataService;
 
     /**
+     * 数据字典数据mapper
+     */
+    private final DictDataMapper  dyeDataMapper;
+
+    /**
+     * 项目的mapper
+     */
+    private final ProjectMapper baseMapper;
+
+    /**
      * 审核意见服务
      */
     private final AuditOpinionService auditOpinionService;
@@ -232,6 +258,533 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      */
     private final AuditOpinionMapper auditOpinionMapper;
 
+
+    @Override
+    public boolean exportProjectNumber(List<Long> projectIds, HttpServletResponse response) {
+        List<ListExportVo> voList = getDownloadProject(projectIds);
+        //过滤项目状态值,不有符合有违规就抛出异常
+        List<ListExportVo> errorList = voList.stream().filter(e -> {
+            ProjectStatusEnum statusEnum = ProjectStatusEnum.fromValue(e.getStateValue());
+            if (statusEnum == NOT_PASS || statusEnum == AUDITING) {
+                return true;
+            } else {
+                return false;
+            }
+        }).collect(Collectors.toList());
+
+        List<String> errorMsg = new ArrayList<>();
+        if(CollUtil.isNotEmpty(errorList)){
+            errorList.forEach(e -> {
+                ProjectStatusEnum statusEnum = ProjectStatusEnum.fromValue(e.getStateValue());
+                errorMsg.add("项目编号：" + e.getProjectNumber() +"项目名称："+e.getProjectName()+ "，状态为：" + statusEnum.getDescription() + "，不能导出");
+            });
+        }
+        if(CollUtil.isNotEmpty(errorMsg)){
+            throw new ServiceException("下列项目状态不可以导出:"+errorMsg.toString());
+        }
+
+        try {
+            List<ExportProjectNumberExeclVo> resultsList = toExportProjectNumberExeclVoListFromListExportVoList(voList);
+            ExcelUtils.write(response, "项目学分列表", "项目学分列表", ExportProjectNumberExeclVo.class, resultsList);
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
+    }
+    public List<ExportProjectNumberExeclVo> toExportProjectNumberExeclVoListFromListExportVoList(List<ListExportVo> list){
+        return list.stream()
+                .map(this::toExportProjectNumberExeclVoFromListExportVo)
+                .collect(Collectors.toList());
+    }
+    /**
+     * 将ListExportVo对象转换为ExportProjectNumberExeclVo对象
+     * 此方法用于在导出项目编号到Excel时，将从数据库获取的数据转换为适合导出的格式
+     *
+     * @param listExportVo 包含项目信息的ListExportVo对象，用于转换
+     * @return 返回一个ExportProjectNumberExeclVo对象，包含经过转换后适合导出到Excel的项目信息
+     */
+    public  ExportProjectNumberExeclVo toExportProjectNumberExeclVoFromListExportVo(ListExportVo listExportVo) {
+        if (listExportVo == null) {
+            return null;
+        }
+        ExportProjectNumberExeclVo exportProjectNumberExeclVo = new ExportProjectNumberExeclVo();
+        exportProjectNumberExeclVo.setSerialNumber(listExportVo.getSerialNumber());
+
+        exportProjectNumberExeclVo.setProjectNumber(listExportVo.getProjectNumber());
+        exportProjectNumberExeclVo.setProjectName(listExportVo.getProjectName());
+        exportProjectNumberExeclVo.setProjectType(listExportVo.getProjectType());
+
+        exportProjectNumberExeclVo.setPrincipalName(listExportVo.getPrincipalName());
+        exportProjectNumberExeclVo.setPrincipalNumber(listExportVo.getPrincipalNumber());
+
+        exportProjectNumberExeclVo.setOtherMembers(listExportVo.getOtherMembers());
+        exportProjectNumberExeclVo.setTeacherName(listExportVo.getTeacherName());
+
+        exportProjectNumberExeclVo.setProjectPeriod(listExportVo.getProjectPeriod());
+        exportProjectNumberExeclVo.setBatch(listExportVo.getBatch());
+        //评审结果
+        exportProjectNumberExeclVo.setState(ProjectResultsEnum.fromValue(listExportVo.getStateValue()).getDescription());
+        if(ProjectStatusEnum.PASS == ProjectStatusEnum.fromValue(listExportVo.getStateValue())){
+            //获取项目对象类型的分数设置
+            Map<Long, String> projectTypeMap = xmStudnetProperties.getProjectType();
+            exportProjectNumberExeclVo.setCredits(projectTypeMap.get(listExportVo.getStateValue()));
+        }else{
+            exportProjectNumberExeclVo.setCredits("无");
+        }
+
+        return exportProjectNumberExeclVo;
+    }
+    @Override
+    public   List<ListExportVo> getDownloadProject(List<Long> projectIds) {
+        //1.根据项目id集合进行获取项目集合
+        List<Project> projectList = selectByProjectIds(projectIds);
+        //2.根据项目集合获取年度组集合
+        List<YearGroup> yearGroupList = fetchAndValidateYearGroupsByProjects(projectList);
+        //3.根据项目集合获取年度数据集合
+        List<YearData> yearDataList = fetchAndValidateYearDataByProjects(projectList);
+        //4.根据项目获取学院组集合
+        List<CollegeGroup> collegeGroupList = fetchAndValidateCollegeGroupByProjects(projectList);
+        //5.获取学生报名集合 key:项目id vlaue:学生报名集合
+        Map<Long, List<StudnetApplys>> studnetApplysMap = fetchAndValidateStudnetApplysByProjects(projectList);
+        //6.获取老师报名集合 key:项目id vlaue:老师报名集合
+        Map<Long, List<TeacherApplys>> teacherApplysMap = fetchAndValidateTeacherApplysByProjects(projectList);
+
+        //8.获取 项目类型 和 项目级别 的字典数据 key: 字典类型的Key value:字典数据集合
+        Map<String, List<DictData>> dictDataMap = fetchAndValidateDictDataByProjects(projectList);
+        //9.数据封装
+
+        //1.部分数据cv
+        List<ListExportVo> voList = toListExportVoFromProjectList(projectList);
+        //2.封装字段数据 项目类型 和 项目级别
+        enrichExportVoWithDictData(dictDataMap, voList);
+        //3.封装 学院和年度
+        enrichExportDataWithYearAndCollegeInfo(yearGroupList, yearDataList, collegeGroupList, voList);
+        //4. 封装 负责人和  其他成员 ,指导老师所有信息,同时封装序号
+
+        voList.forEach(e -> {
+            //学生报名信息
+            List<StudnetApplys> studnetApplysList = studnetApplysMap.get(e.getProjectId());
+            //1.获取负责人的信息
+            StudnetApplys chiefApply = studnetApplysList.stream()
+                    .filter(studnet -> studnet.getUserId().equals(e.getUserId()))
+                    //只获取第一个
+                    .collect(Collectors.toList())
+                    .get(0);
+            e.setPrincipalName(chiefApply.getName())
+                    .setPrincipalNumber(chiefApply.getUserName())
+                    .setPrincipalPhone(chiefApply.getPhone())//学生信息 联系电话必传 但是手机不是
+                    .setPrincipalEmail(chiefApply.getMailbox());
+            //2.其他成员信息
+
+            //剔除负责人
+            List<StudnetApplys> applys = studnetApplysList.stream()
+                    .filter(studnet -> !(studnet.getUserId().equals(e.getUserId())))
+                    //只获取第一个
+                    .collect(Collectors.toList());
+            String applysStr = toNameUserNameString(applys);
+            e.setOtherMembers(applysStr);
+
+            //3.指导老师
+            List<TeacherApplys> teacherApplys = teacherApplysMap.get(e.getProjectId());
+            //指导教师姓名
+            String teacherNameUserNameString = toTeacherNameUserNameString(teacherApplys);
+            //指导教师职称
+            String postString = toPostString(teacherApplys);
+            //指导老师手机号
+            String phoneString = toPhoneString(teacherApplys);
+            //指导老师信息写入
+            e.setTeacherName(teacherNameUserNameString)
+                    .setTeacherTitle(postString)
+                    .setTeacherPhone(phoneString);
+        });
+
+        //5.序号
+        for (int i = 0; i < voList.size(); i++) {
+            voList.get(i).setSerialNumber((long) (i + 1));
+        }
+
+
+        return voList;
+    }
+
+    @Override
+    public boolean exportProjectinfoList(List<ListExportVo> voList, HttpServletResponse response) {
+
+        try {
+            List<ListExportExeclVo> list = toListExportExeclVoListFromListExportVoList(voList);
+            ExcelUtils.write(response, "项目信息表", "项目信息表", ListExportExeclVo.class, list);
+        } catch (IOException e) {
+            throw new ServiceException("导出失败"+e.getMessage());
+        }
+        return false;
+    }
+
+     /**
+     * 将ListExportVo集合转换为ListExportExeclVo集合
+     * @param projectList
+     * @return
+     */
+    private List<ListExportExeclVo> toListExportExeclVoListFromListExportVoList(List<ListExportVo> projectList) {
+        return projectList.stream()
+                .map(this::toListExportExeclVoFormListExportVo)
+                .collect(Collectors.toList());
+
+    }
+
+    public  ListExportExeclVo toListExportExeclVoFormListExportVo(ListExportVo vo) {
+        if (vo == null) {
+            return null;
+        }
+        ListExportExeclVo listExportExeclVo = new ListExportExeclVo();
+        listExportExeclVo.setSerialNumber(vo.getSerialNumber());
+        listExportExeclVo.setCollege(vo.getCollege());
+        listExportExeclVo.setProjectNumber(vo.getProjectNumber());
+        listExportExeclVo.setProjectName(vo.getProjectName());
+        listExportExeclVo.setProjectType(vo.getProjectType());
+        listExportExeclVo.setProjectRankStr(vo.getProjectRankStr());
+        listExportExeclVo.setProjectFunds(vo.getProjectFunds());
+        listExportExeclVo.setPrincipalName(vo.getPrincipalName());
+        listExportExeclVo.setPrincipalNumber(vo.getPrincipalNumber());
+        listExportExeclVo.setPrincipalPhone(vo.getPrincipalPhone());
+        listExportExeclVo.setPrincipalEmail(vo.getPrincipalEmail());
+        listExportExeclVo.setOtherMembers(vo.getOtherMembers());
+        listExportExeclVo.setTeacherName(vo.getTeacherName());
+        listExportExeclVo.setTeacherTitle(vo.getTeacherTitle());
+        listExportExeclVo.setTeacherPhone(vo.getTeacherPhone());
+        listExportExeclVo.setProjectPeriod(vo.getProjectPeriod());
+        listExportExeclVo.setBatch(vo.getBatch());
+        listExportExeclVo.setState(vo.getState());
+        return listExportExeclVo;
+    }
+
+    /**
+     * 将 TeacherApplys 列表转换为 "姓名/工号,姓名/工号,..." 的格式字符串。
+     * <p>
+     * 示例："龙登燕/3032085，蒋宇/3032064"
+     * </p>
+     *
+     * @param list 待转换的 TeacherApplys 对象列表
+     * @return 拼接后的字符串，元素间以中文逗号分隔；若列表为空或 null，则返回空字符串
+     */
+    public  String toTeacherNameUserNameString(List<TeacherApplys> list) {
+        if (list == null || list.isEmpty()) {
+            return "无数据";
+        }
+        return list.stream()
+                .map(e -> e.getName() + "/" + e.getUserName())
+                .collect(Collectors.joining("，"));
+    }
+
+    /**
+     * 将 TeacherApplys 列表中的职位字段按顺序拼接为 "职位,职位,..." 的格式字符串。
+     * <p>
+     * 示例："高级实验师，助教(高校)，讲师"
+     * </p>
+     *
+     * @param list 待转换的 TeacherApplys 对象列表
+     * @return 拼接后的职位列表字符串，元素间以中文逗号分隔；若列表为空或 null，则返回空字符串
+     */
+    public static String toPostString(List<TeacherApplys> list) {
+        if (list == null || list.isEmpty()) {
+            return "无数据";
+        }
+        return list.stream()
+                .map(TeacherApplys::getPost)
+                .collect(Collectors.joining("，"));
+    }
+
+    /**
+     * 将 TeacherApplys 列表中的电话字段按顺序拼接为 "电话,电话,..." 的格式字符串。
+     * <p>
+     * 示例："15531537780，13080135877"
+     * </p>
+     *
+     * @param list 待转换的 TeacherApplys 对象列表
+     * @return 拼接后的电话号码列表字符串，元素间以中文逗号分隔；若列表为空或 null，则返回空字符串
+     */
+    public static String toPhoneString(List<TeacherApplys> list) {
+        if (list == null || list.isEmpty()) {
+            return "无数据";
+        }
+        return list.stream()
+                .map(TeacherApplys::getPhone)
+                .collect(Collectors.joining("，"));
+    }
+
+    /**
+     * 将 StudnetApplys 列表转换为 "name/userName,name/userName,..." 的字符串
+     * @param list 学生报名列表
+     * @return 返回 案例:刘鹏/1953100109，梁展滔/1953400131，周友柏/1953400120，张沁怡/2053400203
+     */
+    public static String toNameUserNameString(List<StudnetApplys> list) {
+        if (list == null || list.isEmpty()) {
+            return "无数据";
+        }
+        return list.stream()
+                .map(e -> e.getName() + "/" + e.getUserName())
+                .collect(Collectors.joining("，"));
+    }
+
+    /**
+     * 丰富导出数据，添加年份和学院信息
+     * 该方法通过将年份组、年份数据和学院组信息与待导出的数据列表进行关联，以丰富导出信息
+     *
+     * @param yearGroupList 年份组列表，包含不同年份的分组信息
+     * @param yearDataList 年份数据列表，包含每年的具体数据信息
+     * @param collegeGroupList 学院组列表，包含不同学院的分组信息
+     * @param voList 待导出的数据视图对象列表，将被丰富以包含年份和学院信息
+     */
+    private  void enrichExportDataWithYearAndCollegeInfo(List<YearGroup> yearGroupList, List<YearData> yearDataList, List<CollegeGroup> collegeGroupList, List<ListExportVo> voList) {
+        //年度组id和yearGroup的映射关系
+        Map<Long, YearGroup> yearGroupMap = yearGroupList.stream()
+                .collect(Collectors.toMap(YearGroup::getYearGroupId, e -> e));
+        // 年度数据id和yearData的映射关系
+        Map<Long, YearData> yearDataMap = yearDataList.stream()
+                .collect(Collectors.toMap(YearData::getYearDataId, e -> e));
+        // 学院组id和collegeGroup的映射关系
+        Map<Long, CollegeGroup> collegeGroupMap = collegeGroupList.stream()
+                .collect(Collectors.toMap(CollegeGroup::getCollegeGroupId, e -> e));
+
+
+        voList.forEach(e->{
+            YearGroup yearGroup = yearGroupMap.get(e.getYearGroupId());//年度组
+            YearData yearData = yearDataMap.get(e.getYearDataId());//年度数据
+            CollegeGroup collegeGroup = collegeGroupMap.get(e.getCollegeGroupId());//学院
+            if(ObjectUtil.isNull(yearGroup)){
+                e.setBatch("未知数据");
+            }
+            if(ObjectUtil.isNull(yearData)){
+                e.setProjectPeriod("未知数据");
+            }
+            if(ObjectUtil.isNull(collegeGroup)){
+                e.setCollege("未知数据");
+            }
+            e.setCollege(collegeGroup.getName());//学院
+            e.setBatch(yearGroup.getName());//年度组
+            e.setProjectPeriod(yearData.getName());//年度数据
+        });
+    }
+
+    /**
+     * 使用字典数据丰富导出Vo对象<br>
+     * 该方法主要通过将字典数据映射到导出Vo对象上来增强Vo对象的信息内容<br>
+     * 它处理项目类型和项目级别字段，将它们的字典标签添加到Vo对象中<br><br>
+     *
+     * @param dictDataMap 包含字典数据的映射，键是字典类型，值是字典数据列表
+     * @param voList 待丰富数据的导出Vo对象列表
+     */
+    private  void enrichExportVoWithDictData(Map<String, List<DictData>> dictDataMap, List<ListExportVo> voList) {
+        // 项目类型 key: 字典键值 value:字典数据对象
+        Map<String, DictData> projectTypeDictDataMap = dictDataMap.get(DICT_TYPE_PROJECT_TYPE).stream()
+                .collect(Collectors.toMap(DictData::getDictValue, e -> e));
+        //项目级别 key: 字典键值 value:字典数据对象
+        Map<String, DictData> projectRankDictDataMap = dictDataMap.get(DICT_TYPE_PROJECT_RANK).stream()
+                .collect(Collectors.toMap(DictData::getDictValue, e -> e));
+        //遍历vo进行封装项目类型 和 项目级别
+        voList.forEach(e -> {
+            DictData typeDictData = projectTypeDictDataMap.get(e.getType().toString());//类型
+            DictData rankDictData = projectRankDictDataMap.get(e.getProjectRank().toString());//级别
+
+            if(ObjectUtil.isNull(typeDictData)){//类型为空
+                e.setProjectType("未知数据");
+            }
+            if(ObjectUtil.isNull(rankDictData)){//级别为空
+                e.setProjectRankStr("未知数据");
+            }
+            e.setProjectType(typeDictData.getDictLabel());//项目类型
+            e.setProjectRankStr(rankDictData.getDictLabel()); //项目级别
+        });
+    }
+
+    /**
+     * 将项目列表转换为列表导出的视图对象列表
+     *
+     * @param projectList 项目实体列表，用于转换为视图对象
+     * @return 返回一个列表，包含转换后的列表导出视图对象
+     */
+    public List<ListExportVo> toListExportVoFromProjectList(List<Project> projectList) {
+        if (projectList == null ||  projectList.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return projectList.stream()
+                .map(this::toListExportVoFromProject)
+                .collect(Collectors.toList());
+    }
+    /**
+     * 将项目对象转换为列表导出视图对象
+     * 此方法用于将项目详情转换为适用于列表导出的视图对象，便于数据的导出和展示
+     *
+     * @param project 项目对象，包含项目详细信息如果传入的项目对象为null，则返回null
+     * @return ListExportVo 列表导出视图对象，包含从项目对象中提取的特定信息
+     */
+    public  ListExportVo toListExportVoFromProject(Project project) {
+        if (project == null) {
+            return null;
+        }
+        ListExportVo listExportVo = new ListExportVo();
+        listExportVo.setProjectNumber(project.getProjectNumber());
+        listExportVo.setProjectName(project.getName());
+        listExportVo.setState(ProjectStatusEnum.fromValue(project.getState()).getDescription());
+        listExportVo.setType(project.getType());
+        listExportVo.setProjectRank(project.getProjectRank());
+        listExportVo.setProjectFunds(project.getTotalMoney().toString());
+        listExportVo.setCollegeGroupId(project.getCollegeGroupId());
+        listExportVo.setYearGroupId(project.getYearGroupId());
+        listExportVo.setYearDataId(project.getYearDataId());
+        listExportVo.setUserId(project.getUserId());
+        listExportVo.setProjectId(project.getProjectId());
+        listExportVo.setStateValue(project.getState());
+        return listExportVo;
+    }
+
+    /**
+     * 根据项目列表获取并验证字典数据<br>
+     * 此方法旨在从数据库中查询特定字典类型的数据，并以映射的形式返回，便于后续处理和使用<br>
+     * 主要功能包括：<br>
+     * 1. 查询‘项目类型’和‘项目级别’这两种字典类型的对应字典数据<br>
+     * 2. 将查询到的数据组织成一个映射，其中字典类型的标识作为键，对应的字典数据列表作为值<br><br>
+     *
+     * @param projectList 项目列表，目前该参数未被使用，未来可能用于细化查询条件或验证
+     * @return 返回一个映射，其中包含‘项目类型’和‘项目级别’这两种字典类型的字典数据列表
+     */
+    private Map<String, List<DictData>> fetchAndValidateDictDataByProjects(List<Project> projectList) {
+        // 传入 项目类型 和 项目级别 的字典类型的集合查询对应
+        List<DictData> dictDataList = dyeDataMapper.selectByDictTypes(Arrays.asList(
+                DICT_TYPE_PROJECT_RANK,
+                DICT_TYPE_PROJECT_TYPE
+        ));
+        //map集合 key: 字典类型的Key value:字典数据集合
+        Map<String, List<DictData>> dictDataMap = dictDataList.stream()
+                .collect(Collectors.groupingBy(DictData::getDictType));
+        return dictDataMap;
+    }
+
+    /**
+     * 根据项目列表获取并验证学院组<br><br>
+     *
+     * 通过项目列表中的学院组ID来查询学院组信息，并验证查询结果<br>
+     * 如果没有找到对应的学院组，则抛出服务异常<br><br>
+     *
+     * @param projectList 项目列表，用于获取学院组ID
+     * @return 返回查询到的学院组列表
+     * @throws ServiceException 如果查询结果为空，则抛出获取学院组数据失败的异常
+     */
+    private List<CollegeGroup> fetchAndValidateCollegeGroupByProjects(List<Project> projectList) {
+        List<CollegeGroup> collegeGroupList = collegeGroupService.lambdaQuery()
+                .in(CollegeGroup::getCollegeGroupId, projectList.stream().map(Project::getCollegeGroupId).collect(Collectors.toList()))
+                .list();
+
+        if (collegeGroupList.isEmpty()) {
+            throw new ServiceException("获取学院组数据失败");
+        }
+        return collegeGroupList;
+    }
+
+    /**
+     * 根据项目列表获取并验证教师申请信息<br><br>
+     *
+     * 通过项目ID查询教师申请信息，并验证查询结果是否为空如果为空，则抛出异常<br>
+     * 最后，将查询到的教师申请信息按项目ID分组返回<br><br>
+     *
+     * @param projectList 项目列表，用于查询教师申请信息
+     * @return 返回一个映射，键为项目ID，值为与该项目ID关联的教师申请信息列表
+     * @throws ServiceException 如果查询的教师报名数据为空，则抛出此异常
+     */
+    private Map<Long, List<TeacherApplys>> fetchAndValidateTeacherApplysByProjects(List<Project> projectList) {
+        // 根据项目ID列表查询教师申请信息
+        List<TeacherApplys> teacherApplysList= teacherApplysService.lambdaQuery()
+                .in(TeacherApplys::getProjectId, projectList.stream().map(Project::getProjectId).collect(Collectors.toList()))
+                .list();
+        if (teacherApplysList.isEmpty()) {
+            throw new ServiceException("老师报名数据为空");
+        }
+        // 将查询到的教师申请信息按项目ID分组，并返回
+        return teacherApplysList.stream().collect(Collectors.groupingBy(TeacherApplys::getProjectId));
+    }
+
+    /**
+     * 根据项目列表获取并验证学生申请数据<br><br>
+     *
+     * 通过项目ID查询学生申请记录，并将这些记录按项目ID分组返回这样做是为了确保每个项目的学生申请数据能够<br>
+     * 方便地被访问和处理如果找不到任何学生申请记录，则抛出异常，表明数据缺失或查询条件不匹配<br>
+     *
+     * @param projectList 项目列表，用于查询学生申请记录
+     * @return 返回一个映射，键是项目ID，值是与该项目ID关联的学生申请记录列表
+     * @throws ServiceException 如果学生报名数据为空，则抛出此异常
+     */
+    private Map<Long, List<StudnetApplys>> fetchAndValidateStudnetApplysByProjects(List<Project> projectList) {
+        // 查询指定项目列表的所有学生申请记录
+        List<StudnetApplys> studnetApplysList = studnetApplysService.lambdaQuery()
+                .in(StudnetApplys::getProjectId, projectList.stream().map(project -> project.getProjectId()).collect(Collectors.toSet()))
+                .list();
+        if (CollUtil.isEmpty(studnetApplysList)) {
+            throw new ServiceException("学生报名数据为空");
+        }
+        // 将查询到的学生申请记录按项目ID分组，并返回
+        return studnetApplysList.stream().collect(Collectors.groupingBy(StudnetApplys::getProjectId));
+    }
+
+    /**
+     * 根据项目列表获取并验证年度数据<br><br>
+     *
+     * 通过项目列表中的年度数据ID查询对应的年度数据，并验证查询结果是否为空<br>
+     * 如果查询结果为空，则抛出异常，提示传入的项目ID为脏数据<br><br>
+     *
+     * @param projectList 项目列表，用于获取年度数据ID进行查询
+     * @return 返回查询到的年度数据列表
+     * @throws ServiceException 如果查询不到任何年度数据，则抛出此异常
+     */
+    private List<YearData> fetchAndValidateYearDataByProjects(List<Project> projectList) {
+        // 根据项目列表中的年份数据ID查询对应的年度数据
+        List<YearData> yearDataList = yearDataService.lambdaQuery()
+                .in(YearData::getYearDataId,
+                        projectList.stream().map(project -> project.getYearDataId()).collect(Collectors.toSet()))
+                .list();
+        if (CollUtil.isEmpty(yearDataList)) {
+            throw new ServiceException("传入项目id,查询不到年度数据,为脏数据,请联系管理员");
+        }
+        return yearDataList;
+    }
+    /**
+     * 根据项目列表获取并验证年度组<br>
+     * 该方法通过项目列表中的年度组ID查询对应的年度组信息，并进行数据有效性验证<br>
+     * 如果查询结果为空，抛出异常提示数据不一致<br>
+     *
+     * @param projectList 项目列表，用于提取年度组ID进行查询
+     * @return 年度组列表，包含与项目关联的年度组信息
+     * @throws ServiceException 当查询不到年度组数据时，抛出服务异常
+     */
+    private  List<YearGroup> fetchAndValidateYearGroupsByProjects(List<Project> projectList) {
+        // 根据项目列表中的年度组ID查询年度组信息
+        List<YearGroup> yearGroupList = yearGroupService.lambdaQuery()
+                .in(YearGroup::getYearGroupId, projectList.stream().map(project -> project.getYearGroupId()).collect(Collectors.toSet()))
+                .list();
+        if (CollUtil.isEmpty(yearGroupList)) {
+            throw new ServiceException("传入项目id,查询不到年度组数据,为脏数据,请联系管理员");
+        }
+        return yearGroupList;
+    }
+
+    private List<Project> selectByProjectIds(List<Long> projectIds) {
+        List<Project> projectList= this.listByIds(projectIds);
+        if(CollUtil.isEmpty(projectList)){
+            throw new ServiceException("传入项目id,数据库没有数据");
+        }
+        Set<Long> idSet = projectList.stream().map(Project::getProjectId).collect(Collectors.toSet());
+        //记录错误
+        List<String> errorList = new ArrayList<>();
+        //校验哪些项目id不存在数据
+        projectIds.forEach(id->{
+            if(!idSet.contains(id)){
+                errorList.add("项目id:"+id+"不存在数据库");
+            }
+        });
+        //如果有错误就抛出异常
+        if(CollUtil.isNotEmpty(errorList)){
+            throw new ServiceException(CollUtil.join(errorList,";\n") );
+        }
+        return projectList;
+    }
 
     /**
      * 批量下载指定项目的文件（支持结题材料或附加材料），并打包成 zip 压缩包通过响应返回。
@@ -409,6 +962,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 //        isYearGroupIdExistAndYearDataIsEnable(applyForDTO.getYearGroupId(),applyForDTO.getYearDataId());
         //10.检查报名的学生的学院组是否存在并且是否启用
         isStudentCollegeGroupsEnabled(applyForDTO.getStudents());
+        //11.项目名称不可以重复
+        checkProjectName(applyForDTO);
         //todo 有空写,验证文件存在通内
         checkFileUrl(applyForDTO.getMaterialsUrl());
         //todo 有空再写,验证用户负责人只有一个项目在进行中才可以申请新的项目&&(同时只有一个是负责人|| 参加项目进行中最多2个)
@@ -431,6 +986,20 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             throw new ServiceException("项目进行表插入失败,请检查",444);
         }
         return Response.success("项目申请成功,等待审核");
+    }
+
+    /**
+     * 项目名称重复校验
+     * @param applyForDTO
+     */
+    private void checkProjectName(ApplyForDTO applyForDTO) {
+        Long count = this.lambdaQuery()
+                .eq(Project::getName, applyForDTO.getName())
+                .select(Project::getName)
+                .count();
+        if (count > 0) {
+            throw new ServiceException("项目名称重复,请修改,当前项目名称数量:"+count);
+        }
     }
 
     /**
@@ -626,10 +1195,12 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      */
     public void convertProjectFiles(DetailProjectVo projectVo, Project project) {
         //结题文件
-        JSONArray array = JSONUtil.parseArray(project.getConcludeUrl());
-        List<String> concludeUrl = JSONUtil.toList(array, String.class);
+//        JSONArray array = JSONUtil.parseArray(project.getConcludeUrl());
+//        List<String> concludeUrl = JSONUtil.toList(array, String.class);
+        ArrayList<String> list = new ArrayList<>();
+        list.add(project.getConcludeUrl());
         //todo 申请文件改话,这里也要改
-        projectVo.setConcludeUrl(concludeUrl)
+        projectVo.setConcludeUrl(list)
                 .setMaterialsUrl(project.getMaterialsUrl());
 
     }
@@ -790,9 +1361,38 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * @return 基本情况vo
      */
     public Elementary convertElementaryInfo(Project project) {
-        Elementary elementary = BeanCopyUtils.copyBean(project, Elementary.class);
+        Elementary elementary = toElementaryFromProject(project);
         elementary.setBeginTime(DateUtil.formatDateTime(project.getBeginTime()))//立项时间
                 .setEndTime(DateUtil.formatDateTime(project.getEndTime()));//结束时间
+        return elementary;
+    }
+
+    /**
+     * Project 转 Elementary
+     * @param project
+     * @return
+     */
+    public static Elementary toElementaryFromProject(Project project) {
+        if (project == null) {
+            return null;
+        }
+        Elementary elementary = new Elementary();
+        elementary.setProjectId(project.getProjectId());
+        elementary.setProjectNumber(project.getProjectNumber());
+        elementary.setName(project.getName());
+        elementary.setCollegeGroupId(project.getCollegeGroupId());
+        elementary.setYearGroupId(project.getYearGroupId());
+        elementary.setYearDataId(project.getYearDataId());
+        elementary.setType(project.getType());
+        elementary.setProjectRank(project.getProjectRank());
+        elementary.setSubjectCategory(project.getSubjectCategory());
+        elementary.setCategory(project.getCategory());
+        elementary.setProjectSource(project.getProjectSource());
+        elementary.setProjectSynopsis(project.getProjectSynopsis());
+        elementary.setPrincipalExperience(project.getPrincipalExperience());
+        elementary.setTeacherExperience(project.getTeacherExperience());
+        elementary.setFirmTeacherExperience(project.getFirmTeacherExperience());
+        elementary.setTeacherSupport(project.getTeacherSupport());
         return elementary;
     }
 
@@ -1233,6 +1833,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     public boolean calibrationBasicInformation(BasicInformationDTO basicInformationDTO,String msg) {
         //1.信息拷贝
         ApplyForDTO dto = BeanCopyUtils.copyBean(basicInformationDTO, ApplyForDTO.class);
+        //1.校验项目名是否重复
+        checkProjectName(dto);
         //2.字典数据校验
         checkAddProjectDictData(dto);
         //3.校验学院是否存在和启用
@@ -1241,6 +1843,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         checkYearGroup(dto.getYearGroupId(), dto.getYearDataId());
         //5.附件4之外的需要企业老师的支持
         teachersSupport(dto);
+
         return true;
     }
 
@@ -1574,6 +2177,437 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             counter++;
         }
         return fileName;
+    }
+
+
+
+    @Override
+    @Transactional
+    public boolean batchBingNumber(MultipartFile file) {
+        //1.文件读 去空和去重复校验
+        List<BatchBingNumberDto> dtoList = readBatchBingNumberDtoFile(file);
+        //2.校验编号不存在系统当中,校验项目存在系统当中,校验项目都没有重复绑定
+        List<Project> projectList = checkEXISTAndRightData(dtoList);
+        //3.项目进行编号绑定
+        return updateNumber(projectList, dtoList);
+    }
+
+    @Override
+    public boolean getProjectNumberTemplate(HttpServletResponse response) {
+        try {
+            ExcelUtils.write(response, "项目编号绑定模板", "模板", BatchBingNumberDto.class, new  ArrayList<>());
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public boolean changeUser(ChangeUserDto changeUserDto) {
+        //0.校验项目存在
+        Project project = this.getById(changeUserDto.getProjectId());
+        if (project == null) {
+            throw new ServiceException("项目不存在");
+        }
+        if(project.getState().equals( ProjectConstant.PROJECT_STATUS_NOT_PASS_VALUE_2 )
+                || project.getState().equals( ProjectConstant.PROJECT_STATUS_PASS_VALUE) ){
+            throw new ServiceException("项目状态为待审核或者审核通过，无法修改人员");
+        }
+        //1.数据拷贝到 申请项目dto类 进行老师和学生的参数校验
+        ApplyForDTO data = toApplyForDTOFromChangeUserDto(changeUserDto);
+        //2.校验用户(老师和学生)都存在
+        isStuentAndTeacherExist(data);
+        //3.校验负责人是不是排列第一个,并且第一个id要和申请人id一致
+//        checkPrincipal(data);  ChangeUserDto.getPrincipalUserId()方法已经获取到负责人id已经进行判断过了
+        //4.校验报名人数,有老师和学生
+        data.setType(project.getType()); //这里校验需要项目类型,进行写入
+        checkStuentAndTeacher(data);
+
+        //5.更新项目
+        updateProjectInfo(changeUserDto, project);
+        //6.更新学生报名表
+        List<StudnetApplys> oldStudentsApplyList = updateStudentApplications(project, data);
+        //7.更新老师报名表
+        List<TeacherApplys> oldTeacherApplysList = updateTeacherApplys(project, data);
+        //8.更换成员记录进度表
+        return updateProjectScheduleWithUserChanges(changeUserDto, oldStudentsApplyList, oldTeacherApplysList, project);
+
+    }
+
+    @Override
+    public boolean downloadYear(Long yearId, HttpServletResponse response) {
+        ProjectStatistics vo = baseMapper.getProjectStatistics(yearId);
+        if (vo != null) {
+            try {
+                ExcelUtils.write(response, "项目统计", "统计", ProjectStatistics.class, Arrays.asList(vo));
+            } catch (IOException e) {
+                return false;
+            }
+            return true;
+        }
+        throw new ServiceException("该年度没有数据");
+    }
+
+    /**
+     * 更新项目进度记录以反映用户变更<br>
+     * 该方法主要用于当项目成员（学生和教师）发生变化时，记录这些变化到项目进度表中<br><br>
+     *
+     * @param changeUserDto 包含变更后学生和教师信息的DTO
+     * @param oldStudentsApplyList 变更前的学生申请列表
+     * @param oldTeacherApplysList 变更前的教师申请列表
+     * @param project 项目对象，包含项目ID等信息
+     * @return 返回项目进度记录是否成功保存
+     */
+    private boolean updateProjectScheduleWithUserChanges(ChangeUserDto changeUserDto, List<StudnetApplys> oldStudentsApplyList, List<TeacherApplys> oldTeacherApplysList, Project project) {
+        //0.学院组信息
+        Map<Long, CollegeGroup> collegeGroupMap =
+                // 根据学院id查询学院列表
+                collegeGroupService.lambdaQuery()
+                .in(CollegeGroup::getCollegeGroupId
+                        , changeUserDto.getStudents().stream()
+                                .map(e -> e.getCollegeGroupId())
+                                .collect(Collectors.toList())
+                )
+                .list()
+                .stream()
+                        //把查询结果转换 为map key:学院id value:学院对象
+                .collect(Collectors.toMap(CollegeGroup::getCollegeGroupId, e -> e));
+
+        //1.新增的学生展示字符串
+        StringBuilder newStudentString = new StringBuilder();
+        newStudentString.append("更换之后的学生列表：\n");
+        for (ApplyForStudent s : changeUserDto.getStudents()) {
+            newStudentString.append(String.format("姓名:%s/学号:%s/专业班级:%s/所在学院:%s/项目中的分工:%s/联系电话:%s/邮箱:%s/成员类型:%s\n",
+                    s.getName(),
+                    s.getUserName(),
+                    s.getProfessionalClass(),
+                    collegeGroupMap.get(s.getCollegeGroupId()).getName(),
+                    s.getJob(),
+                    s.getPhone(),
+                    s.getMailbox(),
+                    s.getIsPrincipal() != null && s.getIsPrincipal() == 1 ? "第一主持人" : "成员"
+            ));
+        }
+        //2.老的学生展示字符串
+        StringBuilder oldStudentString = new StringBuilder();
+        oldStudentString.append("更换之前的学生列表：\n");
+        for (StudnetApplys s : oldStudentsApplyList) {
+            oldStudentString.append(String.format("姓名:%s/学号:%s/专业班级:%s/所在学院:%s/项目中的分工:%s/联系电话:%s/邮箱:%s/成员类型:%s\n",
+                    s.getName(),
+                    s.getUserName(),
+                    s.getProfessionalClass(),
+                    collegeGroupMap.get(s.getCollegeGroupId()).getName(),
+                    s.getJob(),
+                    s.getPhone(),
+                    s.getMailbox(),
+                    s.getIsPrincipal() != null && s.getIsPrincipal() == 1 ? "第一主持人" : "成员"
+            ));
+        }
+        //3.新增的老师展示字符串
+        StringBuilder newTeacherString = new StringBuilder();
+        newTeacherString.append("\n\n更换之后的老师的列表：\n");
+        for (ApplyForTeacher t : changeUserDto.getTeachers()) {
+            newTeacherString.append(String.format("姓名:%s/单位:%s/职位:%s/联系电话:%s/邮箱:%s/成员类型:%s\n",
+                    t.getName(),
+                    t.getUnit(),
+                    t.getPost(),
+                    t.getPhone(),
+                    t.getMailbox(),
+                    t.getIsTeacher() != null && t.getIsTeacher() == 0 ? "指导老师" : "企业老师"
+            ));
+        }
+        //4.老的老师展示字符串
+        StringBuilder oldTeacherString = new StringBuilder();
+        oldTeacherString.append("更换之前的老师的列表：\n");
+        for (TeacherApplys t : oldTeacherApplysList) {
+            oldTeacherString.append(String.format("姓名:%s/单位:%s/职位:%s/联系电话:%s/邮箱:%s/成员类型:%s\n",
+                    t.getName(),
+                    t.getUnit(),
+                    t.getPost(),
+                    t.getPhone(),
+                    t.getMailbox(),
+                    t.getIsTeacher() != null && t.getIsTeacher() == 0 ? "指导老师" : "企业老师"
+            ));
+        }
+
+        //获取当前项目最后一个进度记录表
+        ProjectSchedule lastByProjectId = projectScheduleService.getLastByProjectId(project.getProjectId());
+
+        // 合并所有内容
+        String fullContent = new StringBuilder()
+                .append(newStudentString)
+                .append(oldStudentString)
+                .append(newTeacherString)
+                .append(oldTeacherString)
+                .toString();
+
+        ProjectSchedule newSchedule = new ProjectSchedule()
+                .setProjectId(project.getProjectId())
+                .setRootId(lastByProjectId.getProjectScheduleId())
+                .setUserId(SecurityUtils.getUserId())
+                .setContent(fullContent);
+        return projectScheduleService.save(newSchedule);
+    }
+
+
+    /**
+     * 更新项目信息方法<br><br>
+     *
+     * 本方法主要用于根据用户变更信息更新项目详情，包括项目负责人、成员、指导老师和企业老师的信息
+     *
+     * @param changeUserDto 用户变更信息对象，包含需要更新的项目人员信息
+     * @param project 项目对象，需要更新的项目实例
+     * @throws ServiceException 如果更新项目失败，抛出服务异常
+     */
+    private void updateProjectInfo(ChangeUserDto changeUserDto, Project project) {
+        //1.获取负责人的id
+        Long userId = changeUserDto.getPrincipalUserId();
+        //2.获取成员的id集合字符串 [id1,id2]
+        String studentUserIdJsonArray = changeUserDto.getStudentUserIdJsonArray();
+        //3.1 获取指导老师的id集合字符串 [id1,id2]
+        String teacherUserIdJsonArray = changeUserDto.getTeacherUserIdJsonArray();
+        //3.2 获取企业老师的id集合字符串 [id1,id2]
+        String firmTeacherJsonArray = changeUserDto.getFirmTeacherJsonArray();
+        //5.更新项目表
+        project.setUserId(userId)
+                .setMemberId(studentUserIdJsonArray)
+                .setTeacherId(teacherUserIdJsonArray)
+                .setFirmTeacherId(firmTeacherJsonArray);
+        if(!this.updateById(project)){
+            throw  new  ServiceException("更新项目失败");
+        }
+    }
+
+    /**
+     * 更新学生项目申请信息
+     * 此方法先删除项目当前的所有学生申请记录，然后插入新的申请信息
+     *
+     * @param project 包含项目ID的项目对象，用于标识需要更新申请信息的项目
+     * @param data 包含新的学生申请信息的数据传输对象
+     * @return  List<StudnetApplys> 返回已经删除的学生报名列表(老的报名表)
+     * @throws ServiceException 如果删除或插入操作失败，则抛出服务异常
+     */
+    private List<StudnetApplys> updateStudentApplications(Project project, ApplyForDTO data) {
+        //1.删除原本报名表
+        List<StudnetApplys> oldStudnetApplys = studnetApplysService.lambdaQuery()
+                .eq(StudnetApplys::getProjectId, project.getProjectId())
+                .list();
+        boolean removeStudnetApplys = studnetApplysService.remove(new LambdaQueryWrapper<StudnetApplys>()
+                .in(StudnetApplys::getStudnetApplyId,
+                        oldStudnetApplys.stream()
+                                .map(StudnetApplys::getStudnetApplyId)
+                                .collect(Collectors.toList())
+                )
+        );
+
+        if(!removeStudnetApplys){
+            throw  new  ServiceException("删除项目报名表失败");
+        }
+        //2.查询新的学生报名表
+        if(!insertProjectStudnet(data, project.getProjectId())){
+            throw new ServiceException("插入学生表失败,请检查");
+        }
+        return  oldStudnetApplys;
+    }
+
+    /**
+     * 更新项目相关的教师申请记录
+     * 此方法先删除项目当前的教师申请记录，然后插入新的教师申请记录
+     *
+     * @param project 包含项目ID的项目对象，用于识别和操作相关的教师申请记录
+     * @param data 包含新教师申请信息的数据传输对象，用于插入新的教师申请记录
+     * @return  List<TeacherApplys> 返回已经删除的教师报名列表(老的报名表)
+     * @throws ServiceException 如果删除或插入操作失败，则抛出服务异常
+     */
+    private List<TeacherApplys> updateTeacherApplys(Project project, ApplyForDTO data) {
+        //1.删除老师原本报名表
+        List<TeacherApplys> oldTeacherApplys = teacherApplysService.lambdaQuery()
+                .eq(TeacherApplys::getProjectId, project.getProjectId())
+                .list();
+        boolean removeTeacherApplys = teacherApplysService.remove(new LambdaQueryWrapper<TeacherApplys>()
+                .in(TeacherApplys::getTeacherApplyId,
+                        oldTeacherApplys.stream()
+                                .map(TeacherApplys::getTeacherApplyId)
+                                .collect(Collectors.toList())
+                )
+        );
+        if(!removeTeacherApplys){
+            throw  new  ServiceException("删除项目报名表失败");
+        }
+        //2.插入老师表
+        if(!insertProjectTeacher(data, project.getProjectId())){
+            throw new ServiceException("插入老师表失败,请检查");
+        }
+        return  oldTeacherApplys;
+    }
+
+    public  ApplyForDTO toApplyForDTOFromChangeUserDto(ChangeUserDto changeUserDto) {
+        if (changeUserDto == null) {
+            return null;
+        }
+        ApplyForDTO applyForDTO = new ApplyForDTO();
+        applyForDTO.setStudents(changeUserDto.getStudents());
+        applyForDTO.setTeachers(changeUserDto.getTeachers());
+        return applyForDTO;
+    }
+
+
+    /**
+     * 项目进行编号绑定
+     * @param projectList 项目集合
+     * @param dtoList 编号集合
+     * @return
+     */
+    private boolean updateNumber(List<Project> projectList, List<BatchBingNumberDto> dtoList) {
+        //1.项目转为map key:项目名称 value:项目对象
+        Map<String, Project> projectMap = projectList
+                .stream()
+                .collect(Collectors.toMap(Project::getName, e -> e));
+
+        //2.遍历导入数据,写入项目编号
+        dtoList.forEach(e->{
+            //获取对应项目对象
+            Project project = projectMap.get(e.getName());
+            //写入项目编号
+            project.setProjectNumber(e.getProjectNumber());
+        });
+        //3.更新数据库
+        return this.updateBatchById(projectList);
+    }
+
+    /**
+     * 校验编号不存在系统当中,校验项目存在系统当中,校验项目都没有重复绑定<br>
+     * 操作数据库校验
+     * @param dtoList 导入数据
+     * @return 返回需要绑定项目集合
+     */
+    private List<Project> checkEXISTAndRightData(List<BatchBingNumberDto> dtoList) {
+        //1.校验编号全部不存在数据库当中
+
+        //2查询全部编号 转为set集合
+        Set<String> numberSet = this.lambdaQuery().in(Project::getProjectNumber, dtoList.stream().map(BatchBingNumberDto::getProjectNumber).collect(Collectors.toList()))
+                .select(Project::getProjectNumber)
+                .list()
+                .stream()
+                .map(Project::getProjectNumber)
+                .collect(Collectors.toSet());
+        //3.根据项目名称查询全部项目
+        List<Project> projectList = this.lambdaQuery().in(Project::getName, dtoList.stream().map(BatchBingNumberDto::getName).collect(Collectors.toList()))
+                .list();
+
+        //项目List转为map key 为项目名称 value为项目对象
+        Map<String, Project> projectMap = projectList
+                .stream()
+                .collect(Collectors.toMap(Project::getName, e -> e));
+
+
+        //4.错误信息记录
+        List<String> errorList = new ArrayList<>();
+
+        for (int i = 0; i < dtoList.size(); i++) {
+            BatchBingNumberDto dto = dtoList.get(i);
+
+            //当前行错误信息
+            List<String> error = new ArrayList<>();
+
+            //1.校验编号不存在系统
+            if (numberSet.contains(dto.getProjectNumber())) {
+                error.add("编号:《"+dto.getProjectNumber()+"》已经存在,不要重复绑定");
+            }
+            //2.1校验项目不存在 和 项目没有绑定编号
+            if (!projectMap.containsKey(dto.getName())) {
+                error.add("项目名称:《"+dto.getName()+"》不存在,请检查");
+            }else{
+                //2.2校验当前项目有没有绑定项目编号
+                Project project = projectMap.get(dto.getName());
+                if(StrUtil.isNotBlank(project.getProjectNumber())){
+                    error.add("项目名称:《"+dto.getName()+"》已经绑定了项目编号:《"+project.getProjectNumber()+"》,请检查");
+                }
+            }
+
+            //3.当前行有错误信息进行记录
+            if (CollUtil.isNotEmpty(error)) {
+                errorList.add("第" + (i + 2) + "行："+CollUtil.join(error,","));
+            }
+        }
+        //5.判断错误信息集合有数据抛出异常
+        if (CollUtil.isNotEmpty(errorList)) {
+            throw new ServiceException("数据错误异常:"+CollUtil.join(errorList,";\n"));
+        }
+
+        return projectList;
+    }
+
+    /**
+     * 读取导入文件,校验去空,去重校验
+     * @param file
+     * @return 导入数据
+     */
+    private static List<BatchBingNumberDto> readBatchBingNumberDtoFile(MultipartFile file) {
+        //1.读取文件
+        List<BatchBingNumberDto> list = null;
+        try {
+             list = ExcelUtils.read(file, BatchBingNumberDto.class);
+        } catch (Exception e) {
+            throw new ServiceException("解析Execl失败");
+        }
+        if(CollUtil.isEmpty(list)){
+            throw new ServiceException("当前Execl没有读取到如何束脚");
+        }
+
+        //2.1校验数据 项目编号或者项目名称重复
+        HashMap<String, Long> numberMap = new HashMap<>(); //项目编号集合 记录项目编号 key 为项目编号 value 为第一个匹配到的项目编号的起始位置
+        HashMap<String, Long> nameMap = new HashMap<>(); //项目名称集合 记录项目名称 key 为项目名称 value 为第一个匹配到的项目名称的起始位置
+
+        //2.2 错误信息集合
+        List<String> errorList = new ArrayList<>();
+
+        //2.3 遍历数据
+        for (int i =0; i < list.size(); i++){
+
+            BatchBingNumberDto dto = list.get(i);
+
+            //当前行的错误信息集合
+            List<String> error = new ArrayList<>();
+
+
+            //2.3.1 为空判断 默认不为空
+            boolean isNumberNUllist = false; //编号不为空
+            boolean isNameNUllist = false; //名称不为空
+
+            if (StrUtil.isBlank(dto.getProjectNumber())){
+                isNumberNUllist = true;
+                error.add("项目编号不能为空");
+
+            }
+            if (StrUtil.isBlank(dto.getName())){
+                isNameNUllist = true;
+                error.add("项目名称不能为空");
+            }
+            //2.3.2 去重校验
+            if(!isNumberNUllist && numberMap.containsKey(dto.getProjectNumber())){
+                error.add("项目编号:"+dto.getProjectNumber()+"重复,第一次出现是:"+numberMap.get(dto.getProjectNumber())+"行");
+            }else if (!isNumberNUllist){ //不为空,第一次出现添加集合当中
+                numberMap.put(dto.getProjectNumber(), (long) (i+2));
+            }
+            if(!isNameNUllist && nameMap.containsKey(dto.getName())){
+                error.add("项目名称:"+dto.getName()+"重复,第一次出现是:"+nameMap.get(dto.getName())+"行");
+            }else if (!isNameNUllist){ //不为空,第一次出现添加集合当中
+                nameMap.put(dto.getName(), (long) (i+2));
+            }
+            //2.3.3 错误信息
+            if(CollUtil.isNotEmpty(error)){
+                errorList.add("第" + (i + 2) + "行：" + CollUtil.join(error, ","));
+            }
+        }
+        //3.错误信息校验
+        if(CollUtil.isNotEmpty(errorList)){
+            throw new ServiceException("数据错误信息:"+CollUtil.join(errorList,";\n"));
+        }
+
+
+        return list;
     }
 
 
@@ -2695,6 +3729,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
         //4.2提前添加查询
         queryWrapper
+                .like(projectSelectDto.getProjectNumber() != null,Project::getProjectNumber,projectSelectDto.getProjectNumber())
                 //项目名称 模糊
                 .like(StrUtil.isNotBlank(projectSelectDto.getName()), Project::getName, projectSelectDto.getName())
                 //项目级别
@@ -3735,6 +4770,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         teacherApplys.stream().forEach(e -> {
             e.setProjectId(projectId);
             e.setName(userMap.get(e.getUserId()).getNickName());
+            e.setUserName(userMap.get(e.getUserId()).getUserName());
         });
         //插入老师表
         return teacherApplysService.saveBatch(teacherApplys);
@@ -3748,7 +4784,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      */
     public boolean insertProjectStudnet(ApplyForDTO applyForDTO, Long projectId) {
 //        List<StudnetApplys> studnetApplys= BeanCopyUtils.copyBeans(applyForDTO.getStudents(),StudnetApplys.class);
-        List<StudnetApplys> studnetApplys                                            = toStudnetApplysListFromApplyForDTOList(applyForDTO.getStudents());
+        List<StudnetApplys> studnetApplys = toStudnetApplysListFromApplyForDTOList(applyForDTO.getStudents());
         //3.1 获取用户id集合 key是用户id value是用户对象
         List<Long> userIds = studnetApplys.stream().map(e -> e.getUserId()).collect(Collectors.toList());
         List<User> users = userService.selectByUserIds(userIds);
@@ -4100,8 +5136,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         List<Long> teacherId =applyForDTO.getTeachers().stream()
                 .map(ApplyForTeacher::getUserId)
                 .collect(Collectors.toList());
-        //校验学生是否存在
-        studentId.stream().forEach(id -> {
+        //1.校验学生是否存在
+       /* studentId.stream().forEach(id -> {
             if (!isUserExist(id)){
                 List<ApplyForStudent> students = applyForDTO.getStudents().stream()
                         .filter(studentBean -> studentBean.getUserId().equals(id))
@@ -4110,9 +5146,37 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 students.stream().forEach(student -> result.append(student.getName()).append("，"));
                 throw new ServiceException(result.toString(),444);
             }
+        });*/
+        //错误结果集
+        List<String> erroeList = new ArrayList<>();
+
+        //1.1根据学生id获取学生用户 map集合 key:userId vlaue:用户集合
+        Map<Long, User> stuentMap = userService.lambdaQuery().in(User::getUserId, studentId).list()
+                .stream()
+                .collect(Collectors.toMap(User::getUserId, e -> e));
+        //2.遍历传入学生参数校验是否存在数据库和名字是否正确
+        applyForDTO.getStudents().forEach(dto->{
+            if (!stuentMap.containsKey(dto.getUserId())) {//不存在记录
+                erroeList.add("学号:"+dto.getUserName()+"/姓名:"+dto.getName()+"不存在数据库\n");
+            }else {//校验名字 和 学号 是否正确
+                User user = stuentMap.get(dto.getUserId());
+                if(!user.getNickName().equals(dto.getName())){
+                    erroeList.add("学号:"+dto.getUserName()+"/姓名:"+dto.getName()+"与数据库中的姓名不一致,数据库存储名字为:"+user.getNickName()+"\n");
+                }
+                if(!user.getUserName().equals(dto.getUserName())){
+                    erroeList.add("学号:"+dto.getUserName()+"/姓名:"+dto.getName()+"与数据库中的学号不一致,数据库存储学号为:"+user.getUserName()+"\n");
+                }
+
+            }
         });
-        //校验老师是否存在
-        teacherId.forEach(id -> {
+        if (CollUtil.isNotEmpty(erroeList)) {
+            throw new ServiceException("传入的学生参错误:"+StrUtil.join(",", erroeList));
+        }
+
+
+
+        //2.校验老师是否存在
+       /* teacherId.forEach(id -> {
             if (!isUserExist(id)) {
                 List<ApplyForTeacher> teachers = applyForDTO.getTeachers().stream()
                         .filter(teacherBean -> teacherBean.getUserId().equals(id))
@@ -4121,7 +5185,27 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 teachers.forEach(teacher -> result.append(teacher.getName()).append("，"));
                 throw new ServiceException(result.toString());
             }
+        });*/
+
+        //2.1 根据教师id获取教师用户 map集合 key:userId vlaue:用户集合
+        Map<Long, User> teacherMap = userService.lambdaQuery().in(User::getUserId, teacherId).list()
+                .stream()
+                .collect(Collectors.toMap(User::getUserId, e -> e));
+
+        //2.2 遍历传入教师参数校验是否存在数据库和名字是否正确
+        applyForDTO.getTeachers().forEach(dto->{
+            if (!teacherMap.containsKey(dto.getUserId())) {//不存在记录
+                erroeList.add("姓名:"+dto.getName()+"不存在数据库\n");
+            }else {//校验名字  是否正确
+                User user = teacherMap.get(dto.getUserId());
+                if(!user.getNickName().equals(dto.getName())){
+                    erroeList.add("姓名:"+dto.getName()+"与数据库中的姓名不一致,数据库存储名字为:"+user.getNickName()+"\n");
+                }
+            }
         });
+        if (CollUtil.isNotEmpty(erroeList)) {
+            throw new ServiceException("传入的指导老师参错误:"+StrUtil.join(",", erroeList));
+        }
 
         //1.必须存在一个指导老师
         long teacherCount = applyForDTO.getTeachers().stream()
@@ -4131,7 +5215,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             throw new ServiceException("必须存在一个指导老师");
         }
 
-        //验证 学生学号是否和id对应,先根据id批量查询用户信息
+       /* //验证 学生学号是否和id对应,先根据id批量查询用户信息
         userService.listByIds(studentId).stream().forEach(user -> {
             //转换用户ID和学号
             Map<Long, String> map = applyForDTO.getStudents().stream()
@@ -4145,9 +5229,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             if(!user.getUserName().equals(userName)){
                 throw new ServiceException("当前用户的学号:"+userName+"与数据库中不一致,当前用户的id:"+user.getUserId()+"不一致,请联系管理员");
             }
-        });
+        });*/
 
-        //todo 校验名字是否和账号对应
+
 
     }
 

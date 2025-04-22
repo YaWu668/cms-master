@@ -1,5 +1,6 @@
 package com.xk.config;
 
+import cn.hutool.core.collection.CollUtil;
 import com.cms.common.core.exception.ServiceException;
 import com.xk.service.DictDataService;
 import lombok.Data;
@@ -34,6 +35,11 @@ public class XMStudnetProperties {
      *     key(字典类型的): vlaue(0不需要企业老师,1需要企业)
      */
     private Map<Long, Long> teacherBusinessGuidance;
+
+    /**
+     * 项目级别的分数设置 1代表国家级 2代表区级 3代表校级
+     */
+    private Map<Long,String> projectType;
 
 
     /**
@@ -77,6 +83,15 @@ public class XMStudnetProperties {
             }
         }
 
+        //校验 项目级别的分数设置 的字典类型存在
+        for(Long key:projectType.keySet()){
+            if (!dictDataService.checkDictData(key,"xm_item_rank")){
+                throw new ServiceException("配置项:xm.studnet.projectType 中项目级别: "+key+" 不存在，请检查 Nacos 配置，请联系管理员",500);
+            }
+        }
+
+        //todo 项目级别的分数设置,必须是数字
+
     }
 
     /**
@@ -88,6 +103,9 @@ public class XMStudnetProperties {
         }
         if(teacherBusinessGuidance == null) {
             throw new ServiceException("配置项:xm.studnet.teacherBusinessGuidance 不能为空，请检查 Nacos 配置，请联系管理员", 500);
+        }
+        if (projectType == null || CollUtil.isEmpty(projectType)) {
+            throw new ServiceException("配置项:xm.studnet.projectType 不能为空，请检查 Nacos 配置，请联系管理员", 500);
         }
     }
 }

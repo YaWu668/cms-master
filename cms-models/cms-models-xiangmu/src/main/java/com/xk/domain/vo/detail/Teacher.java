@@ -20,6 +20,10 @@ public class Teacher {
      */
     private String name;
     /**
+     * 工号
+     */
+    private String userName;
+    /**
      * 手机
      */
     private String phone;

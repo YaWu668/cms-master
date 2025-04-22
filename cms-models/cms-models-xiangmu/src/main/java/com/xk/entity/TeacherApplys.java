@@ -30,6 +30,10 @@ public class TeacherApplys extends BaseEntity  {
     private Long userId;
     //姓名
     private String name;
+    /**
+     * 老师工号
+     */
+    private String userName;
     //单位
     private String unit;
     //职位

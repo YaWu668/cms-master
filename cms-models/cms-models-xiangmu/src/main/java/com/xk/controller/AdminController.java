@@ -5,6 +5,7 @@ import com.cms.common.core.web.domain.Response;
 import com.cms.common.log.annotation.Log;
 import com.cms.common.log.enums.BusinessType;
 import com.xk.domain.dto.*;
+import com.xk.domain.vo.Execl.ListExportVo;
 import com.xk.domain.vo.admin.UserListVo;
 import com.xk.domain.vo.group.CollegeDataVo;
 import com.xk.domain.vo.group.CollegeDetailedLisVo;
@@ -69,6 +70,78 @@ public class AdminController {
      * 项目服务
      */
     private final  ProjectService projectService;
+
+    @PostMapping("/test")
+    private Response testResponse(@RequestBody @Valid TestDto  testDto){
+        return Response.success(testDto);
+    }
+    /**
+     * 更换人员(直接覆盖原本)
+     */
+    @PutMapping("/changeUser")
+    @Log(title = "更换人员", businessType = BusinessType.UPDATE)
+    public Response changeUser(@RequestBody @Valid ChangeUserDto changeUserDto){
+        return projectService.changeUser(changeUserDto)?
+                Response.success() : Response.error("更换人员失败");
+    }
+//----------------批量导出和导入
+
+    /**
+     * 根据项目id导出项目学分
+     * @param projectIds 项目id
+     * @param response 响应
+     * @return
+     */
+    @GetMapping("/exportProjectNumber")
+    @Log(title = "根据项目id导出项目学分", businessType = BusinessType.OTHER)
+    public Response<?> exportProjectNumber(@RequestParam("projectIds") @NotNull List<Long> projectIds,
+                                             HttpServletResponse response){
+        return projectService.exportProjectNumber(projectIds,response)
+                ?Response.success() : Response.error("导出失败");
+    }
+
+    /**
+     * 根据年度id导出项目聚合数据
+     */
+    @GetMapping("/download/year")
+    @Log(title = "根据年度id导出项目聚合数据", businessType = BusinessType.OTHER)
+    public Response<?> downloadYear(Long yearId,
+                                    HttpServletResponse response){
+        return projectService.downloadYear(yearId,response)?Response.success() : Response.error("导出失败");
+    }
+
+    /**
+     * 根据项目id导出项目信息列表
+     * @param projectIds 年度组id
+     * @param response 响应
+     * @return
+     */
+    @GetMapping("/download/project")
+    public Response<?> downloadProject(@RequestParam("projectIds") @NotNull List<Long> projectIds,
+                                    HttpServletResponse response){
+        List<ListExportVo> voList = projectService.getDownloadProject(projectIds);
+        return projectService.exportProjectinfoList(voList,response)?Response.success() : Response.error("导出失败");
+    }
+
+    /**
+     * 项目批量绑定项目编号
+     * @param file
+     * @return
+     */
+    @PutMapping("/batchBing/number")
+    public Response batchBingNumber(@RequestParam("file") MultipartFile file){
+        return projectService.batchBingNumber(file)?
+                Response.success() : Response.error("批量绑定失败");
+    }
+
+    /**
+     * 获取项目绑定项目编号Execl模板
+     */
+    @GetMapping("/getProjectNumberTemplate")
+    public Response getProjectNumberTemplate(HttpServletResponse response){
+        return projectService.getProjectNumberTemplate(response)?
+                Response.success() : Response.error("获取模板失败");
+    }
 
 
 //-------------------------------------------------------

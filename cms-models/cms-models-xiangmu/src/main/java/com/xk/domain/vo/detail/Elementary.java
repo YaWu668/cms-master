@@ -9,6 +9,10 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class Elementary {
     /**
+     * 项目id
+     */
+    private Long projectId;
+    /**
      * 项目立项时间 (yyyy-MM-dd HH:mm:ss)
      */
     private String beginTime;
@@ -72,4 +76,8 @@ public class Elementary {
      * 年度组的id(缺少api根据id)--- 一年期
      */
     private Long yearGroupId;
+    /**
+     * 项目编号
+     */
+    private String projectNumber;
 }

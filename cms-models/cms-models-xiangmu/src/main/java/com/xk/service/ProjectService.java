@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.cms.common.core.web.domain.Response;
 import com.xk.domain.dto.*;
 
+import com.xk.domain.vo.Execl.ListExportVo;
 import com.xk.domain.vo.detail.DetailProjectVo;
 import com.xk.domain.vo.project.ProjectListvo;
 
@@ -12,9 +13,12 @@ import com.xk.domain.vo.detail.DetailProjectVo;
 import com.xk.domain.vo.student.StudentProjectVo;
 import com.xk.domain.vo.student.StudentVo;
 import com.xk.entity.Project;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -23,6 +27,27 @@ import java.util.List;
  * @author yawu
  */
 public interface ProjectService extends IService<Project> {
+    /**
+     * 根据项目id导出项目学分
+     * @param projectIds 项目id集合
+     * @param response
+     * @return
+     */
+    boolean exportProjectNumber( List<Long> projectIds, HttpServletResponse response);
+    /**
+     * 根据年度组id导出项目的
+     * @param projectIds 项目id集合
+     * @return
+     */
+    List<ListExportVo> getDownloadProject(List<Long> projectIds);
+
+    /**
+     * 导出项目信息列表
+     * @param voList 项目信息列表
+     * @param response
+     * @return
+     */
+    boolean exportProjectinfoList(List<ListExportVo> voList, HttpServletResponse response);
     /**
      * 批量下载指定项目的文件（支持结题材料或附加材料），并打包成 zip 压缩包通过响应返回。
      *
@@ -261,6 +286,37 @@ public interface ProjectService extends IService<Project> {
      * @return 返回文件流，前端下载
      */
      void exportXmWord(List<Long> projectIds, HttpServletResponse response) throws Exception;
+
+
+
+    /**
+     * 绑定项目编号
+     * @param file
+     * @return
+     */
+    boolean batchBingNumber(MultipartFile file);
+
+    /**
+     * 获取项目编号模板
+     * @param response
+     * @return
+     */
+    boolean getProjectNumberTemplate(HttpServletResponse response);
+
+    /**
+     * 更换人员
+     * @param changeUserDto
+     * @return
+     */
+    boolean changeUser( ChangeUserDto changeUserDto);
+
+    /**
+     * 根据年度id导出项目集合信息
+     * @param yearId
+     * @param response
+     * @return
+     */
+    boolean downloadYear(Long yearId, HttpServletResponse response);
 
 
 }

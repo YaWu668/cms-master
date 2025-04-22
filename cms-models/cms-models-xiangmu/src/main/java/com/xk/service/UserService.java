@@ -1,6 +1,7 @@
 package com.xk.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.xk.domain.dto.ChangeUserDto;
 import com.xk.domain.dto.ProjectPersonDto;
 import com.xk.domain.vo.SearchPersonListVo;
 import com.xk.domain.vo.detail.Student;
@@ -11,6 +12,7 @@ import com.xk.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -78,5 +80,7 @@ public interface UserService extends IService<User> {
      * @return
      */
     boolean getExeclTemplate(@NotNull(message = "type不允许为空") @Min(value = 0,message = "type不允许小于0") @Max(value = 1,message = "type不允许大于1") Integer type, HttpServletResponse response);
+
+
 }
 
