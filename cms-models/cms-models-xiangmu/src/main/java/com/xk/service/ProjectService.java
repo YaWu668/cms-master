@@ -257,10 +257,10 @@ public interface ProjectService extends IService<Project> {
 
     /**
      * 根据项目id导出对应的word
-     * @param projectId 项目id
+     * @param projectIds 项目id
      * @return 返回文件流，前端下载
      */
-     void exportXmWord(Long projectId, HttpServletResponse response) throws Exception;
+     void exportXmWord(List<Long> projectIds, HttpServletResponse response) throws Exception;
 
 
 }

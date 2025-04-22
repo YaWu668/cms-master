@@ -194,9 +194,9 @@ public class PulicController {
      * @return response携带文件字节数组返回
      */
     @GetMapping("/exportWord")
-    public void exportXmWord(@RequestParam Long projectId, HttpServletResponse response) throws Exception {
+    public void exportXmWord(@RequestParam List<Long> projectIds, HttpServletResponse response) throws Exception {
         // 调用服务层方法获取文件字节数组
-        projectService.exportXmWord(projectId,response);
+        projectService.exportXmWord(projectIds,response);
     }
 
 

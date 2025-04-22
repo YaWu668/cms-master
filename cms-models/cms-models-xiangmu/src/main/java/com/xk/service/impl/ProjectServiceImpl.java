@@ -1,6 +1,7 @@
 package com.xk.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ArrayUtil;
@@ -47,20 +48,18 @@ import com.xk.domain.vo.detail.*;
 import com.xk.domain.vo.student.StudentVo;
 import com.xk.entity.*;
 import com.xk.enums.ProjectStatusEnum;
-import com.xk.mapper.ProjectMapper;
-import com.xk.mapper.StudnetApplysMapper;
-import com.xk.mapper.TeacherApplysMapper;
-import com.xk.mapper.UserMapper;
+import com.xk.mapper.*;
 import com.xk.service.*;
 import com.xk.utils.BeanCopyUtils;
 import com.xk.utils.BeanUtils;
 import com.xk.utils.ResponseStreamUtil;
+import groovyjarjarpicocli.CommandLine;
 import com.xk.utils.ZipUtils;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.apache.tools.zip.ZipEntry;
+import org.apache.tools.zip.ZipOutputStream;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,13 +68,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -85,10 +84,16 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiConsumer;
+import java.util.logging.Level;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
@@ -221,6 +226,11 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * 文件客户端
      */
     private final SysFileClient sysFileClient;
+
+    /**
+     * 审核意见表(AuditOpinion)表数据库访问层
+     */
+    private final AuditOpinionMapper auditOpinionMapper;
 
 
     /**
@@ -1444,49 +1454,126 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     }
 
     @Override
-    public void exportXmWord(Long projectId, HttpServletResponse response) throws Exception {
+    public void exportXmWord(List<Long> projectIds, HttpServletResponse response) throws Exception {
         // 获取项目信息，判断项目状态是否可以导出
-        Project project = getProject(projectId);
-        String fileName = project.getName()
-                +"_"
-                +LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日HH时mm分"))
-                +".docx";
-        // 设置响应头：保持Word文件MIME类型
-        response.setContentType("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
-
-        // 使用RFC 5987 编码方式设置文件名
-        String encodedFileName = URLEncoder.encode(fileName, "UTF-8");
-        response.setHeader("Content-Disposition", "attachment; filename*=UTF-8''" + encodedFileName);
-
-        // 项目状态校验
-        if (project.getState() == ProjectConstant.PROJECT_STATUS_NOT_PASS_VALUE
-                || project.getState() == ProjectConstant.PROJECT_STATUS_AUDIT_VALUE) {
-            throw new ServiceException("项目:<" + project.getName() + "> 状态没有审核通过，无法导出为 Word 文件");
+        List<Project> projectList = projectIds.stream()
+                .map(this::getProject)
+                .collect(Collectors.toList());
+        projectList.forEach(project -> {
+            // 项目状态校验
+            if (project.getState() == ProjectConstant.PROJECT_STATUS_NOT_PASS_VALUE
+                    || project.getState() == ProjectConstant.PROJECT_STATUS_AUDIT_VALUE) {
+                throw new ServiceException("项目:<" + project.getName() + "> 状态没有审核通过，无法导出为 Word 文件");
+            }
+        });
+        // 生成原始文件名
+        String originalZipFileName = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日HH时mm分")) + ".zip";
+        // 对文件名进行UTF-8 URL编码
+        String encodedZipFileName = URLEncoder.encode(originalZipFileName, StandardCharsets.UTF_8.toString())
+                .replaceAll("\\+", "%20") // 将URL编码中的+替换为%20（空格编码）
+                .replaceAll("!", "%21")
+                .replaceAll("'", "%27")
+                .replaceAll("\\(", "%28")
+                .replaceAll("\\)", "%29");
+        Map<String, CompletableFuture<byte[]>> futureFilesMap = new HashMap<>();
+        Set<String> usedFileNames = new HashSet<>();
+        for (Project project : projectList) {
+            // 异步生成 Word 文件
+            CompletableFuture<byte[]> future = CompletableFuture.supplyAsync(() -> {
+                byte[] fileBytes = null;
+                try {
+                    if (project.getType().equals(ProjectConstant.PROJECT_TYPE_INNOVATION_TRAINING)) {
+                        fileBytes = this.exportWordForTypeOne(project);
+                    } else if (project.getType().equals(ProjectConstant.PROJECT_TYPE_STARTUP_TRAINING)) {
+                        fileBytes = this.exportWordForTypeTwo(project);
+                    } else if (project.getType().equals(ProjectConstant.PROJECT_TYPE_STARTUP_PRACTICE)) {
+                        fileBytes = this.exportWordForTypeThree(project);
+                    }
+                } catch (Exception e) {
+                    log.error("生成项目" + project.getName() + "的 Word 文件时出错");
+                    throw new ServiceException("生成项目" + project.getName() + "的 Word 文件时出错");
+                }
+                return fileBytes;
+            });
+            // 生成ZIP内的文件名
+            String originalFileName = project.getName() + "_"
+                    + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日HH时mm分"))
+                    + ".docx";
+            String uniqueFileName = this.ensureUniqueFileName(originalFileName, usedFileNames);
+            futureFilesMap.put(uniqueFileName, future);
+            usedFileNames.add(uniqueFileName);
         }
-
-        // 确认是否是管理员或者是项目老师或者学生，否则不允许导出word
-//        isContainsMembers(project);
-        byte[] fileBytes = null;
-        // 判断项目类型,根据3种不同的类型导出不一样的word，1为创新训练项目, 2为创业训练项目, 3为创业实践
-        if (project.getType().equals(ProjectConstant.PROJECT_TYPE_INNOVATION_TRAINING)) {
-            fileBytes = exportWordForTypeOne(project);
-        } else if (project.getType().equals(ProjectConstant.PROJECT_TYPE_STARTUP_TRAINING)) {
-            fileBytes = exportWordForTypeTwo(project);
-        } else if (project.getType().equals(ProjectConstant.PROJECT_TYPE_STARTUP_PRACTICE)) {
-            fileBytes = exportWordForTypeThree(project);
+        // 等待所有异步任务完成
+        CompletableFuture.allOf(futureFilesMap.values().toArray(new CompletableFuture[0])).join();
+        Map<String, byte[]> filesMap = new HashMap<>();
+        for (Map.Entry<String, CompletableFuture<byte[]>> entry : futureFilesMap.entrySet()) {
+            try {
+                byte[] fileBytes = entry.getValue().get();
+                if (fileBytes != null) {
+                    filesMap.put(entry.getKey(), fileBytes);
+                }
+            } catch (InterruptedException | ExecutionException e) {
+                log.error("等待异步任务完成时出错: " + e.getMessage());
+            }
         }
-
-        if (fileBytes == null) {
-            throw new ServiceException("项目<" + project.getName() + ">读取失败，无法导出为 Word 文件");
+        byte[] zipBytes = this.compressFilesToZip(filesMap);
+        // 设置响应头
+        response.setContentType("application/zip");
+        response.setHeader("Content-Disposition",
+                "attachment; filename*=UTF-8''" + encodedZipFileName);
+        try (OutputStream out = response.getOutputStream()) {
+            out.write(zipBytes);
+        } catch (IOException e) {
+            log.error("写入 ZIP 文件错误:" + e.getMessage());
+            throw new ServiceException("文件导出失败");
         }
+    }
 
-        // 将文件字节写入响应流（仿照方法一的方式）
-        try {
-                response.getOutputStream().write(fileBytes);
-                response.getOutputStream().flush();
-            } catch (IOException e) {
-            throw new ServiceException("文件下载失败：" + e.getMessage());
+    /**
+     * 压缩多个文件到一个 ZIP 文件中
+     * zipUtils的compress方法会导致导出的最后一个word损坏，所以自己抽象出一个方法专门用于压缩word文件
+     * @param filesMap 文件名与文件字节数组的映射
+     * @return 压缩后的zip字节数组
+     */
+    private  byte[] compressFilesToZip(Map<String, byte[]> filesMap) {
+        // 1.1压缩多个文件到一个 ZIP 文件中
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+             ZipOutputStream zos = new ZipOutputStream(baos)) {
+            for (Map.Entry<String, byte[]> entry : filesMap.entrySet()) {
+                String entryName = entry.getKey();
+                byte[] data = entry.getValue();
+                ZipEntry zipEntry = new ZipEntry(entryName);
+                zos.putNextEntry(zipEntry);
+                zos.write(data);
+                zos.closeEntry();
+            }
+            // 2.1完成压缩
+            zos.finish();
+            return baos.toByteArray();
+        }catch (IOException e){
+            throw new ServiceException("压缩文件失败");
         }
+    }
+
+    /**
+     * 确保文件名不重复
+     * @param originalFileName 原始文件名
+     * @param usedFileNames 已使用的文件名集合
+     * @return 返回文件名
+     */
+    private String ensureUniqueFileName(String originalFileName, Set<String> usedFileNames) {
+        String fileName = originalFileName;
+        int counter = 1;
+        while (usedFileNames.contains(fileName)) {
+            int dotIndex = originalFileName.lastIndexOf('.');
+            if (dotIndex != -1) {
+                String name = originalFileName.substring(0, dotIndex);
+                String extension = originalFileName.substring(dotIndex);
+                fileName = name + "(" + counter + ")" + extension;
+            }
+            counter++;
+        }
+        return fileName;
     }
 
 
@@ -1519,17 +1606,20 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             wordMap.put("cTen", extractTextFromHtml(project.getCTen()));
             wordMap.put("cEleven", extractTextFromHtml(project.getCEleven()));
             //TODO 立项依据的图片,每一个立项依据的图片垂直拼接成一张单独的图片
-            wordMap.put("imageA", getPictureRenderData(project.getCOne()));
-            wordMap.put("imageB", getPictureRenderData(project.getCTwo()));
-            wordMap.put("imageC", getPictureRenderData(project.getCThree()));
-            wordMap.put("imageD", getPictureRenderData(project.getCFour()));
-            wordMap.put("imageE", getPictureRenderData(project.getCFive()));
-            wordMap.put("imageF", getPictureRenderData(project.getCSix()));
-            wordMap.put("imageG", getPictureRenderData(project.getCSeven()));
-            wordMap.put("imageH", getPictureRenderData(project.getCEight()));
-            wordMap.put("imageI", getPictureRenderData(project.getCNine()));
-            wordMap.put("imageJ", getPictureRenderData(project.getCTen()));
-            wordMap.put("imageK", getPictureRenderData(project.getCEleven()));
+            ArrayList<String> htmlStringList = ListUtil
+                    .toList(project.getCOne(),
+                            project.getCTwo(),
+                            project.getCThree(),
+                            project.getCFour(),
+                            project.getCFive(),
+                            project.getCSix(),
+                            project.getCSeven(),
+                            project.getCEight(),
+                            project.getCNine(),
+                            project.getCTen(),
+                            project.getCEleven());
+            HashMap<String, Object>  allPictureMap =  getAllPicture(htmlStringList);
+            wordMap.putAll(allPictureMap);
             //三、经费预算（单位：元）
             DetailedFundingOneDto budgetOne = getBudget(project.getBudget(), project.getType());//获取详细经费预算
             HashMap<String, Object> budgetOneMap = convertObjectToHashMap(budgetOne);//获取详细经费预算map
@@ -1581,15 +1671,17 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             wordMap.put("bSeven", extractTextFromHtml(project.getBSeven()));
             wordMap.put("bEight", extractTextFromHtml(project.getBEight()));
             // 立项依据的图片,每一个立项依据的图片垂直拼接成一张单独的图片
-            wordMap.put("imageA", getPictureRenderData(project.getBOne()));
-            wordMap.put("imageB", getPictureRenderData(project.getBTwo()));
-            wordMap.put("imageC", getPictureRenderData(project.getBThree()));
-            wordMap.put("imageD", getPictureRenderData(project.getBFour()));
-            wordMap.put("imageE", getPictureRenderData(project.getBFive()));
-            wordMap.put("imageF", getPictureRenderData(project.getBSix()));
-            wordMap.put("imageG", getPictureRenderData(project.getBSeven()));
-            wordMap.put("imageH", getPictureRenderData(project.getBEight()));
-
+            ArrayList<String> htmlStringList = ListUtil
+                    .toList(project.getBOne(),
+                            project.getBTwo(),
+                            project.getBThree(),
+                            project.getBFour(),
+                            project.getBFive(),
+                            project.getBSix(),
+                            project.getBSeven(),
+                            project.getBEight());
+            HashMap<String, Object>  allPictureMap =  getAllPicture(htmlStringList);
+            wordMap.putAll(allPictureMap);
             //三、经费预算（单位：元）
             DetailedFundingOneDto budgetOne = getBudget(project.getBudget(), project.getType());//获取详细经费预算
             HashMap<String, Object> budgetOneMap = convertObjectToHashMap(budgetOne);//获取详细经费预算map
@@ -1640,14 +1732,18 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             wordMap.put("aSeven", extractTextFromHtml(project.getASeven()));
             wordMap.put("aEight", extractTextFromHtml(project.getAEight()));
             // 立项依据的图片,每一个立项依据的图片垂直拼接成一张单独的图片
-            wordMap.put("imageA", getPictureRenderData(project.getAOne()));
-            wordMap.put("imageB", getPictureRenderData(project.getATwo()));
-            wordMap.put("imageC", getPictureRenderData(project.getAThree()));
-            wordMap.put("imageD", getPictureRenderData(project.getAFour()));
-            wordMap.put("imageE", getPictureRenderData(project.getAFive()));
-            wordMap.put("imageF", getPictureRenderData(project.getASix()));
-            wordMap.put("imageG", getPictureRenderData(project.getASeven()));
-            wordMap.put("imageH", getPictureRenderData(project.getAEight()));
+            // 获取所有照片的map
+            ArrayList<String> htmlStringList = ListUtil
+                    .toList(project.getAOne(),
+                            project.getATwo(),
+                            project.getAThree(),
+                            project.getAFour(),
+                            project.getAFive(),
+                            project.getASix(),
+                            project.getASeven(),
+                            project.getAEight());
+            HashMap<String, Object>  allPictureMap =  getAllPicture(htmlStringList);
+            wordMap.putAll(allPictureMap);
             //三、经费预算（单位：元）
             DetailedFundingOneDto budgetOne = getBudget(project.getBudget(), project.getType());//获取详细经费预算
             HashMap<String, Object> budgetOneMap = convertObjectToHashMap(budgetOne);//获取详细经费预算map
@@ -1670,6 +1766,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             throw new ServiceException("导出失败", 444);
         }
     }
+
 
     /**
      * 创新训练项目详细经费预算json转换为实体
@@ -1920,10 +2017,11 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                     extractedText.append(p.childNode(i).toString().replaceAll("<[^>]*>", ""));
                 }
             }
-            extractedText.append("\n\n");
         }
         return extractedText.toString();
     }
+
+
 
     /**
      * 三个项目中共有的项目信息，除了类型一没有企业导师的信息
@@ -1933,35 +2031,21 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     private HashMap<String, Object> getProjectMap(Project project) {
         //把实体类转为map
         HashMap<String, Object> wordMap = convertObjectToHashMap(project);
+        List<Map<String, Object>> students = getAllStudents(project);//所有学生
+        List<Map<String, Object>> teacherListA = getAllTeachers(project, 0);//指导老师
+        List<Map<String, Object>> teacherListB = getAllTeachers(project, 1);//企业老师
         //word封面
-        StudnetApplys projectHead = this.studnetApplysService.getOne(new LambdaQueryWrapper<StudnetApplys>()
-                .eq(StudnetApplys::getUserId, project.getUserId())
-                .eq(StudnetApplys::getProjectId, project.getProjectId()));
-        wordMap.put("studentname", projectHead.getName());//项目负责人名字
-        wordMap.put("studentPhone", projectHead.getPhone());//项目负责人联系电话
-        wordMap.put("schoolName", collegeGroupService.getById(projectHead.getCollegeGroupId()).getName());//项目负责人学院组名称
-        wordMap.put("userName", projectHead.getUserName());//项目负责人学号
-        wordMap.put("professionalClass", projectHead.getProfessionalClass());//项目负责人专业班级
-        Long firstTeacherId = getProjectMembersIds(project.getTeacherId()).get(0);
-        TeacherApplys firstTeacher = this.teacherApplysService.list(new LambdaQueryWrapper<TeacherApplys>()
-                        .eq(TeacherApplys::getUserId, firstTeacherId)
-                        .eq(TeacherApplys::getProjectId, project.getProjectId())
-                        .eq(TeacherApplys::getIsTeacher, 0))
-                .get(0);
-        wordMap.put("teacherName", firstTeacher.getName());
-        wordMap.put("teacherPhone", firstTeacher.getPhone());
+        wordMap.putAll(this.getChargeStudentMap(students));
+        wordMap.put("teacherName", this.getAllTeacherName(teacherListA));//所有指导老师名字字符串
+        wordMap.put("teacherPhone", teacherListA.get(0).get("phone"));
         if (!project.getType().equals(ProjectConstant.PROJECT_TYPE_INNOVATION_TRAINING)) {
-            TeacherApplys firstfirmTeacher = this.teacherApplysService.list(new LambdaQueryWrapper<TeacherApplys>()
-                            .eq(TeacherApplys::getUserId, firstTeacherId)
-                            .eq(TeacherApplys::getProjectId, project.getProjectId())
-                            .eq(TeacherApplys::getIsTeacher, 1))
-                    .get(0);
-            wordMap.put("firmTeacherName", firstfirmTeacher.getName());
-            wordMap.put("firmTeacherPhone", firstfirmTeacher.getPhone());
+            wordMap.put("firmTeacherName", this.getAllTeacherName(teacherListB));
         }
-        wordMap.put("beginTime", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        wordMap.put("beginTime", DateTimeFormatter.ofPattern("yyyy年MM月dd日")
                 .format(LocalDateTime.ofInstant(project.getBeginTime().toInstant(), ZoneId.systemDefault())));//活动的开始时间
-        wordMap.put("endTime", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        wordMap.put("beginTime1", DateTimeFormatter.ofPattern("yyyy年MM月")
+                .format(LocalDateTime.ofInstant(project.getBeginTime().toInstant(), ZoneId.systemDefault())));//活动的开始时间
+        wordMap.put("endTime", DateTimeFormatter.ofPattern("yyyy年MM月")
                 .format(LocalDateTime.ofInstant(project.getEndTime().toInstant(), ZoneId.systemDefault())));//活动的结束时间
         //一：基本情况
         wordMap.put("beginYear", DateTimeFormatter.ofPattern("yyyy")
@@ -1969,11 +2053,101 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         wordMap.put("beinMonth", project.getBeginTime().getMonth() + 1);//活动开始月份
         wordMap.put("endYear", project.getEndTime().getYear() + 1900);//活动结束年份
         wordMap.put("endMonth", project.getEndTime().getMonth() + 1);//活动结束月份
-        wordMap.put("majorName", userService.getById(project.getUserId()).getMajorName());
-        wordMap.put("studentList", getAllStudents(project));//获得项目所有学生并添加回去map
-        wordMap.put("teacherListA", getAllTeachers(project));//获得项目所有指导老师并添加回去map
-        wordMap.put("teacherListB", getAllFirmTeacherId(project));//获得项目所有指导老师并添加回去map
+        wordMap.put("majorNames", this.getMajorNames(students));
+        wordMap.put("studentList", students);//获得项目所有学生并添加回去map
+        wordMap.put("teacherListA", teacherListA);//获得项目所有指导老师并添加回去map
+        wordMap.put("teacherListB", teacherListB);//获得项目所有指导老师并添加回去map
+        //审核意见，类型1三种，类型23四种
+        wordMap.putAll(this.getAuditOpinionMap(project.getProjectId()));
         return wordMap;
+    }
+
+
+    /**
+     * 获取一个word的所有审核意见的map
+     * @param projectId 项目id
+     * @return 所有审核意见的map
+     */
+    private HashMap<String, Object> getAuditOpinionMap(Long projectId){
+        // 审核意见
+        List<AuditOpinion> auditOpinions = auditOpinionService.selectByPropertieID(projectId);
+        //对所有审核意见进行排序，并去掉管理员审核意见
+        List<AuditOpinion> sortedAuditOpinions = auditOpinions.stream()
+                .sorted(Comparator.comparing(AuditOpinion::getRootId))
+                .collect(Collectors.toList());
+        HashMap<String, Object> map = new HashMap<>();
+        AuditOpinionDTO auditOpinionDTO = this.auditOpinionMapper.getAuditOpinionDTOList(projectId);
+        List<AuditOpinion> list = sortedAuditOpinions.stream()
+                .filter(sortedAuditOpinion -> !sortedAuditOpinion.getAuditOpinionId().equals(auditOpinionDTO.getAuditOpinionId()))
+                .collect(Collectors.toList());
+        for (int i = 0; i < list.size(); i++) {
+            map.put("auditOpinion" + (char) ('A' + i),list.get(i).getAuditOpinion());
+        }
+        return map;
+    }
+
+    /**
+     * 获取所有项目学生专业名称字符串
+     * @param students 项目所有学生集合
+     * @return 所有专业名称字符串
+     */
+    private String getMajorNames(List<Map<String, Object>> students){
+        StringBuilder stringBuilder = new StringBuilder();
+        List<String> majorNames = students.stream().map(student -> student.get("professionalClass").toString()).collect(Collectors.toList());
+        majorNames.stream()
+                .map(this::getMajorName)
+                .distinct()
+                .collect(Collectors.toList())
+                .forEach(majorName ->stringBuilder.append("、").append(majorName));
+        return stringBuilder.deleteCharAt(0).toString();
+    }
+
+    /**
+     * 正则匹配专业名称
+     * @param majorNames 班级信息字符串
+     * @return 专业名称
+     */
+    private String getMajorName(String majorNames){
+        // 编译正则表达式
+        Pattern pattern = Pattern.compile("^\\d+级([^\\d]+)\\d+班");
+        // 创建 Matcher 对象
+        Matcher matcher = pattern.matcher(majorNames);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        // 匹配失败
+        throw new RuntimeException("获取" + majorNames + "专业名称失败");
+    }
+
+    /**
+     * 获取项目负责人的信息map
+     * @param students 项目所有学生集合
+     * @return 负责人信息实体
+     */
+    private Map<String, Object> getChargeStudentMap(List<Map<String, Object>> students) {
+        HashMap<String, Object> map = new HashMap<>();
+        for (Map<String, Object> student : students) {
+            if (student.get("isPrincipal").equals("是")){
+                map.put("studentname", student.get("name"));
+                map.put("studentPhone", student.get("phone"));
+                map.put("schoolName", student.get("collegeGroupId"));
+                map.put("userName", student.get("userName"));
+                map.put("professionalClass", student.get("professionalClass"));
+                break;
+            }
+        }
+        return map;
+    }
+
+    /**
+     * 获得所有老师名字的字符串
+     * @param teacherListA 指导老师集合
+     * @return 所有老师名字字符串
+     */
+    private String getAllTeacherName(List<Map<String, Object>> teacherListA) {
+        StringBuilder stringBuilder = new StringBuilder();
+        teacherListA.forEach(map -> stringBuilder.append(",").append(map.get("name")));
+        return stringBuilder.deleteCharAt(0).toString();
     }
 
     /**
@@ -2005,52 +2179,103 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * @param project 项目信息实体
      * @return 一个列表，里面是所有老师的报名信息，为key-value形式
      */
-    private List<Map<String, Object>> getAllTeachers(Project project) {
+    // 获取项目里全部老师的具体报名信息
+    private List<Map<String, Object>> getAllTeachers(Project project,int type) {
         List<Map<String, Object>> allTeachers = new ArrayList<>();
         List<Long> projectMembers = getProjectMembersIds(project.getTeacherId());
-        projectMembers.forEach(id -> {
-            TeacherApplys projectTeacher = this.teacherApplysService.getOne(new LambdaQueryWrapper<TeacherApplys>()
-                    .eq(TeacherApplys::getUserId, id)
+        List<Long> projectMembersIds = getProjectMembersIds(project.getFirmTeacherId());
+        ArrayList<Long> list = new ArrayList<>(projectMembers);
+        list.addAll(projectMembersIds);
+        // 使用 IN 条件一次性查询所有老师的报名信息
+        List<TeacherApplys> projectTeachers;
+        if (!project.getType().equals(ProjectConstant.PROJECT_TYPE_INNOVATION_TRAINING)) {
+             projectTeachers = teacherApplysService.list(new LambdaQueryWrapper<TeacherApplys>()
+                    .in(TeacherApplys::getUserId, list)
+                    .eq(TeacherApplys::getProjectId, project.getProjectId())
+                    .eq(TeacherApplys::getIsTeacher, type));
+        }else{
+             projectTeachers = teacherApplysService.list(new LambdaQueryWrapper<TeacherApplys>()
+                    .in(TeacherApplys::getUserId, list)
                     .eq(TeacherApplys::getProjectId, project.getProjectId())
                     .eq(TeacherApplys::getIsTeacher, 0));
+        }
+        if (ObjectUtil.isEmpty(projectTeachers)) {
+            throw new ServiceException(project.getName()+"查询不到项目的老师信息");
+        }
+        for (TeacherApplys projectTeacher : projectTeachers) {
             Map<String, Object> map = new HashMap<>();
+            map.put("userId", projectTeacher.getUserId());
             map.put("name", projectTeacher.getName());
             map.put("unit", projectTeacher.getUnit());
             map.put("post", projectTeacher.getPost());
             map.put("phone", projectTeacher.getPhone());
             map.put("mailbox", projectTeacher.getMailbox());
             allTeachers.add(map);
-        });
+        }
+
         return allTeachers;
     }
 
-    //获取项目里全部学生的具体报名信息
+    /**
+     * 获取项目里全部学生的具体报名信息map
+     * @param project
+     * @return 一个列表，里面是所有学生的报名信息，为key-value形式
+     */
     private List<Map<String, Object>> getAllStudents(Project project) {
         List<Map<String, Object>> allStudents = new ArrayList<>();
         List<Long> projectMembers = getProjectMembersIds(project.getMemberId());
-        projectMembers.forEach(id -> {
-            StudnetApplys projectStudent = this.studnetApplysService.getOne(new LambdaQueryWrapper<StudnetApplys>()
-                    .eq(StudnetApplys::getUserId, id)
-                    .eq(StudnetApplys::getProjectId, project.getProjectId()));
+
+        // 使用 IN 条件一次性查询所有学生的报名信息
+        List<StudnetApplys> projectStudents = studnetApplysService.list(new LambdaQueryWrapper<StudnetApplys>()
+                .in(StudnetApplys::getUserId, projectMembers)
+                .eq(StudnetApplys::getProjectId, project.getProjectId()));
+        if (ObjectUtil.isEmpty(projectStudents)) {
+            throw new ServiceException(project.getName()+"查询不到项目的学生信息");
+        }
+        //查询所有学院组名字再进行匹配，避免在循环里查询数据库
+        List<DictData> nationList = this.dictDataService
+                .list(new LambdaQueryWrapper<DictData>().eq(DictData::getDictType, "xm_item_nation"));
+        if (ObjectUtil.isEmpty(nationList)){
+            throw new ServiceException(project.getName()+"查询不到学院组信息");
+        }
+        for (StudnetApplys projectStudent : projectStudents) {
             Map<String, Object> map = new HashMap<>();
+            map.put("userId",projectStudent.getUserId());
             map.put("name", projectStudent.getName());
             map.put("sex", projectStudent.getSex() == 0L ? "男" : "女");
             map.put("userName", projectStudent.getUserName());
-            DictData xmItemNation = this.dictDataService.getOne(new LambdaQueryWrapper<DictData>()
-                    .eq(DictData::getDictType, "xm_item_nation")
-                    .eq(DictData::getDictValue, projectStudent.getNation()));
-            map.put("nation", xmItemNation.getDictLabel());
+            map.put("nation",this.getNationName(nationList, projectStudent.getNation()));
             map.put("dateOfBirth", projectStudent.getDateOfBirth());
             map.put("collegeGroupId", collegeGroupService.getById(projectStudent.getCollegeGroupId()).getName());
             map.put("professionalClass", projectStudent.getProfessionalClass());
+            if (ObjectUtil.isEmpty(projectStudent.getPhone())) {
+                throw new ServiceException("查询不到项目学生"+projectStudent.getName()+"手机号");
+            }
             map.put("phone", projectStudent.getPhone());
             map.put("mobilePhone", projectStudent.getMobilePhone());
             map.put("mailbox", projectStudent.getMailbox());
             map.put("job", projectStudent.getJob());
             map.put("isPrincipal", projectStudent.getIsPrincipal() == 1 ? "是" : "否");
+
             allStudents.add(map);
-        });
+        }
+
         return allStudents;
+    }
+
+    /**
+     * 获取所在学院名字
+     * @param nationList 学院组列表
+     * @param nationId 学院组id
+     * @return 学院组名字
+     */
+    private String getNationName(List<DictData> nationList,Long nationId){
+        for (DictData dictData : nationList) {
+            if (dictData.getDictSort().equals(nationId) || nationId != null){
+                return dictData.getDictLabel();
+            }
+        }
+        return null;
     }
 
     /**
@@ -2103,108 +2328,154 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return Arrays.asList(idArray);
     }
 
+    /**
+     * 获取一个项目里所有需要的图片map
+     * @param htmlStrings html字符串集合
+     * @return 此项目的所有拼接后的图片
+     */
+    private HashMap<String, Object> getAllPicture(List<String> htmlStrings) {
+        List<CompletableFuture<Map.Entry<String, Object>>> futures = new ArrayList<>();
+        // 为每个 HTML 字符串创建异步任务
+        for (int i = 0; i < htmlStrings.size(); i++) {
+            int index = i; // 确保在 lambda 中捕获正确的索引
+            CompletableFuture<Map.Entry<String, Object>> future = CompletableFuture.supplyAsync(() -> {
+                String html = htmlStrings.get(index);
+                PictureRenderData pictureRenderData = null;
+                if (StrUtil.isNotBlank(html)) {
+                    try {
+                        pictureRenderData = getPictureRenderData(html);
+                    } catch (Exception e) {
+                        log.error("处理图片异常: {}",  e);
+                    }
+                }
+                // 生成键
+                return new AbstractMap.SimpleEntry<>(
+                        "image" + (char) ('A' + index),
+                        pictureRenderData
+                );
+            });
+            futures.add(future);
+        }
+        // 等待所有任务完成
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+        // 按顺序收集结果到 Map
+        HashMap<String, Object> result = new HashMap<>();
+        for (CompletableFuture<Map.Entry<String, Object>> future : futures) {
+            try {
+                Map.Entry<String, Object> entry = future.get();
+                result.put(entry.getKey(), entry.getValue());
+            } catch (InterruptedException | ExecutionException e) {
+                log.error("获取异步任务结果失败: {}", e);
+            }
+        }
+
+        return result;
+    }
 
     /**
-     * 创建用于插入word的图片，此次固定了图片的宽高，如果不固定的话word可能会出现图片过大
-     * @param html html文本
-     * @return 用于插入word的图片对象
-     * @throws IOException 图片获取异常
+     * 获取图片处理图片拼接成一张图片
+     * @param html HTML字符串
+     * @return 返回word模板占位符所需的图片对象
      */
     private PictureRenderData getPictureRenderData(String html) {
-        //当前html文本的全部图片路径
-        String[] extractAllImagePaths = extractAllImagePaths(html);
-        if (extractAllImagePaths.length == 0){
+        String[] imagePaths = extractAllImagePaths(html);
+        //动态获取高度
+        int height = 250 * imagePaths.length;
+        if (imagePaths.length == 0) {
             return null;
         }
-        //获取图片
-        ArrayList<InputStream> inputStreams = new ArrayList<>();
-        for (String extractAllImagePath : extractAllImagePaths) {
-            ResponseEntity<byte[]> responseEntity = this.sysFileClient.viewXmByPath(extractAllImagePath);
-            if (ObjectUtil.isEmpty(responseEntity)){
-                continue;
-            }
-            try {
-                InputStream inputStream = ResponseStreamUtil.convertResponseToStream(responseEntity);
-                inputStreams.add(inputStream);
-            } catch (ServletException e) {
-                log.error("获取图片异常:{}", e);
+        List<InputStream> inputStreams = new ArrayList<>();
+        for (String imagePath : imagePaths) {
+            InputStream stream = downloadImageStream(imagePath);
+            if (stream != null) {
+                inputStreams.add(stream);
             }
         }
-        //拼接图片
-        BufferedImage bufferedImage = combineImagesVertically(inputStreams);
-        return Pictures.ofBufferedImage(bufferedImage, PictureType.PNG)
-                .size(500, 500).create();
-
+        if (inputStreams.isEmpty()) {
+            return null;
+        }
+        BufferedImage combinedImage = combineImagesVertically(inputStreams);
+        return Pictures.ofBufferedImage(combinedImage, PictureType.PNG)
+                .size(500, height)
+                .create();
     }
 
     /**
-     * 将多个图片流垂直拼接成java图片
-     * @param inputStreams 图片流集合
-     * @return 垂直拼接后的java图片
+     * 提取HTML中的所有图片路径
+     * @param html HTML字符串
+     * @return 路径字符串数组
      */
-    public BufferedImage combineImagesVertically(List<InputStream> inputStreams) {
-
-        List<BufferedImage> images = new ArrayList<>();
-        int totalHeight = 0;
-        int maxWidth = 0;
-
-        // 将 InputStream 转换为 BufferedImage，并计算总高度和最大宽度
-        for (InputStream inputStream : inputStreams) {
-            try {
-                BufferedImage image = ImageIO.read(inputStream);
-                images.add(image);
-                totalHeight += image.getHeight();
-                maxWidth = Math.max(maxWidth, image.getWidth());
-            } catch (IOException e) {
-                log.error("拼接图片异常:{}", e);
-            }
-
-        }
-
-        // 创建一个新的 BufferedImage 对象
-        BufferedImage combinedImage = new BufferedImage(maxWidth, totalHeight, BufferedImage.TYPE_INT_RGB);
-        java.awt.Graphics2D g2d = combinedImage.createGraphics();
-        int currentHeight = 0;
-
-        // 依次绘制每个图imageType = 1片
-        for (BufferedImage image : images) {
-            g2d.drawImage(image, 0, currentHeight, null);
-            currentHeight += image.getHeight();
-        }
-        g2d.dispose();
-
-        for (InputStream inputStream : inputStreams) {
-            try {
-                inputStream.close();
-            } catch (IOException e) {
-                log.error("拼接图片异常:{}", e);
-            }
-        }
-        return combinedImage;
+    private String[] extractAllImagePaths(String html) {
+        Document doc = Jsoup.parse(html);
+        Elements imgElements = doc.select("img");
+        return imgElements.stream()
+                .map(img -> img.attr("src"))
+                .filter(StrUtil::isNotBlank)
+                .toArray(String[]::new);
     }
 
     /**
-     * 提取html中的所有图片路径
-     * @param html html文本
-     * @return 不包含网络图片的图片路径集合
+     * 调用sysFileClient根据路径获取图片流
+     * @param imagePath 图片路径
+     * @return 图片流
      */
-    public String[] extractAllImagePaths(String html) {
-        List<String> paths = new ArrayList<>();
+    private InputStream downloadImageStream(String imagePath) {
         try {
-            Document doc = Jsoup.parse(html);
-            Elements images = doc.select("img");
-
-            for (Element img : images) {
-                String src = img.attr("src");
-                // 新增条件：排除以 "http" 或 "https" 开头的路径（区分大小写，严格匹配小写开头）
-                if (!src.isEmpty() && !src.startsWith("http")) {
-                    paths.add(src);
-                }
+            ResponseEntity<byte[]> response = sysFileClient.viewXmByPath(imagePath);
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                return new java.io.ByteArrayInputStream(response.getBody());
             }
         } catch (Exception e) {
-            System.err.println("解析HTML时发生错误: " + e.getMessage());
+            log.error("下载图片失败: {}",  e);
         }
-        return paths.toArray(new String[0]);
+        return null;
+    }
+
+    /**
+     * 处理拼接垂直图片
+     * @param inputStreams 需要拼接的图片流
+     * @return 拼接后的java图片
+     */
+    private BufferedImage combineImagesVertically(List<InputStream> inputStreams) {
+        // 将输入流转换为 BufferedImage 列表，忽略无效的图片
+        List<BufferedImage> images = new ArrayList<>();
+        for (InputStream inputStream : inputStreams) {
+            BufferedImage image = null;
+            try {
+                image = javax.imageio.ImageIO.read(inputStream);
+            } catch (IOException e) {
+                log.error("图片读取异常: {}", e);
+            } finally {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    log.error("输入流关闭异常: {}", e);
+                }
+            }
+            if (image != null) {
+                images.add(image);
+            }
+        }
+
+        // 计算拼接后的总高度和最大宽度
+        int totalHeight = 0;
+        int maxWidth = 0;
+        for (BufferedImage image : images) {
+            totalHeight += image.getHeight();
+            maxWidth = Math.max(maxWidth, image.getWidth());
+        }
+
+        // 创建用于拼接的画布
+        BufferedImage combinedImage = new BufferedImage(maxWidth, totalHeight, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = combinedImage.createGraphics();
+        int y = 0;
+        // 逐个绘制图片到垂直拼接的位置
+        for (BufferedImage image : images) {
+            g2d.drawImage(image, 0, y, null);
+            y += image.getHeight();
+        }
+        g2d.dispose();
+        return combinedImage;
     }
 
     private boolean updateProjectTeacher(ApplyForDTO update, Long projectId) {
