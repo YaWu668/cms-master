@@ -2116,7 +2116,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                     filesMap.put(entry.getKey(), fileBytes);
                 }
             } catch (InterruptedException | ExecutionException e) {
-                log.error("等待异步任务完成时出错: " + e.getMessage());
+                log.error("等待异步任务完成时出错: " + e);
             }
         }
         byte[] zipBytes = this.compressFilesToZip(filesMap);
@@ -2127,7 +2127,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         try (OutputStream out = response.getOutputStream()) {
             out.write(zipBytes);
         } catch (IOException e) {
-            log.error("写入 ZIP 文件错误:" + e.getMessage());
+            log.error("写入 ZIP 文件错误:" + e);
             throw new ServiceException("文件导出失败");
         }
     }
@@ -2675,6 +2675,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             return baos.toByteArray();
         } catch (IOException e) {
             inputStream.close();
+            log.error("导出失败", e);
             throw new ServiceException("导出失败", 444);
         }
     }
@@ -2736,6 +2737,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             inputStream.close();
             return baos.toByteArray();
         } catch (IOException e) {
+            log.error("导出失败", e);
             throw new ServiceException("导出失败", 444);
         }
     }
@@ -2797,6 +2799,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             inputStream.close();
             return baos.toByteArray();
         } catch (IOException e) {
+            log.error("导出失败", e);
             throw new ServiceException("导出失败", 444);
         }
     }

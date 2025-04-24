@@ -190,10 +190,11 @@ public class PulicController {
 
     /**
      * 根据项目的id，导出对应项目的word书
-     * @param projectId 项目id
+     * @param projectIds 项目id
      * @return response携带文件字节数组返回
      */
     @GetMapping("/exportWord")
+    @Log(title = "批量导出项目word", businessType = BusinessType.EXPORT)
     public void exportXmWord(@RequestParam List<Long> projectIds, HttpServletResponse response) throws Exception {
         // 调用服务层方法获取文件字节数组
         projectService.exportXmWord(projectIds,response);
