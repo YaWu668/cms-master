@@ -55,7 +55,7 @@
 
     <delete id="deleteRoleMenu">
         delete from sys_role_dept where role_id in
-        <foreach collection="array" item="roleId" open="(" separator="," close=")">
+        <foreach collection="list" item="roleId" open="(" separator="," close=")">
             #{roleId}
         </foreach>
     </delete>

@@ -63,7 +63,7 @@ public interface SysRoleMapper extends BaseMapper<SysRole> {
      *
      * @param roleId 角色Id
      */
-    @Select("select count(1) from sys_user_role where role_id = #{roleId})")
+    @Select("select count(1) from sys_user_role where role_id = #{roleId}")
     Integer countUserRoleByRoleId(Long roleId);
 
     /**

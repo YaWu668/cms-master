@@ -57,7 +57,7 @@
 
     <delete id="deleteRoleDept">
         delete from sys_role_menu where role_id in
-        <foreach collection="array" item="roleId" open="(" separator="," close=")">
+        <foreach collection="list" item="roleId" open="(" separator="," close=")">
             #{roleId}
         </foreach>
     </delete>
@@ -96,6 +96,7 @@
             <if test="status != null">
                 and status = #{status}
             </if>
+        and del_flag != 1
         </where>
         group by r.role_id
     </select>
