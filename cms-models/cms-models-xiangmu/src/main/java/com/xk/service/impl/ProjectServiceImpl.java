@@ -964,13 +964,11 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         isStudentCollegeGroupsEnabled(applyForDTO.getStudents());
         //11.项目名称不可以重复
         checkProjectName(applyForDTO);
-        //todo 有空写,验证文件存在通内
+        //有空写,验证文件存在通内
         checkFileUrl(applyForDTO.getMaterialsUrl());
         //todo 有空再写,验证用户负责人只有一个项目在进行中才可以申请新的项目&&(同时只有一个是负责人|| 参加项目进行中最多2个)
 
         //todo 有空再写,验证队员和老师参数进行项目最多有2个
-
-
         //1.把数据转到实体类当中并写入数据库,插入项目表新增项目
         Long projectId = insertProject(applyForDTO);
         //2.插入学生表
@@ -1083,6 +1081,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * @return
      */
     @Override
+    @Transactional
     public Response delectStudentProjectById(Long projectId) {
         // 登录用户Id
         Long userId = SecurityUtils.getLoginUser().getUserid();
@@ -1580,7 +1579,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         }else if(roles.contains(ProjectConstant.ROLE_SPECIALIST) && projectSelectDto.getRole().equals(ProjectConstant.ROLE_SPECIALIST)){
             //4.4专家组只能返回自己专家组的
             pageDTO = this.getProjectListBySpecialist(projectSelectDto);
-        }else if(roles.contains(ProjectConstant.ROLE_ADMIN) && projectSelectDto.getRole().equals(ProjectConstant.ROLE_ADMIN)){
+        }else if((roles.contains(ProjectConstant.ROLE_ADMIN) ||roles.contains(ProjectConstant.ADMIN) ) && projectSelectDto.getRole().equals(ProjectConstant.ROLE_ADMIN)){
             //4.5管理员可以查看所有
             pageDTO = this.getProjectListByAdmin(projectSelectDto);
         }else {
@@ -3346,7 +3345,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         List<Long> allIds = Stream.concat(studentIds.stream(), Stream.concat(teacherIds.stream(), firmTeacherIds.stream())).collect(Collectors.toList());
         //查找id是否存在项目成员里，如果不在则查找用户角色表是否有管理员身份，如果都不符合则不允许导出word
         if (!allIds.contains(userId) &&
-                roles.stream().noneMatch(role -> role.equalsIgnoreCase(RoleConstant.ADMIN))) {
+                roles.stream().noneMatch(role -> (role.equalsIgnoreCase(RoleConstant.ADMIN) || role.equalsIgnoreCase(RoleConstant.XM_ADMIN) ))) {
             throw new ServiceException("当前用户没有权限导出word", 444);
         }
     }
@@ -3835,8 +3834,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             if (!roleService.hasRole(RoleConstant.EXPERT)){
                 return false;
             }
-        }else if(type.equals(ProjectConstant.ROLE_ADMIN)){  //管理员
-            if (!roleService.hasRole(RoleConstant.ADMIN)){
+        }else if(type.equals(ProjectConstant.ROLE_ADMIN) ){  //管理员
+            if (!(roleService.hasRole(RoleConstant.XM_ADMIN) || roleService.hasRole(RoleConstant.ADMIN)  )){
                 return false;
             }
         }
@@ -4584,7 +4583,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             return isHaveCollege(project);
         }
         //4.管理员进行判断
-        if(RoleConstant.ADMIN.equals(role.getRoleKey())){
+        if(RoleConstant.XM_ADMIN.equals(role.getRoleKey())){
             return isHaveAdmin();
         }
         //5.专家进行判断

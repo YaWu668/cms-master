@@ -59,7 +59,7 @@ public class StudentController  {
     }
 
     /**
-     * 获取自己创建的项目列表或者是直接报名项目
+     * 获取自己创建的项目列表或者是直接报名项目(废弃)
      * @return
      */
     @GetMapping("/get/project")
@@ -89,7 +89,7 @@ public class StudentController  {
     }
 
     /**
-     * 获取学生 or 教师的报名表
+     * 获取学生 or 教师的报名表(不知道做什么,暂时废弃)
      * @param role
      * @param name
      * @return
@@ -103,7 +103,7 @@ public class StudentController  {
     }
 
     /**
-     * 搜索自己创建的项目
+     * 搜索自己创建的项目(废弃)
      * @param currentPage
      * @param pageSize
      * @return

@@ -38,6 +38,7 @@ public class ProjectConstant {
     public static final String ROLE_COLLEGE = "xm-college";
     public static final String ROLE_SPECIALIST = "xm-specialist";
     public static final String ROLE_ADMIN = "xm-admin";
+    public static final String ADMIN = "admin";
 
     /**
      * 项目类型: 1:创新训练项目 2:创业训练项目 3:创业实践项目

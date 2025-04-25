@@ -48,7 +48,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     @Override
     public Long getAdminId() {
-        LambdaQueryWrapper<Role> eq = new LambdaQueryWrapper<Role>().eq(Role::getRoleKey, RoleConstant.ADMIN);
+        LambdaQueryWrapper<Role> eq = new LambdaQueryWrapper<Role>().eq(Role::getRoleKey, RoleConstant.XM_ADMIN);
         Long roleId = this.getOne(eq).getRoleId();
         if(roleId == null){
             throw  new ServiceException("一生一项目的管理员角色不存在,请联系管理员修复");
@@ -87,6 +87,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
                     .in(Role::getRoleKey, RoleConstant.TEACHER
                                         , RoleConstant.COLLEGE
                                         , RoleConstant.EXPERT
+                                        , RoleConstant.XM_ADMIN
                                         , RoleConstant.ADMIN)
                     .list();
         }

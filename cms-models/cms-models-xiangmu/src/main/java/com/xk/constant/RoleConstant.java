@@ -7,7 +7,7 @@ public class RoleConstant {
     /**
      * 一生一项目管理员角色,角色权限字符串
      */
-    public static final String ADMIN = "xm-admin";
+    public static final String XM_ADMIN = "xm-admin";
 
     /**
      * 一生一项目老师角色,角色权限字符串
@@ -27,4 +27,8 @@ public class RoleConstant {
      * 一生一项目学生角色,角色权限字符串
      */
     public static final String STUDENT = "xm-student";
+    /**
+     * 超级管理员
+     */
+    public static final String ADMIN = "admin";
 }

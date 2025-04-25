@@ -148,6 +148,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             roleKey.add(RoleConstant.COLLEGE);
             roleKey.add(RoleConstant.EXPERT);
             roleKey.add(RoleConstant.ADMIN);
+            roleKey.add(RoleConstant.XM_ADMIN);
         }
 
         // 构造 LambdaQueryWrapper
