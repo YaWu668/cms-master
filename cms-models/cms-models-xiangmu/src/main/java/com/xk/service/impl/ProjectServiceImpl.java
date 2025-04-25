@@ -32,6 +32,7 @@ import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.Pictures;
 import com.deepoove.poi.policy.HackLoopTableRenderPolicy;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.javaparser.utils.Log;
 import com.xk.client.SysUserClient;
 import com.xk.config.*;
 import com.xk.constant.ProjectConstant;
@@ -2057,11 +2058,14 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
     @Override
     public void exportXmWord(List<Long> projectIds, HttpServletResponse response) throws Exception {
+        //非异步方法
         // 获取项目信息，判断项目状态是否可以导出
         List<Project> projectList = projectIds.stream()
                 .map(this::getProject)
                 .collect(Collectors.toList());
         projectList.forEach(project -> {
+            //权限校验
+            isContainsMembers(project);
             // 项目状态校验
             if (project.getState() == ProjectConstant.PROJECT_STATUS_NOT_PASS_VALUE
                     || project.getState() == ProjectConstant.PROJECT_STATUS_AUDIT_VALUE) {
@@ -2077,46 +2081,31 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 .replaceAll("'", "%27")
                 .replaceAll("\\(", "%28")
                 .replaceAll("\\)", "%29");
-        Map<String, CompletableFuture<byte[]>> futureFilesMap = new HashMap<>();
+        Map<String, byte[]> filesMap = new HashMap<>();
         Set<String> usedFileNames = new HashSet<>();
         for (Project project : projectList) {
-            // 异步生成 Word 文件
-            CompletableFuture<byte[]> future = CompletableFuture.supplyAsync(() -> {
-                byte[] fileBytes = null;
-                try {
-                    if (project.getType().equals(ProjectConstant.PROJECT_TYPE_INNOVATION_TRAINING)) {
-                        fileBytes = this.exportWordForTypeOne(project);
-                    } else if (project.getType().equals(ProjectConstant.PROJECT_TYPE_STARTUP_TRAINING)) {
-                        fileBytes = this.exportWordForTypeTwo(project);
-                    } else if (project.getType().equals(ProjectConstant.PROJECT_TYPE_STARTUP_PRACTICE)) {
-                        fileBytes = this.exportWordForTypeThree(project);
-                    }
-                } catch (Exception e) {
-                    log.error("生成项目" + project.getName() + "的 Word 文件时出错");
-                    throw new ServiceException("生成项目" + project.getName() + "的 Word 文件时出错");
+            byte[] fileBytes = null;
+            try {
+                if (project.getType().equals(ProjectConstant.PROJECT_TYPE_INNOVATION_TRAINING)) {
+                    fileBytes = this.exportWordForTypeOne(project);
+                } else if (project.getType().equals(ProjectConstant.PROJECT_TYPE_STARTUP_TRAINING)) {
+                    fileBytes = this.exportWordForTypeTwo(project);
+                } else if (project.getType().equals(ProjectConstant.PROJECT_TYPE_STARTUP_PRACTICE)) {
+                    fileBytes = this.exportWordForTypeThree(project);
                 }
-                return fileBytes;
-            });
+            } catch (Exception e) {
+                log.error("生成项目" + project.getName() + "的 Word 文件时出错");
+                throw new ServiceException("导出"+project.getName()+" Word文件失败:"+e.getMessage());
+            }
             // 生成ZIP内的文件名
             String originalFileName = project.getName() + "_"
                     + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日HH时mm分"))
                     + ".docx";
             String uniqueFileName = this.ensureUniqueFileName(originalFileName, usedFileNames);
-            futureFilesMap.put(uniqueFileName, future);
-            usedFileNames.add(uniqueFileName);
-        }
-        // 等待所有异步任务完成
-        CompletableFuture.allOf(futureFilesMap.values().toArray(new CompletableFuture[0])).join();
-        Map<String, byte[]> filesMap = new HashMap<>();
-        for (Map.Entry<String, CompletableFuture<byte[]>> entry : futureFilesMap.entrySet()) {
-            try {
-                byte[] fileBytes = entry.getValue().get();
-                if (fileBytes != null) {
-                    filesMap.put(entry.getKey(), fileBytes);
-                }
-            } catch (InterruptedException | ExecutionException e) {
-                log.error("等待异步任务完成时出错: " + e);
+            if (fileBytes != null) {
+                filesMap.put(uniqueFileName, fileBytes);
             }
+            usedFileNames.add(uniqueFileName);
         }
         byte[] zipBytes = this.compressFilesToZip(filesMap);
         // 设置响应头
@@ -2126,9 +2115,82 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         try (OutputStream out = response.getOutputStream()) {
             out.write(zipBytes);
         } catch (IOException e) {
-            log.error("写入 ZIP 文件错误:" + e);
+            Log.error("写入 ZIP 文件错误:" + e);
             throw new ServiceException("文件导出失败");
         }
+        //异步获取
+//        // 获取项目信息，判断项目状态是否可以导出
+//        List<Project> projectList = projectIds.stream()
+//                .map(this::getProject)
+//                .collect(Collectors.toList());
+//        projectList.forEach(project -> {
+//            // 项目状态校验
+//            if (project.getState() == ProjectConstant.PROJECT_STATUS_NOT_PASS_VALUE
+//                    || project.getState() == ProjectConstant.PROJECT_STATUS_AUDIT_VALUE) {
+//                throw new ServiceException("项目:<" + project.getName() + "> 状态没有审核通过，无法导出为 Word 文件");
+//            }
+//        });
+//        // 生成原始文件名
+//        String originalZipFileName = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日HH时mm分")) + ".zip";
+//        // 对文件名进行UTF-8 URL编码
+//        String encodedZipFileName = URLEncoder.encode(originalZipFileName, StandardCharsets.UTF_8.toString())
+//                .replaceAll("\\+", "%20") // 将URL编码中的+替换为%20（空格编码）
+//                .replaceAll("!", "%21")
+//                .replaceAll("'", "%27")
+//                .replaceAll("\\(", "%28")
+//                .replaceAll("\\)", "%29");
+//        Map<String, CompletableFuture<byte[]>> futureFilesMap = new HashMap<>();
+//        Set<String> usedFileNames = new HashSet<>();
+//        for (Project project : projectList) {
+//            // 异步生成 Word 文件
+//            CompletableFuture<byte[]> future = CompletableFuture.supplyAsync(() -> {
+//                byte[] fileBytes = null;
+//                try {
+//                    if (project.getType().equals(ProjectConstant.PROJECT_TYPE_INNOVATION_TRAINING)) {
+//                        fileBytes = this.exportWordForTypeOne(project);
+//                    } else if (project.getType().equals(ProjectConstant.PROJECT_TYPE_STARTUP_TRAINING)) {
+//                        fileBytes = this.exportWordForTypeTwo(project);
+//                    } else if (project.getType().equals(ProjectConstant.PROJECT_TYPE_STARTUP_PRACTICE)) {
+//                        fileBytes = this.exportWordForTypeThree(project);
+//                    }
+//                } catch (Exception e) {
+//                    log.error("生成项目" + project.getName() + "的 Word 文件时出错");
+//                    throw new ServiceException("导出"+project.getName()+" Word文件失败:"+e.getMessage());
+//                }
+//                return fileBytes;
+//            });
+//            // 生成ZIP内的文件名
+//            String originalFileName = project.getName() + "_"
+//                    + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy年MM月dd日HH时mm分"))
+//                    + ".docx";
+//            String uniqueFileName = this.ensureUniqueFileName(originalFileName, usedFileNames);
+//            futureFilesMap.put(uniqueFileName, future);
+//            usedFileNames.add(uniqueFileName);
+//        }
+//        // 等待所有异步任务完成
+//        CompletableFuture.allOf(futureFilesMap.values().toArray(new CompletableFuture[0])).join();
+//        Map<String, byte[]> filesMap = new HashMap<>();
+//        for (Map.Entry<String, CompletableFuture<byte[]>> entry : futureFilesMap.entrySet()) {
+//            try {
+//                byte[] fileBytes = entry.getValue().get();
+//                if (fileBytes != null) {
+//                    filesMap.put(entry.getKey(), fileBytes);
+//                }
+//            } catch (InterruptedException | ExecutionException e) {
+//                log.error("等待异步任务完成时出错: " + e);
+//            }
+//        }
+//        byte[] zipBytes = this.compressFilesToZip(filesMap);
+//        // 设置响应头
+//        response.setContentType("application/zip");
+//        response.setHeader("Content-Disposition",
+//                "attachment; filename*=UTF-8''" + encodedZipFileName);
+//        try (OutputStream out = response.getOutputStream()) {
+//            out.write(zipBytes);
+//        } catch (IOException e) {
+//            log.error("写入 ZIP 文件错误:" + e);
+//            throw new ServiceException("文件导出失败");
+//        }
     }
 
     /**
@@ -2799,7 +2861,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             return baos.toByteArray();
         } catch (IOException e) {
             log.error("导出失败", e);
-            throw new ServiceException("导出失败", 444);
+            throw new ServiceException("导出失败");
         }
     }
 
@@ -3071,7 +3133,11 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         List<Map<String, Object>> teacherListA = getAllTeachers(project, 0);//指导老师
         List<Map<String, Object>> teacherListB = getAllTeachers(project, 1);//企业老师
         //word封面
-        wordMap.putAll(this.getChargeStudentMap(students));
+        Map<String, Object> studentMap = this.getChargeStudentMap(students);
+        if (ObjectUtil.isEmpty(studentMap)){
+            throw new ServiceException("当前项目"+project.getName()+"没有负责人，请检查项目信息或请联系管理员");
+        }
+        wordMap.putAll(studentMap);
         wordMap.put("teacherName", this.getAllTeacherName(teacherListA));//所有指导老师名字字符串
         wordMap.put("teacherPhone", teacherListA.get(0).get("phone"));
         if (!project.getType().equals(ProjectConstant.PROJECT_TYPE_INNOVATION_TRAINING)) {
@@ -3152,7 +3218,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             return matcher.group(1);
         }
         // 匹配失败
-        throw new RuntimeException("获取" + majorNames + "专业名称失败");
+        return "数据错误";
     }
 
     /**
@@ -3370,42 +3436,61 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * @return 此项目的所有拼接后的图片
      */
     private HashMap<String, Object> getAllPicture(List<String> htmlStrings) {
-        List<CompletableFuture<Map.Entry<String, Object>>> futures = new ArrayList<>();
-        // 为每个 HTML 字符串创建异步任务
-        for (int i = 0; i < htmlStrings.size(); i++) {
-            int index = i; // 确保在 lambda 中捕获正确的索引
-            CompletableFuture<Map.Entry<String, Object>> future = CompletableFuture.supplyAsync(() -> {
-                String html = htmlStrings.get(index);
-                PictureRenderData pictureRenderData = null;
-                if (StrUtil.isNotBlank(html)) {
-                    try {
-                        pictureRenderData = getPictureRenderData(html);
-                    } catch (Exception e) {
-                        log.error("处理图片异常: {}",  e);
-                    }
-                }
-                // 生成键
-                return new AbstractMap.SimpleEntry<>(
-                        "image" + (char) ('A' + index),
-                        pictureRenderData
-                );
-            });
-            futures.add(future);
-        }
-        // 等待所有任务完成
-        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
-        // 按顺序收集结果到 Map
+        //非异步获取图片
         HashMap<String, Object> result = new HashMap<>();
-        for (CompletableFuture<Map.Entry<String, Object>> future : futures) {
-            try {
-                Map.Entry<String, Object> entry = future.get();
-                result.put(entry.getKey(), entry.getValue());
-            } catch (InterruptedException | ExecutionException e) {
-                log.error("获取异步任务结果失败: {}", e);
+        for (int i = 0; i < htmlStrings.size(); i++) {
+            String html = htmlStrings.get(i);
+            PictureRenderData pictureRenderData = null;
+            if (StrUtil.isNotBlank(html)) {
+                try {
+                    pictureRenderData = getPictureRenderData(html);
+                } catch (Exception e) {
+                    log.error("处理图片异常:"+e);
+                }
             }
+            // 生成键
+            String key = "image" + (char) ('A' + i);
+            result.put(key, pictureRenderData);
         }
-
         return result;
+
+        //异步获取图片
+//        List<CompletableFuture<Map.Entry<String, Object>>> futures = new ArrayList<>();
+//        // 为每个 HTML 字符串创建异步任务
+//        for (int i = 0; i < htmlStrings.size(); i++) {
+//            int index = i; // 确保在 lambda 中捕获正确的索引
+//            CompletableFuture<Map.Entry<String, Object>> future = CompletableFuture.supplyAsync(() -> {
+//                String html = htmlStrings.get(index);
+//                PictureRenderData pictureRenderData = null;
+//                if (StrUtil.isNotBlank(html)) {
+//                    try {
+//                        pictureRenderData = getPictureRenderData(html);
+//                    } catch (Exception e) {
+//                        log.error("处理图片异常: {}",  e);
+//                    }
+//                }
+//                // 生成键
+//                return new AbstractMap.SimpleEntry<>(
+//                        "image" + (char) ('A' + index),
+//                        pictureRenderData
+//                );
+//            });
+//            futures.add(future);
+//        }
+//        // 等待所有任务完成
+//        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+//        // 按顺序收集结果到 Map
+//        HashMap<String, Object> result = new HashMap<>();
+//        for (CompletableFuture<Map.Entry<String, Object>> future : futures) {
+//            try {
+//                Map.Entry<String, Object> entry = future.get();
+//                result.put(entry.getKey(), entry.getValue());
+//            } catch (InterruptedException | ExecutionException e) {
+//                log.error("获取异步任务结果失败: {}", e);
+//            }
+//        }
+//
+//        return result;
     }
 
     /**
