@@ -138,6 +138,7 @@ public class SysUserController extends BaseController {
         this.startPage();
         // 2.查询数据
         List<SysUserDto> users = this.userService.listEntities(query);
+        users.forEach(user -> user.setRoleIds(userService.getUserRolesIds(user.getUserId())));
         // 3.返回数据
         return this.getDataTable(users);
     }
