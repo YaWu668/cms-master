@@ -1,5 +1,6 @@
 package com.xk.domain.dto;
 
+import com.xk.check.annotations.SQLInjectionSafe;
 import com.xk.check.annotations.XSSValidation;
 import com.xk.domain.query.PageQuery;
 import lombok.Data;
@@ -17,6 +18,7 @@ public class YearDetailedListDto extends PageQuery {
      * 年度组的名称--模糊搜索
      */
     @XSSValidation(message = "请求包含非法字符")
+    @SQLInjectionSafe(message = "请求包含非法字符")
     private String name;
 
 
