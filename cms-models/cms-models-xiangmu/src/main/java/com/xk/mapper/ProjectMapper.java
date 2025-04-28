@@ -19,7 +19,7 @@ public interface ProjectMapper extends BaseMapper<Project> {
     /**
      * 获取可以结题的项目列表,要求项目状态为项目进行中,并且项目结束时间<当前日期
      */
-    @Select("SELECT * FROM xm_project WHERE state = 2 AND end_time < CURDATE()")
+    @Select("SELECT * FROM xm_project WHERE state = 2 AND end_time < NOW()")
     List<Project> getToBeCompletedProjectList();
 
     /**

@@ -64,9 +64,9 @@ public class MyScheduledTask {
      * 项目启动时候也一直一次
      */
     @Async
-//    @Scheduled(cron = "0 0 4 * * ?")`
+    @Scheduled(cron = "0 * * * * *")
     //测试 5分钟执行一次
-    @Scheduled(cron = "0 0 * * * *")
+//    @Scheduled(cron ="0 * * * * *")
     @Transactional
     public void executeAsyncTask2() {
         log.info("开始执行定时任务");
