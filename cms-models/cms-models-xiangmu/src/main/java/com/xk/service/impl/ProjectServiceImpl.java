@@ -1983,6 +1983,10 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         //3.修改项目结束时间 和 修改状态
         byId.setEndTime(updateProjectEndTimeDelayDto.getProjectEndTime());
         byId.setState(ProjectConstant.PROJECT_STATUS_IN_PROGRESS_VALUE);
+        boolean b = this.updateById(byId);
+        if (!b){
+            throw new ServiceException("修改项目结束时间失败");
+        }
         //4.记录项目修改状态
         String endTimeStr = DateUtil.formatDateTime(byId.getEndTime());
         String currentTimeStr = DateUtil.formatDateTime(updateProjectEndTimeDelayDto.getProjectEndTime());
