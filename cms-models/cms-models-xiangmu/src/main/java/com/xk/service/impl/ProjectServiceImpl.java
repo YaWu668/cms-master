@@ -60,11 +60,8 @@ import com.xk.enums.ProjectResultsEnum;
 import com.xk.enums.ProjectStatusEnum;
 import com.xk.mapper.*;
 import com.xk.service.*;
-import com.xk.utils.BeanCopyUtils;
-import com.xk.utils.BeanUtils;
-import com.xk.utils.ResponseStreamUtil;
+import com.xk.utils.*;
 import groovyjarjarpicocli.CommandLine;
-import com.xk.utils.ZipUtils;
 import lombok.RequiredArgsConstructor;
 
 import org.apache.tools.zip.ZipEntry;
@@ -2096,6 +2093,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             } catch (Exception e) {
                 log.error("生成项目" + project.getName() + "的 Word 文件时出错");
                 throw new ServiceException("导出"+project.getName()+" Word文件失败:"+e.getMessage());
+            } catch (OutOfMemoryError e) {
+                log.error("生成项目" + project.getName() + "的 Word 文件时发生内存溢出", e);
+                throw new ServiceException("导出" + project.getName() + " Word文件时内存溢出:" + e.getMessage());
             }
             // 生成ZIP内的文件名
             String originalFileName = project.getName() + "_"
@@ -2875,15 +2875,13 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     private static DetailedFundingOneDto getBudget(String budget, Long type) {
         DetailedFundingOneDto detailedFundingOneDto = new DetailedFundingOneDto();
         Gson gson = new Gson();
-        Type listType = new TypeToken<List<DetailedFundingDto>>() {
-        }.getType();
+        Type listType = new TypeToken<List<DetailedFundingDto>>() {}.getType();
         List<DetailedFundingDto> dtoList = gson.fromJson(budget, listType);
         // 获取映射关系
         if (type == 1L) {
             Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> mapping = getMappingOne();
             dtoList.forEach(dto -> {
                 BiConsumer<DetailedFundingOneDto, DetailedFundingDto> consumer = mapping.get(dto.getName());
-                System.out.println(dto);
                 if (consumer != null) {
                     consumer.accept(detailedFundingOneDto, dto);
                 }
@@ -2892,7 +2890,6 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> mapping = getMappingTwo();
             dtoList.forEach(dto -> {
                 BiConsumer<DetailedFundingOneDto, DetailedFundingDto> consumer = mapping.get(dto.getName());
-                System.out.println(dto);
                 if (consumer != null) {
                     consumer.accept(detailedFundingOneDto, dto);
                 }
@@ -2901,7 +2898,6 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> mapping = getMappingThree();
             dtoList.forEach(dto -> {
                 BiConsumer<DetailedFundingOneDto, DetailedFundingDto> consumer = mapping.get(dto.getName());
-                System.out.println(dto);
                 if (consumer != null) {
                     consumer.accept(detailedFundingOneDto, dto);
                 }
@@ -2965,10 +2961,10 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             oneDto.setThreeD(dto.getPostStage());
         });
         mapping.put("4. 咨询费", (oneDto, dto) -> {
-            oneDto.setThreeA(dto.getBudgetFunds());
-            oneDto.setThreeB(dto.getMainPurpose());
-            oneDto.setThreeC(dto.getPreviousStage());
-            oneDto.setThreeD(dto.getPostStage());
+            oneDto.setFourA(dto.getBudgetFunds());
+            oneDto.setFourB(dto.getMainPurpose());
+            oneDto.setFourC(dto.getPreviousStage());
+            oneDto.setFourD(dto.getPostStage());
         });
         return mapping;
     }
@@ -3499,7 +3495,13 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * @return 返回word模板占位符所需的图片对象
      */
     private PictureRenderData getPictureRenderData(String html) {
-        String[] imagePaths = extractAllImagePaths(html);
+        String[] imagePaths = null;
+        try {
+            imagePaths = HtmlUtils.getUrls(html).toArray(new String[0]);
+        }catch (IOException e){
+            log.error("获取图片路径失败: {}", e);
+            throw new ServiceException("获取图片路径失败");
+        }
         //动态获取高度
         int height = 250 * imagePaths.length;
         if (imagePaths.length == 0) {
