@@ -1974,12 +1974,16 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             throw new ServiceException("项目不存在");
         }
         //2.判断项目状态是否可以修改,待结题才可以修改
-        if (byId.getState().intValue() != ProjectConstant.PROJECT_STATUS_PENDING_VALUE){
+        if (byId.getState().intValue() != ProjectConstant.PROJECT_STATUS_IN_PROGRESS_VALUE){
             throw new ServiceException("项目状态不可以修改,只有项目待结题才可以修改项目结束时间");
         }
         //3.修改项目结束时间 和 修改状态
         byId.setEndTime(updateProjectEndTimeDelayDto.getProjectEndTime());
         byId.setState(ProjectConstant.PROJECT_STATUS_IN_PROGRESS_VALUE);
+        boolean b = this.updateById(byId);
+        if (!b){
+            throw new ServiceException("修改项目结束时间失败");
+        }
         //4.记录项目修改状态
         String endTimeStr = DateUtil.formatDateTime(byId.getEndTime());
         String currentTimeStr = DateUtil.formatDateTime(updateProjectEndTimeDelayDto.getProjectEndTime());

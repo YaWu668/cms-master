@@ -77,7 +77,7 @@ public class  ApplyForDTO{
     @NotNull(message = "项目名称不能为空")
     @NotEmpty(message = "项目名称不能为空")
     @RichText
-    @Pattern(regexp = "[\\\\\\\\/:*?\\\"<>|]" ,message = "项目名称格式不正确,下禁止的字符: \\ / : * ? \" < > |")
+    @Pattern( regexp = "^[^\\\\/:*?\"<>|]+$",message = "项目名称格式不正确,下禁止的字符: \\ / : * ? \" < > |")
     private String name;
     /**
      * 负责人曾经参与科研的情况
