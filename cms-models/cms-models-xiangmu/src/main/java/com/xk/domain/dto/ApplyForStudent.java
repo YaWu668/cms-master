@@ -39,8 +39,9 @@ public class ApplyForStudent {
     @NotEmpty(message = "学生的邮箱不能为空")
     private String mailbox;
     /**
-     * 手机
+     * 手机并且可以为空
      */
+    @Pattern(regexp = "^(1[3-9]\\d{9})?$", message = "手机号格式不正确")
     private String mobilePhone;
     /**
      * 名字
