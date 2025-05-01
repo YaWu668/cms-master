@@ -48,7 +48,7 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
     /**
      * 根据用户id查询该用户拥有哪些角色
      *
-     * @param id 角色id
+     * @param id 用户id
      * @return 角色id集合
      */
     @Select("select ur.role_id from sys_user_role ur where ur.user_id = #{id}")
