@@ -267,7 +267,7 @@ public class AdminController {
      */
     @GetMapping("/getYearDetailedList")
     @Log(title = "查询年度详细列表", businessType = BusinessType.OTHER)
-    public Response<PageDTO<YearDetailedLisVo>> getYearDetailedList(YearDetailedListDto yearDetailedListDto){
+    public Response<PageDTO<YearDetailedLisVo>> getYearDetailedList(@Valid YearDetailedListDto yearDetailedListDto){
         return Response.success(yearGroupService.getYearDetailedList(yearDetailedListDto));
     }
     /**

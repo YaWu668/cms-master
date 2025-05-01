@@ -11,6 +11,14 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class DetailedFundingDto {
     /**
+     * 比如“1”，“2”，“3”
+     */
+    private String id;
+    /**
+     * 顶级行为为null；子项行填它最近的父行id
+     */
+    private String parentId;
+    /**
      * 开支科目，用于明确资金的具体用途分类。
      */
     private String name;

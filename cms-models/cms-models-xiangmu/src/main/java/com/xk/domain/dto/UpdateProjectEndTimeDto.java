@@ -1,5 +1,6 @@
 package com.xk.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -21,8 +22,13 @@ public class UpdateProjectEndTimeDto {
     @Min(value = 1, message = "项目id不能小于1")
     private Long projectId;
     /**
-     * 修改解题时间
+     * 修改解题时间 yyyy-MM-dd HH:mm:ss  GMT+8
      */
+    @JsonFormat(
+            shape = JsonFormat.Shape.STRING,
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"      // 根据你的时区调整
+    )
     @Future(message = "项目结束时间不能小于当前时间")
     @NotNull(message = "项目结束时间不能为空")
     private Date projectEndTime;
