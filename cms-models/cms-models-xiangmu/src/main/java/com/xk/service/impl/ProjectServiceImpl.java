@@ -1893,16 +1893,16 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         //1.根据项目类型进行校验,表格格式的描述正确
         Long type = data.getType();
         if(Objects.deepEquals(type, ProjectConstant.PROJECT_TYPE_INNOVATION_TRAINING)){
-            ProgramFundsFormatUtils.isValid(data.getBudget());
+            ProgramFundsFormatUtils.isValid(data.toBudgetItemList());
         }else if(Objects.deepEquals(type, ProjectConstant.PROJECT_TYPE_STARTUP_TRAINING)){
-            ProgramFundsFormatUtils.isValidCase2(data.getBudget());
+            ProgramFundsFormatUtils.isValidCase2(data.toBudgetItemList());
         }else if(Objects.deepEquals(type, ProjectConstant.PROJECT_TYPE_STARTUP_PRACTICE)){
-            ProgramFundsFormatUtils.isValidCase3(data.getBudget());
+            ProgramFundsFormatUtils.isValidCase3(data.toBudgetItemList());
         }else{
             throw new ServiceException("项目类型错误");
         }
         //1.进行校验金额正确
-        BudgetValidator.validate(data.getBudget(), data.getTotalMoney());
+        BudgetValidator.validate(data.toBudgetItemList(), data.getTotalMoney());
     }
 
     /**
@@ -1946,7 +1946,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             throw new ServiceException("当前项目状态不可以修改");
         }
         //2.修改项目
-        ApplyForDTO update = BeanCopyUtils.copyBean(modifyApplyForDTO, ApplyForDTO.class);
+        ApplyForDTO update = toModifyApplyForDTOFormModifyApplyForDTO(modifyApplyForDTO);
         //2.1.a ,b ,c必须三选一,参数不能为null
         checkApplyFor(update);
         //2.2.钱的比较验算 财政+学校 = 总金额
@@ -1990,6 +1990,37 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return Response.success("项目修改完成,请等待重新审核");
     }
 
+    public static ApplyForDTO toModifyApplyForDTOFormModifyApplyForDTO(ModifyApplyForDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+        ApplyForDTO applyForDTO = new ApplyForDTO();
+        applyForDTO.setA(dto.getA());
+        applyForDTO.setB(dto.getB());
+        applyForDTO.setC(dto.getC());
+        applyForDTO.setBudget(dto.getBudget());
+        applyForDTO.setCategory(dto.getCategory());
+        applyForDTO.setCollegeGroupId(dto.getCollegeGroupId());
+        applyForDTO.setFirmTeacherExperience(dto.getFirmTeacherExperience());
+        applyForDTO.setFiscalAppropriation(dto.getFiscalAppropriation());
+        applyForDTO.setMaterialsUrl(dto.getMaterialsUrl());
+        applyForDTO.setName(dto.getName());
+        applyForDTO.setPrincipalExperience(dto.getPrincipalExperience());
+        applyForDTO.setProjectSource(dto.getProjectSource());
+        applyForDTO.setProjectSynopsis(dto.getProjectSynopsis());
+        applyForDTO.setProjectRank(dto.getProjectRank());
+        applyForDTO.setSchoolAllocation(dto.getSchoolAllocation());
+        applyForDTO.setStudents(dto.getStudents());
+        applyForDTO.setSubjectCategory(dto.getSubjectCategory());
+        applyForDTO.setTeacherExperience(dto.getTeacherExperience());
+        applyForDTO.setTeachers(dto.getTeachers());
+        applyForDTO.setTeacherSupport(dto.getTeacherSupport());
+        applyForDTO.setTotalMoney(dto.getTotalMoney());
+        applyForDTO.setType(dto.getType());
+        applyForDTO.setYearDataId(dto.getYearDataId());
+        applyForDTO.setYearGroupId(dto.getYearGroupId());
+        return applyForDTO;
+    }
 
     @Override
     @Transactional

@@ -1,5 +1,7 @@
 package com.xk.domain.dto;
 
+import cn.hutool.json.JSONUtil;
+import com.cms.common.core.exception.ServiceException;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,13 +18,12 @@ import java.util.List;
 @Accessors(chain = true)
 public class BudgetDTO {
 
+
     /**
      * 详细经费预算, 没有设计业务, 前端发什么样子json, 就存储什么样子
      */
-    @NotNull(message = "详细经费预算不能为空")
-    @Valid
-    @Size( min = 1,message = "详细经费预算不能少于1")
-    private List<BudgetItem>  budget;
+    @NotBlank(message = "详细经费预算不能为空")
+    private String budget;
     /**
      * 财政拨款的金额(钱)
      */
@@ -48,4 +49,17 @@ public class BudgetDTO {
     @Max(value = 3,message = "申请类型值最大只能是3")
     @NotNull(message = "申请类型不能为空")
     private Long type;
+
+    /**
+     * 获取详细经费预算的json
+     * @return
+     */
+    public List<BudgetItem> toBudgetItemList() {
+        try {
+            return  JSONUtil.toList(JSONUtil.parseArray(budget), BudgetItem.class);
+        }catch (Exception e){
+            throw new ServiceException("详细经费预算的json解析失败:"+e.getMessage());
+        }
+
+    }
 }

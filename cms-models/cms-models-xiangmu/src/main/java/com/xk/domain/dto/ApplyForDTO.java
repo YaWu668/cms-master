@@ -1,6 +1,8 @@
 package com.xk.domain.dto;
 
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.cms.common.core.exception.ServiceException;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.xk.check.annotations.RichText;
@@ -40,10 +42,8 @@ public class  ApplyForDTO{
     /**
      * 详细经费预算, 没有设计业务, 前端发什么样子json, 就存储什么样子
      */
-    @NotNull(message = "详细经费预算不能为空")
-    @Valid
-    @Size( min = 1,message = "详细经费预算不能少于1")
-    private List<BudgetItem>  budget;
+    @NotBlank(message = "详细经费预算不能为空")
+    private String budget;
     /**
      * 项目类别 1为一般项目 2为重点支持领域项目
      */
@@ -167,4 +167,18 @@ public class  ApplyForDTO{
      */
     @NotNull(message = "年度组的id不能为空")
     private Long yearGroupId;
+
+
+    /**
+     * 获取详细经费预算的json
+     * @return
+     */
+    public List<BudgetItem> toBudgetItemList() {
+        try {
+            return  JSONUtil.toList(JSONUtil.parseArray(budget), BudgetItem.class);
+        }catch (Exception e){
+            throw new ServiceException("详细经费预算的json解析失败:"+e.getMessage());
+        }
+
+    }
 }
