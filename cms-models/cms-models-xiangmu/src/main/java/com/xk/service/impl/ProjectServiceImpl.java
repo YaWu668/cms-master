@@ -60,11 +60,8 @@ import com.xk.enums.ProjectResultsEnum;
 import com.xk.enums.ProjectStatusEnum;
 import com.xk.mapper.*;
 import com.xk.service.*;
-import com.xk.utils.BeanCopyUtils;
-import com.xk.utils.BeanUtils;
-import com.xk.utils.ResponseStreamUtil;
+import com.xk.utils.*;
 import groovyjarjarpicocli.CommandLine;
-import com.xk.utils.ZipUtils;
 import lombok.RequiredArgsConstructor;
 
 import org.apache.tools.zip.ZipEntry;
@@ -76,6 +73,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintValidatorContext;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.awt.*;
@@ -945,6 +943,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         checkApplyFor(applyForDTO);
         //2.钱的比较验算 财政+学校 = 总金额
         checkMoney(applyForDTO);
+        //2.1 校验 项目项目预算申请表格式 和 项目预算金额正确
+        validateProjectBudgetAndAmount(applyForDTO);
         //3.校验用户(老师和学生)都存在
         isStuentAndTeacherExist(applyForDTO);
         //4.字典数据校验
@@ -1873,14 +1873,61 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return true;
     }
 
+
     @Override
     public boolean calibrationBudget(BudgetDTO budgetDTO, String msg) {
         //1.数据拷贝
-        ApplyForDTO data = BeanCopyUtils.copyBean(budgetDTO, ApplyForDTO.class);
+        ApplyForDTO data = toApplyForDTOFormBudgetDTO(budgetDTO);
         //2.校验金额格式
         checkMoney(data);
+        //3.校验项目预算的格式和金额是否正确
+        validateProjectBudgetAndAmount(data);
         return true;
     }
+
+    /**
+     * 校验项目预算的格式和金额是否正确
+     * @param data
+     */
+    private void validateProjectBudgetAndAmount(ApplyForDTO data) {
+        //1.根据项目类型进行校验,表格格式的描述正确
+        Long type = data.getType();
+        if(Objects.deepEquals(type, ProjectConstant.PROJECT_TYPE_INNOVATION_TRAINING)){
+            ProgramFundsFormatUtils.isValid(data.getBudget());
+        }else if(Objects.deepEquals(type, ProjectConstant.PROJECT_TYPE_STARTUP_TRAINING)){
+            ProgramFundsFormatUtils.isValidCase2(data.getBudget());
+        }else if(Objects.deepEquals(type, ProjectConstant.PROJECT_TYPE_STARTUP_PRACTICE)){
+            ProgramFundsFormatUtils.isValidCase3(data.getBudget());
+        }else{
+            throw new ServiceException("项目类型错误");
+        }
+        //1.进行校验金额正确
+        BudgetValidator.validate(data.getBudget(), data.getTotalMoney());
+    }
+
+    /**
+     * 转换为ApplyForDTO
+     * @param dto
+     * @return
+     */
+    public static ApplyForDTO toApplyForDTOFormBudgetDTO(BudgetDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+        ApplyForDTO applyForDTO = new ApplyForDTO();
+        applyForDTO.setBudget(dto.getBudget());
+        applyForDTO.setFiscalAppropriation(dto.getFiscalAppropriation());
+        applyForDTO.setSchoolAllocation(dto.getSchoolAllocation());
+        applyForDTO.setTotalMoney(dto.getTotalMoney());
+        applyForDTO.setType(dto.getType());
+        return applyForDTO;
+    }
+
+
+
+
+
+
 
     @Override
     @Transactional
@@ -1904,6 +1951,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         checkApplyFor(update);
         //2.2.钱的比较验算 财政+学校 = 总金额
         checkMoney(update);
+        //2.2.1 验证项目预算的格式和金额是否正确
+        validateProjectBudgetAndAmount(update);
         //2.3.校验用户(老师和学生)都存在
         isStuentAndTeacherExist(update);
         //2.4.字典数据校验
@@ -5342,7 +5391,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         BigDecimal fiscal = new BigDecimal(applyForDTO.getFiscalAppropriation());
         BigDecimal total = new BigDecimal(applyForDTO.getTotalMoney());
         if (school.add(fiscal).compareTo(total)!= 0){
-            throw new ServiceException("财政拨款的金额(钱)和学校的金额(钱)不相等",444);
+            throw new ServiceException("财政拨款的金额(钱)和学校的金额(钱)合计不等于申请金额总和",444);
         }
     }
 

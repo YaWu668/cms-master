@@ -41,8 +41,9 @@ public class  ApplyForDTO{
      * 详细经费预算, 没有设计业务, 前端发什么样子json, 就存储什么样子
      */
     @NotNull(message = "详细经费预算不能为空")
-    @NotEmpty(message = "详细经费预算不能为空")
-    private String budget;
+    @Valid
+    @Size( min = 1,message = "详细经费预算不能少于1")
+    private List<BudgetItem>  budget;
     /**
      * 项目类别 1为一般项目 2为重点支持领域项目
      */
