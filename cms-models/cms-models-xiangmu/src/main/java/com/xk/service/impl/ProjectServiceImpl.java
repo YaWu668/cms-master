@@ -1,5 +1,6 @@
 package com.xk.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.date.DateUnit;
@@ -2721,7 +2722,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             wordMap.putAll(allPictureMap);
             //三、经费预算（单位：元）
             DetailedFundingOneDto budgetOne = getBudget(project.getBudget(), project.getType());//获取详细经费预算
-            HashMap<String, Object> budgetOneMap = convertObjectToHashMap(budgetOne);//获取详细经费预算map
+//            HashMap<String, Object> budgetOneMap = convertObjectToHashMap(budgetOne);
+            Map<String, Object> budgetOneMap = BeanUtil.beanToMap(budgetOne);//获取详细经费预算map
             wordMap.putAll(budgetOneMap);
             // 创建循环行表格渲染策略
             HackLoopTableRenderPolicy policy = new HackLoopTableRenderPolicy();
@@ -2784,7 +2786,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             wordMap.putAll(allPictureMap);
             //三、经费预算（单位：元）
             DetailedFundingOneDto budgetOne = getBudget(project.getBudget(), project.getType());//获取详细经费预算
-            HashMap<String, Object> budgetOneMap = convertObjectToHashMap(budgetOne);//获取详细经费预算map
+            Map<String, Object> budgetOneMap = BeanUtil.beanToMap(budgetOne);//获取详细经费预算map
             wordMap.putAll(budgetOneMap);
             // 创建循环行表格渲染策略
             HackLoopTableRenderPolicy policy = new HackLoopTableRenderPolicy();
@@ -2847,7 +2849,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             wordMap.putAll(allPictureMap);
             //三、经费预算（单位：元）
             DetailedFundingOneDto budgetOne = getBudget(project.getBudget(), project.getType());//获取详细经费预算
-            HashMap<String, Object> budgetOneMap = convertObjectToHashMap(budgetOne);//获取详细经费预算map
+            Map<String, Object> budgetOneMap = BeanUtil.beanToMap(budgetOne);//获取详细经费预算map
             wordMap.putAll(budgetOneMap);
             // 创建循环行表格渲染策略
             HackLoopTableRenderPolicy policy = new HackLoopTableRenderPolicy();
@@ -2869,229 +2871,62 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         }
     }
 
-
-    /**
-     * 创新训练项目详细经费预算json转换为实体
-     * @param budget 详细经费预算json
-     * @param type 经费预算对应的项目类型
-     * @return 详细经费预算实体
-     */
-    private static DetailedFundingOneDto getBudget(String budget, Long type) {
+    private static DetailedFundingOneDto getBudget(String json, Long type) {
         DetailedFundingOneDto detailedFundingOneDto = new DetailedFundingOneDto();
-        Gson gson = new Gson();
-        Type listType = new TypeToken<List<DetailedFundingDto>>() {}.getType();
-        List<DetailedFundingDto> dtoList = gson.fromJson(budget, listType);
-        // 获取映射关系
-        if (type == 1L) {
-            Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> mapping = getMappingOne();
-            dtoList.forEach(dto -> {
-                BiConsumer<DetailedFundingOneDto, DetailedFundingDto> consumer = mapping.get(dto.getName());
-                if (consumer != null) {
-                    consumer.accept(detailedFundingOneDto, dto);
-                }
-            });
-        } else if (type == 2L) {
-            Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> mapping = getMappingTwo();
-            dtoList.forEach(dto -> {
-                BiConsumer<DetailedFundingOneDto, DetailedFundingDto> consumer = mapping.get(dto.getName());
-                if (consumer != null) {
-                    consumer.accept(detailedFundingOneDto, dto);
-                }
-            });
-        } else if (type == 3L) {
-            Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> mapping = getMappingThree();
-            dtoList.forEach(dto -> {
-                BiConsumer<DetailedFundingOneDto, DetailedFundingDto> consumer = mapping.get(dto.getName());
-                if (consumer != null) {
-                    consumer.accept(detailedFundingOneDto, dto);
-                }
-            });
+        JSONArray array = JSONUtil.parseArray(json);
+        List<DetailedFundingDto> detailedFundingDtoList = JSONUtil.toList(array, DetailedFundingDto.class);
+        for (DetailedFundingDto dto : detailedFundingDtoList) {
+            if (StrUtil.equalsAny(dto.getName(),true,"1. 业务费")){
+                detailedFundingOneDto.setOneA(dto.getBudgetFunds());
+                detailedFundingOneDto.setOneB(dto.getMainPurpose());
+                detailedFundingOneDto.setOneC(dto.getPreviousStage());
+                detailedFundingOneDto.setOneD(dto.getPostStage());
+            } else if (StrUtil.equalsAny(dto.getName(),true,"(1)计算、分析、测试费","(1)能源动力费","(1) 计算、分析、测试费")) {
+                detailedFundingOneDto.setOneAa(dto.getBudgetFunds());
+                detailedFundingOneDto.setOneBa(dto.getMainPurpose());
+                detailedFundingOneDto.setOneCa(dto.getPreviousStage());
+                detailedFundingOneDto.setOneDa(dto.getPostStage());
+            } else if (StrUtil.equalsAny(dto.getName(),true,"(2)会议费","(2)能源动力费","(2) 能源动力费")) {
+                detailedFundingOneDto.setOneAb(dto.getBudgetFunds());
+                detailedFundingOneDto.setOneBb(dto.getMainPurpose());
+                detailedFundingOneDto.setOneCb(dto.getPreviousStage());
+                detailedFundingOneDto.setOneDb(dto.getPostStage());
+            } else if (StrUtil.equalsAny(dto.getName(),true,"(3)会议、差旅费","(3)差旅费","(3) 会议、差旅费")) {
+                detailedFundingOneDto.setOneAc(dto.getBudgetFunds());
+                detailedFundingOneDto.setOneBc(dto.getMainPurpose());
+                detailedFundingOneDto.setOneCc(dto.getPreviousStage());
+                detailedFundingOneDto.setOneDc(dto.getPostStage());
+            } else if (StrUtil.equalsAny(dto.getName(),true,"(4)文献检索费","(4) 文献检索费")){
+                detailedFundingOneDto.setOneAd(dto.getBudgetFunds());
+                detailedFundingOneDto.setOneBd(dto.getMainPurpose());
+                detailedFundingOneDto.setOneCd(dto.getPreviousStage());
+                detailedFundingOneDto.setOneDd(dto.getPostStage());
+            } else if (StrUtil.equalsAny(dto.getName(),true,"(5)论文出版费","(5) 论文出版费")){
+                detailedFundingOneDto.setOneAe(dto.getBudgetFunds());
+                detailedFundingOneDto.setOneBe(dto.getMainPurpose());
+                detailedFundingOneDto.setOneCe(dto.getPreviousStage());
+                detailedFundingOneDto.setOneDe(dto.getPostStage());
+            } else if (StrUtil.equalsAny(dto.getName(),true,"2. 仪器设备购置费")){
+                detailedFundingOneDto.setTwoA(dto.getBudgetFunds());
+                detailedFundingOneDto.setTwoB(dto.getMainPurpose());
+                detailedFundingOneDto.setTwoC(dto.getPreviousStage());
+                detailedFundingOneDto.setTwoD(dto.getPostStage());
+            } else if (StrUtil.equalsAny(dto.getName(),true,"3. 材料费","3. 实验装置试制费")){
+                detailedFundingOneDto.setThreeA(dto.getBudgetFunds());
+                detailedFundingOneDto.setThreeB(dto.getMainPurpose());
+                detailedFundingOneDto.setThreeC(dto.getPreviousStage());
+                detailedFundingOneDto.setThreeD(dto.getPostStage());
+            } else if (StrUtil.equalsAny(dto.getName(),true,"4. 材料费","4. 咨询费")){
+                detailedFundingOneDto.setFourA(dto.getBudgetFunds());
+                detailedFundingOneDto.setFourB(dto.getMainPurpose());
+                detailedFundingOneDto.setFourC(dto.getPreviousStage());
+                detailedFundingOneDto.setFourD(dto.getPostStage());
+            }
         }
         return detailedFundingOneDto;
     }
 
-    /**
-     * 定义类型创业训练项目的详细经费的映射关系
-     * @return 创业训练项目的映射关系map
-     */
-    private static Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> getMappingThree() {
-        Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> mapping = new HashMap<>();
-        mapping.put("1. 业务费", (oneDto, dto) -> {
-            oneDto.setOneA(dto.getBudgetFunds());
-            oneDto.setOneB(dto.getMainPurpose());
-            oneDto.setOneC(dto.getPreviousStage());
-            oneDto.setOneD(dto.getPostStage());
-        });
-        mapping.put("(1)能源动力费", (oneDto, dto) -> {
-            oneDto.setOneAa(dto.getBudgetFunds());
-            oneDto.setOneBa(dto.getMainPurpose());
-            oneDto.setOneCa(dto.getPreviousStage());
-            oneDto.setOneDa(dto.getPostStage());
-        });
-        mapping.put("(2)会议费", (oneDto, dto) -> {
-            oneDto.setOneAb(dto.getBudgetFunds());
-            oneDto.setOneBb(dto.getMainPurpose());
-            oneDto.setOneCb(dto.getPreviousStage());
-            oneDto.setOneDb(dto.getPostStage());
-        });
-        mapping.put("(3)差旅费", (oneDto, dto) -> {
-            oneDto.setOneAc(dto.getBudgetFunds());
-            oneDto.setOneBc(dto.getMainPurpose());
-            oneDto.setOneCc(dto.getPreviousStage());
-            oneDto.setOneDc(dto.getPostStage());
-        });
-        mapping.put("(4)文献检索费", (oneDto, dto) -> {
-            oneDto.setOneAd(dto.getBudgetFunds());
-            oneDto.setOneBd(dto.getMainPurpose());
-            oneDto.setOneCd(dto.getPreviousStage());
-            oneDto.setOneDd(dto.getPostStage());
-        });
-        mapping.put("(5)论文出版费", (oneDto, dto) -> {
-            oneDto.setOneAe(dto.getBudgetFunds());
-            oneDto.setOneBe(dto.getMainPurpose());
-            oneDto.setOneCe(dto.getPreviousStage());
-            oneDto.setOneDe(dto.getPostStage());
-        });
-        mapping.put("2. 仪器设备购置费", (oneDto, dto) -> {
-            oneDto.setTwoA(dto.getBudgetFunds());
-            oneDto.setTwoB(dto.getMainPurpose());
-            oneDto.setTwoC(dto.getPreviousStage());
-            oneDto.setTwoD(dto.getPostStage());
-        });
-        mapping.put("3. 材料费", (oneDto, dto) -> {
-            oneDto.setThreeA(dto.getBudgetFunds());
-            oneDto.setThreeB(dto.getMainPurpose());
-            oneDto.setThreeC(dto.getPreviousStage());
-            oneDto.setThreeD(dto.getPostStage());
-        });
-        mapping.put("4. 咨询费", (oneDto, dto) -> {
-            oneDto.setFourA(dto.getBudgetFunds());
-            oneDto.setFourB(dto.getMainPurpose());
-            oneDto.setFourC(dto.getPreviousStage());
-            oneDto.setFourD(dto.getPostStage());
-        });
-        return mapping;
-    }
 
-    /**
-     * 定义类型创业训练项目的详细经费的映射关系
-     * @return 创业训练项目的映射关系map
-     */
-    private static Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> getMappingTwo() {
-        Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> mapping = new HashMap<>();
-        mapping.put("1. 业务费", (oneDto, dto) -> {
-            oneDto.setOneA(dto.getBudgetFunds());
-            oneDto.setOneB(dto.getMainPurpose());
-            oneDto.setOneC(dto.getPreviousStage());
-            oneDto.setOneD(dto.getPostStage());
-        });
-        mapping.put("(1)能源动力费", (oneDto, dto) -> {
-            oneDto.setOneAa(dto.getBudgetFunds());
-            oneDto.setOneBa(dto.getMainPurpose());
-            oneDto.setOneCa(dto.getPreviousStage());
-            oneDto.setOneDa(dto.getPostStage());
-        });
-        mapping.put("(2)会议费", (oneDto, dto) -> {
-            oneDto.setOneAb(dto.getBudgetFunds());
-            oneDto.setOneBb(dto.getMainPurpose());
-            oneDto.setOneCb(dto.getPreviousStage());
-            oneDto.setOneDb(dto.getPostStage());
-        });
-        mapping.put("(3)差旅费", (oneDto, dto) -> {
-            oneDto.setOneAc(dto.getBudgetFunds());
-            oneDto.setOneBc(dto.getMainPurpose());
-            oneDto.setOneCc(dto.getPreviousStage());
-            oneDto.setOneDc(dto.getPostStage());
-        });
-        mapping.put("(4)文献检索费", (oneDto, dto) -> {
-            oneDto.setOneAd(dto.getBudgetFunds());
-            oneDto.setOneBd(dto.getMainPurpose());
-            oneDto.setOneCd(dto.getPreviousStage());
-            oneDto.setOneDd(dto.getPostStage());
-        });
-        mapping.put("(5)论文出版费", (oneDto, dto) -> {
-            oneDto.setOneAe(dto.getBudgetFunds());
-            oneDto.setOneBe(dto.getMainPurpose());
-            oneDto.setOneCe(dto.getPreviousStage());
-            oneDto.setOneDe(dto.getPostStage());
-        });
-        mapping.put("2. 仪器设备购置费", (oneDto, dto) -> {
-            oneDto.setTwoA(dto.getBudgetFunds());
-            oneDto.setTwoB(dto.getMainPurpose());
-            oneDto.setTwoC(dto.getPreviousStage());
-            oneDto.setTwoD(dto.getPostStage());
-        });
-        mapping.put("3. 材料费", (oneDto, dto) -> {
-            oneDto.setThreeA(dto.getBudgetFunds());
-            oneDto.setThreeB(dto.getMainPurpose());
-            oneDto.setThreeC(dto.getPreviousStage());
-            oneDto.setThreeD(dto.getPostStage());
-        });
-        return mapping;
-    }
-
-    /**
-     * 定义类型创新训练项目的详细经费的映射关系
-     * @return 创新训练项目的映射关系map
-     */
-    private static Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> getMappingOne() {
-        Map<String, BiConsumer<DetailedFundingOneDto, DetailedFundingDto>> mapping = new HashMap<>();
-        mapping.put("1. 业务费", (oneDto, dto) -> {
-            oneDto.setOneA(dto.getBudgetFunds());
-            oneDto.setOneB(dto.getMainPurpose());
-            oneDto.setOneC(dto.getPreviousStage());
-            oneDto.setOneD(dto.getPostStage());
-        });
-        mapping.put("(1)计算、分析、测试费", (oneDto, dto) -> {
-            oneDto.setOneAa(dto.getBudgetFunds());
-            oneDto.setOneBa(dto.getMainPurpose());
-            oneDto.setOneCa(dto.getPreviousStage());
-            oneDto.setOneDa(dto.getPostStage());
-        });
-        mapping.put("(2)能源动力费", (oneDto, dto) -> {
-            oneDto.setOneAb(dto.getBudgetFunds());
-            oneDto.setOneBb(dto.getMainPurpose());
-            oneDto.setOneCb(dto.getPreviousStage());
-            oneDto.setOneDb(dto.getPostStage());
-        });
-        mapping.put("(3)会议、差旅费", (oneDto, dto) -> {
-            oneDto.setOneAc(dto.getBudgetFunds());
-            oneDto.setOneBc(dto.getMainPurpose());
-            oneDto.setOneCc(dto.getPreviousStage());
-            oneDto.setOneDc(dto.getPostStage());
-        });
-        mapping.put("(4)文献检索费", (oneDto, dto) -> {
-            oneDto.setOneAd(dto.getBudgetFunds());
-            oneDto.setOneBd(dto.getMainPurpose());
-            oneDto.setOneCd(dto.getPreviousStage());
-            oneDto.setOneDd(dto.getPostStage());
-        });
-        mapping.put("(5)论文出版费", (oneDto, dto) -> {
-            oneDto.setOneAe(dto.getBudgetFunds());
-            oneDto.setOneBe(dto.getMainPurpose());
-            oneDto.setOneCe(dto.getPreviousStage());
-            oneDto.setOneDe(dto.getPostStage());
-        });
-        mapping.put("2. 仪器设备购置费", (oneDto, dto) -> {
-            oneDto.setTwoA(dto.getBudgetFunds());
-            oneDto.setTwoB(dto.getMainPurpose());
-            oneDto.setTwoC(dto.getPreviousStage());
-            oneDto.setTwoD(dto.getPostStage());
-        });
-        mapping.put("3. 实验装置试制费", (oneDto, dto) -> {
-            oneDto.setThreeA(dto.getBudgetFunds());
-            oneDto.setThreeB(dto.getMainPurpose());
-            oneDto.setThreeC(dto.getPreviousStage());
-            oneDto.setThreeD(dto.getPostStage());
-        });
-        mapping.put("4. 材料费", (oneDto, dto) -> {
-            oneDto.setFourA(dto.getBudgetFunds());
-            oneDto.setFourB(dto.getMainPurpose());
-            oneDto.setFourC(dto.getPreviousStage());
-            oneDto.setFourD(dto.getPostStage());
-        });
-        return mapping;
-    }
 
 
     /**
@@ -3150,6 +2985,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         wordMap.put("endTime", DateTimeFormatter.ofPattern("yyyy年MM月")
                 .format(LocalDateTime.ofInstant(project.getEndTime().toInstant(), ZoneId.systemDefault())));//活动的结束时间
         //一：基本情况
+        wordMap.put("yearDate",yearDataService.getById(project.getYearDataId()).getName());
         wordMap.put("beginYear", DateTimeFormatter.ofPattern("yyyy")
                 .format(LocalDateTime.ofInstant(project.getBeginTime().toInstant(), ZoneId.systemDefault())));//活动开始年份
         wordMap.put("beinMonth", project.getBeginTime().getMonth() + 1);//活动开始月份
@@ -3499,13 +3335,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * @return 返回word模板占位符所需的图片对象
      */
     private PictureRenderData getPictureRenderData(String html) {
-        String[] imagePaths = null;
-        try {
-            imagePaths = HtmlUtils.getUrls(html).toArray(new String[0]);
-        }catch (IOException e){
-            log.error("获取图片路径失败: {}", e);
-            throw new ServiceException("获取图片路径失败");
-        }
+        String[] imagePaths;
+        imagePaths = extractAllImagePaths(html);
         //动态获取高度
         int height = 250 * imagePaths.length;
         if (imagePaths.length == 0) {
