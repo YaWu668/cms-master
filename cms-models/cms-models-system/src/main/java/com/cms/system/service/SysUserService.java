@@ -153,4 +153,10 @@ public interface SysUserService extends IService<SysUser> {
      * 数据导入
      */
     boolean importUserInfo(MultipartFile file);
+
+    /**
+     * 封装角色
+     * @param users
+     */
+    void setRole(List<SysUserDto> users);
 }

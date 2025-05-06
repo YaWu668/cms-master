@@ -69,4 +69,14 @@ public class SysUserDto extends SysUser {
      */
     @ApiModelProperty(value = "角色ID", position = 19)
     private Long roleId;
+    /**
+     * 角色key
+     */
+    @TableField(exist = false)
+    private List<String> roleKey;
+    /**
+     * 角色名字
+     */
+    @TableField(exist = false)
+    private List<String> roleName;
 }

@@ -74,6 +74,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintValidatorContext;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.awt.*;
@@ -943,6 +944,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         checkApplyFor(applyForDTO);
         //2.钱的比较验算 财政+学校 = 总金额
         checkMoney(applyForDTO);
+        //2.1 校验 项目项目预算申请表格式 和 项目预算金额正确
+        validateProjectBudgetAndAmount(applyForDTO);
         //3.校验用户(老师和学生)都存在
         isStuentAndTeacherExist(applyForDTO);
         //4.字典数据校验
@@ -1871,14 +1874,61 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return true;
     }
 
+
     @Override
     public boolean calibrationBudget(BudgetDTO budgetDTO, String msg) {
         //1.数据拷贝
-        ApplyForDTO data = BeanCopyUtils.copyBean(budgetDTO, ApplyForDTO.class);
+        ApplyForDTO data = toApplyForDTOFormBudgetDTO(budgetDTO);
         //2.校验金额格式
         checkMoney(data);
+        //3.校验项目预算的格式和金额是否正确
+        validateProjectBudgetAndAmount(data);
         return true;
     }
+
+    /**
+     * 校验项目预算的格式和金额是否正确
+     * @param data
+     */
+    private void validateProjectBudgetAndAmount(ApplyForDTO data) {
+        //1.根据项目类型进行校验,表格格式的描述正确
+        Long type = data.getType();
+        if(Objects.deepEquals(type, ProjectConstant.PROJECT_TYPE_INNOVATION_TRAINING)){
+            ProgramFundsFormatUtils.isValid(data.toBudgetItemList());
+        }else if(Objects.deepEquals(type, ProjectConstant.PROJECT_TYPE_STARTUP_TRAINING)){
+            ProgramFundsFormatUtils.isValidCase2(data.toBudgetItemList());
+        }else if(Objects.deepEquals(type, ProjectConstant.PROJECT_TYPE_STARTUP_PRACTICE)){
+            ProgramFundsFormatUtils.isValidCase3(data.toBudgetItemList());
+        }else{
+            throw new ServiceException("项目类型错误");
+        }
+        //1.进行校验金额正确
+        BudgetValidator.validate(data.toBudgetItemList(), data.getTotalMoney());
+    }
+
+    /**
+     * 转换为ApplyForDTO
+     * @param dto
+     * @return
+     */
+    public static ApplyForDTO toApplyForDTOFormBudgetDTO(BudgetDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+        ApplyForDTO applyForDTO = new ApplyForDTO();
+        applyForDTO.setBudget(dto.getBudget());
+        applyForDTO.setFiscalAppropriation(dto.getFiscalAppropriation());
+        applyForDTO.setSchoolAllocation(dto.getSchoolAllocation());
+        applyForDTO.setTotalMoney(dto.getTotalMoney());
+        applyForDTO.setType(dto.getType());
+        return applyForDTO;
+    }
+
+
+
+
+
+
 
     @Override
     @Transactional
@@ -1897,11 +1947,13 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             throw new ServiceException("当前项目状态不可以修改");
         }
         //2.修改项目
-        ApplyForDTO update = BeanCopyUtils.copyBean(modifyApplyForDTO, ApplyForDTO.class);
+        ApplyForDTO update = toModifyApplyForDTOFormModifyApplyForDTO(modifyApplyForDTO);
         //2.1.a ,b ,c必须三选一,参数不能为null
         checkApplyFor(update);
         //2.2.钱的比较验算 财政+学校 = 总金额
         checkMoney(update);
+        //2.2.1 验证项目预算的格式和金额是否正确
+        validateProjectBudgetAndAmount(update);
         //2.3.校验用户(老师和学生)都存在
         isStuentAndTeacherExist(update);
         //2.4.字典数据校验
@@ -1939,6 +1991,37 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return Response.success("项目修改完成,请等待重新审核");
     }
 
+    public static ApplyForDTO toModifyApplyForDTOFormModifyApplyForDTO(ModifyApplyForDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+        ApplyForDTO applyForDTO = new ApplyForDTO();
+        applyForDTO.setA(dto.getA());
+        applyForDTO.setB(dto.getB());
+        applyForDTO.setC(dto.getC());
+        applyForDTO.setBudget(dto.getBudget());
+        applyForDTO.setCategory(dto.getCategory());
+        applyForDTO.setCollegeGroupId(dto.getCollegeGroupId());
+        applyForDTO.setFirmTeacherExperience(dto.getFirmTeacherExperience());
+        applyForDTO.setFiscalAppropriation(dto.getFiscalAppropriation());
+        applyForDTO.setMaterialsUrl(dto.getMaterialsUrl());
+        applyForDTO.setName(dto.getName());
+        applyForDTO.setPrincipalExperience(dto.getPrincipalExperience());
+        applyForDTO.setProjectSource(dto.getProjectSource());
+        applyForDTO.setProjectSynopsis(dto.getProjectSynopsis());
+        applyForDTO.setProjectRank(dto.getProjectRank());
+        applyForDTO.setSchoolAllocation(dto.getSchoolAllocation());
+        applyForDTO.setStudents(dto.getStudents());
+        applyForDTO.setSubjectCategory(dto.getSubjectCategory());
+        applyForDTO.setTeacherExperience(dto.getTeacherExperience());
+        applyForDTO.setTeachers(dto.getTeachers());
+        applyForDTO.setTeacherSupport(dto.getTeacherSupport());
+        applyForDTO.setTotalMoney(dto.getTotalMoney());
+        applyForDTO.setType(dto.getType());
+        applyForDTO.setYearDataId(dto.getYearDataId());
+        applyForDTO.setYearGroupId(dto.getYearGroupId());
+        return applyForDTO;
+    }
 
     @Override
     @Transactional
@@ -2009,6 +2092,12 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         //3.如果修改状态,和当前状态一样也无法修改
         if (byId.getState().intValue() == updateProjectPassDto.getStatus().intValue()){
             throw new ServiceException("项目状态和修改状态一样,请不要做重复一样操作");
+        }
+        //3.1 通过解题进行判断是不是有提交解题文件
+        String concludeUrl = byId.getConcludeUrl();
+        Response isNull = sysFileClient.fileIsNull(concludeUrl);
+        if (isNull.getCode() != 200){
+            throw new ServiceException("项目《"+byId.getName()+"》未提交解题文件,无法进行解题操作");
         }
         //4.修改项目状态
         byId.setState(updateProjectPassDto.getStatus());
@@ -5179,7 +5268,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         BigDecimal fiscal = new BigDecimal(applyForDTO.getFiscalAppropriation());
         BigDecimal total = new BigDecimal(applyForDTO.getTotalMoney());
         if (school.add(fiscal).compareTo(total)!= 0){
-            throw new ServiceException("财政拨款的金额(钱)和学校的金额(钱)不相等",444);
+            throw new ServiceException("财政拨款的金额(钱)和学校的金额(钱)合计不等于申请金额总和",444);
         }
     }
 

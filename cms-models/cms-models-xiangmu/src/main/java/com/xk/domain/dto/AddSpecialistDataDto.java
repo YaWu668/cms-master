@@ -37,9 +37,9 @@ public class AddSpecialistDataDto {
     @Min(value = 1, message = "用户的id不能小于1")
     private Long userId;
     /**
-     * 专家的手机号,可以为空
+     * 专家的手机号,可以为空,并且可以为空
      */
-    @Pattern(regexp = "^$|^1[3-9]\\\\d{9}$", message = "手机号格式不正确")
+    @Pattern(regexp = "^(1[3-9]\\d{9})?$", message = "手机号格式不正确")
     private String phonenumber;
 
 

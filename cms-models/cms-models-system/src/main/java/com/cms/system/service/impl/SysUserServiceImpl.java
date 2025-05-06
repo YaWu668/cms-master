@@ -9,6 +9,7 @@ import com.cms.common.core.utils.ExcelUtils;
 import com.cms.common.redis.service.RedisService;
 import com.cms.common.security.utils.SecurityUtils;
 import com.cms.system.api.domain.dto.SysUserDto;
+import com.cms.system.api.domain.pojo.SysRole;
 import com.cms.system.api.domain.pojo.SysUser;
 import com.cms.system.domain.pojo.SysConfig;
 import com.cms.system.domain.query.SysUserQuery;
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,6 +47,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Resource
     private SysRoleMapper roleMapper;
+
+
 
     @Resource
     private RedisService redisService;
@@ -71,7 +75,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      */
     @Override
     public List<SysUserDto> listEntities(SysUserQuery query) {
-        return this.sysUserMapper.listEntities(query);
+        List<SysUserDto> dtos = this.sysUserMapper.listEntities(query);
+
+
+
+        return dtos;
     }
 
     /**
@@ -180,7 +188,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     /**
      * 根据用户id查询该用户拥有哪些角色
      *
-     * @param id 角色id
+     * @param id 用户id
      * @return 角色id集合
      */
     @Override
@@ -305,5 +313,20 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public void setRole(List<SysUserDto> users) {
+        users.forEach(user -> {
+            List<Long> rolesIds = this.getUserRolesIds(user.getUserId());
+            List<SysRole> sysRoles = null;
+            if (!rolesIds.isEmpty()) {
+                sysRoles = roleMapper.selectBatchIds(rolesIds);
+            }else{
+                sysRoles = new ArrayList<>();
+            }
+            user.setRoleKey(sysRoles.stream().map(SysRole::getRoleKey).collect(Collectors.toList()));
+            user.setRoleName(sysRoles.stream().map(SysRole::getRoleName).collect(Collectors.toList()));
+        });
     }
 }

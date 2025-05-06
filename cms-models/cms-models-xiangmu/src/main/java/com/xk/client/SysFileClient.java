@@ -18,7 +18,7 @@ public interface SysFileClient {
     ResponseEntity<byte[]> viewXmByPath(@RequestParam("filePath") String filePath);
 
     /**
-     * 判断文件是否存在
+     * 判断文件是否存在,用于文件校验,图片检查不行
      * @param fileName 文件名
      * @return
      */
