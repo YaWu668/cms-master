@@ -2092,6 +2092,12 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         if (byId.getState().intValue() == updateProjectPassDto.getStatus().intValue()){
             throw new ServiceException("项目状态和修改状态一样,请不要做重复一样操作");
         }
+        //3.1 通过解题进行判断是不是有提交解题文件
+        String concludeUrl = byId.getConcludeUrl();
+        Response isNull = sysFileClient.fileIsNull(concludeUrl);
+        if (isNull.getCode() != 200){
+            throw new ServiceException("项目《"+byId.getName()+"》未提交解题文件,无法进行解题操作");
+        }
         //4.修改项目状态
         byId.setState(updateProjectPassDto.getStatus());
         boolean b = this.updateById(byId);

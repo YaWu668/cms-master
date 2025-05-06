@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -76,12 +77,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public List<SysUserDto> listEntities(SysUserQuery query) {
         List<SysUserDto> dtos = this.sysUserMapper.listEntities(query);
 
-        dtos.forEach(user -> {
-            List<Long> rolesIds = this.getUserRolesIds(user.getUserId());
-            List<SysRole> sysRoles = roleMapper.selectBatchIds(rolesIds);
-            user.setRoleKey(sysRoles.stream().map(SysRole::getRoleKey).collect(Collectors.toList()));
-            user.setRoleName(sysRoles.stream().map(SysRole::getRoleName).collect(Collectors.toList()));
-        });
+
 
         return dtos;
     }
@@ -317,5 +313,20 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public void setRole(List<SysUserDto> users) {
+        users.forEach(user -> {
+            List<Long> rolesIds = this.getUserRolesIds(user.getUserId());
+            List<SysRole> sysRoles = null;
+            if (!rolesIds.isEmpty()) {
+                sysRoles = roleMapper.selectBatchIds(rolesIds);
+            }else{
+                sysRoles = new ArrayList<>();
+            }
+            user.setRoleKey(sysRoles.stream().map(SysRole::getRoleKey).collect(Collectors.toList()));
+            user.setRoleName(sysRoles.stream().map(SysRole::getRoleName).collect(Collectors.toList()));
+        });
     }
 }

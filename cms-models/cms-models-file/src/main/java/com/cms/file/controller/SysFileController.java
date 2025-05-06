@@ -79,7 +79,7 @@ public class SysFileController extends BaseController {
     }
 
     /**
-     * 判断文件是否存在
+     * 判断文件是否存在,用于文件校验,图片检查不行
      * @param fileName
      * @return
      */

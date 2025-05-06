@@ -18,7 +18,7 @@ public class TableSupport {
     /**
      * 当前记录起始索引
      */
-    public static final String CURRENT = "current";
+        public static final String CURRENT = "current";
 
     /**
      * 每页显示记录数
