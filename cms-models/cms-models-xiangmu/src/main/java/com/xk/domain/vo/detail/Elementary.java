@@ -80,4 +80,8 @@ public class Elementary {
      * 项目编号
      */
     private String projectNumber;
+    /**
+     * 专家组id
+     */
+    private Long specialistGroupId;
 }

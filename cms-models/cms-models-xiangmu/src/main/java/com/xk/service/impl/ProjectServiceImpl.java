@@ -964,7 +964,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         //10.检查报名的学生的学院组是否存在并且是否启用
         isStudentCollegeGroupsEnabled(applyForDTO.getStudents());
         //11.项目名称不可以重复
-        checkProjectName(applyForDTO);
+        checkProjectName(applyForDTO,null);
         //有空写,验证文件存在通内
         checkFileUrl(applyForDTO.getMaterialsUrl());
         //todo 有空再写,验证用户负责人只有一个项目在进行中才可以申请新的项目&&(同时只有一个是负责人|| 参加项目进行中最多2个)
@@ -990,10 +990,12 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     /**
      * 项目名称重复校验
      * @param applyForDTO
+     * @param projectId 项目id,可以为null,说明是新增校验,有项目id就是修改校验
      */
-    private void checkProjectName(ApplyForDTO applyForDTO) {
+    private void checkProjectName(ApplyForDTO applyForDTO,Long  projectId) {
         Long count = this.lambdaQuery()
                 .eq(Project::getName, applyForDTO.getName())
+                .ne(projectId != null,Project::getProjectId,projectId)
                 .select(Project::getName)
                 .count();
         if (count > 0) {
@@ -1185,6 +1187,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 .setAccording(according)
                 .setExpenditure(expenditure)
                 .setAudit(audit);
+        //2.7 封装
         return Response.success(projectVo);
     }
 
@@ -1393,6 +1396,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         elementary.setTeacherExperience(project.getTeacherExperience());
         elementary.setFirmTeacherExperience(project.getFirmTeacherExperience());
         elementary.setTeacherSupport(project.getTeacherSupport());
+        elementary.setSpecialistGroupId(project.getSpecialistGroupId());
         return elementary;
     }
 
@@ -1834,7 +1838,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         //1.信息拷贝
         ApplyForDTO dto = BeanCopyUtils.copyBean(basicInformationDTO, ApplyForDTO.class);
         //1.校验项目名是否重复
-        checkProjectName(dto);
+        checkProjectName(dto,null);
         //2.字典数据校验
         checkAddProjectDictData(dto);
         //3.校验学院是否存在和启用
@@ -1972,6 +1976,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         isStudentCollegeGroupsEnabled(update.getStudents());
         // 2.11.检查项目附加的URL地址
         checkFileUrl(modifyApplyForDTO.getMaterialsUrl());
+        //2.11.校验项目名是否重复
+        checkProjectName(update, projectId);
 
         //3.1先更新项目表
         if(!updateProject(update,projectId)){
