@@ -1,41 +1,61 @@
 package com.xk.utils;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 public class HtmlUtils {
+
     /**
-     * 对于html文本中的href和src属性的url地址进行提取
+     * 对于html文本中的src的url地址进行提取
      * @param html html文本
      * @return url集合
-     * @throws IOException IO异常
      */
-    public static List<String> getUrls(String html) throws IOException {
-        List<String> urls = new ArrayList<>();
-        Document doc = Jsoup.parse(html);
-        // 提取所有带有 href 属性的标签的 URL
-        Elements hrefElements = doc.select("[href]");
-        for (Element element : hrefElements) {
-            urls.add(element.attr("href"));
-        }
+    public static List<String> getUrlForSrc(String html) {
+        return getUrl(html, CollUtil.toList("src"));
+    }
 
-        // 提取所有带有 src 属性的标签的 URL
-        Elements srcElements = doc.select("[src]");
-        for (Element element : srcElements) {
-            urls.add(element.attr("src"));
-        }
+    /**
+     * 对于html文本中的href的url地址进行提取
+     * @param html html文本
+     * @return url集合
+     */
+    public static List<String> getUrlForHref(String html) {
+        return getUrl(html, CollUtil.toList("href"));
+    }
 
-        //过滤空地址
-        urls = urls.stream().filter(StrUtil::isNotBlank).collect(Collectors.toList());
-        return urls;
+    /**
+     * 对于html文本中的style的url地址进行提取
+     * @param html html文本
+     * @return url集合
+     */
+    public static List<String> getUrlForStyle(String html) {
+        return getUrl(html, CollUtil.toList("style"));
+    }
+
+    /**
+     * 对于html文本中的DataHref的url地址进行提取
+     * @param html html文本
+     * @return url集合
+     */
+    public static List<String> getUrlForDataHref(String html) {
+        return getUrl(html, CollUtil.toList("data-href"));
+    }
+
+    /**
+     * 对于html文本中的Poster的url地址进行提取
+     * @param html html文本
+     * @return url集合
+     */
+    public static List<String> getUrlForPoster(String html) {
+        return getUrl(html, CollUtil.toList("style"));
     }
 
     /**
@@ -43,12 +63,17 @@ public class HtmlUtils {
      * @param html html 文本
      * @param attributes 需要提取 URL 的属性名称列表
      * @return url 集合
-     * @throws IOException IO 异常
      */
-    public static List<String> getUrls(String html, List<String> attributes) throws IOException {
+    public static List<String> getUrlsForAttributes(String html, List<String>  attributes) {
+        return getUrl(html, attributes);
+    }
+
+    private static List<String> getUrl(String html, List<String>  attributes){
+        if (StrUtil.isEmpty(html)){
+            return null;
+        }
         List<String> urls = new ArrayList<>();
         Document doc = Jsoup.parse(html);
-
         for (String attribute : attributes) {
             // 提取所有带有指定属性的标签的 URL
             Elements elements = doc.select("[" + attribute + "]");
@@ -56,9 +81,7 @@ public class HtmlUtils {
                 urls.add(element.attr(attribute));
             }
         }
-
-        // 过滤空地址
-        urls = urls.stream().filter(StrUtil::isNotBlank).collect(Collectors.toList());
-        return urls;
+        //过滤空路径
+        return urls.stream().filter(StrUtil::isNotBlank).collect(Collectors.toList());
     }
 }
