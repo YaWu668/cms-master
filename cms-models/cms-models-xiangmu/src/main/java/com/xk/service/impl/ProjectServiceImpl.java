@@ -28,6 +28,7 @@ import com.cms.common.core.utils.ExcelUtils;
 import com.cms.common.core.web.domain.Response;
 import com.cms.common.security.utils.SecurityUtils;
 import com.cms.system.api.domain.pojo.SysDictData;
+import com.cms.system.api.model.LoginUser;
 import com.deepoove.poi.XWPFTemplate;
 import com.deepoove.poi.config.Configure;
 import com.deepoove.poi.data.Pictures;
@@ -2089,6 +2090,10 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         if (byId == null){
             throw new ServiceException("项目不存在");
         }
+
+        //2.进行校验判断管理员可以直接操作,如果是专家就要判断是不是他组下面的项目
+        isPermissions( byId);
+
         //2.判断项目状态是否可以修改,只有 待结题 结题同 结题 不通过 3个状态才可以进行解题操作
         if (byId.getState().intValue() != ProjectConstant.PROJECT_STATUS_PENDING_VALUE
                 && byId.getState().intValue() != ProjectConstant.PROJECT_STATUS_PASS_VALUE
@@ -2122,6 +2127,46 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
             throw new ServiceException("非法状态无法记录,请联系管理员,状态项目状态为:"+updateProjectPassDto.getStatus());
         }
         return Response.success();
+    }
+
+    /**
+     * 判断当前用户是不是有权限给当前项目进行解题操作,如果是管理员可以直接操作<br>
+     * 是专家话只能进行判断当前项目,是否存在当前用户的专家组内
+     * @param project
+     */
+    private void isPermissions(Project project) {
+        //0.获取当前项目的专家组id
+        Long specialistGroupId = project.getSpecialistGroupId();//有可能为null
+
+        //1.判断是不是管理员
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        Set<String> roles = loginUser.getRoles();
+        if (roles.contains(RoleConstant.ADMIN) || roles.contains(RoleConstant.XM_ADMIN)){//只要是一个管理员就可以进行操作
+            return;
+        }
+        //2.校验是不是专家,如果连专家都不是没有权限操作
+        if (!roles.contains(RoleConstant.EXPERT)){
+            throw new ServiceException("当前用户没有权限,无法进行操作");
+        }else if (specialistGroupId == null){
+            throw new ServiceException("当前项目没有分配专家组,专家无法操作");
+        }
+        //3.判断当前项目是否属于当前用户的的专家组
+
+        //3.1获取当前用户的专家组id集合
+        List<SpecialistData> list = specialistDataService.lambdaQuery()
+                .eq(SpecialistData::getUserId, SecurityUtils.getUserId())
+                .list();
+        //3.2 把专家组集合转为id集合
+        Set<Long> specialistGroupIdSet = list.stream().map(SpecialistData::getSpecialistGroupId).collect(Collectors.toSet());
+
+        if (CollUtil.isEmpty(specialistGroupIdSet)){
+            throw new ServiceException("当前用户没有专家组,无法进行操作");
+        }
+
+        if (!specialistGroupIdSet.contains(specialistGroupId)){
+            throw new ServiceException("当前项目的需要的专家组,你不存在里面无法操作");
+        }
+
     }
 
     @Override

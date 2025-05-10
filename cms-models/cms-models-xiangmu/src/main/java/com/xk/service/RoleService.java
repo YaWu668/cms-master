@@ -49,9 +49,8 @@ public interface RoleService extends IService<Role> {
      */
      List<Role> getStudentOrNoStudnet(Boolean isStudnet);
 
-    /**
-     *
-     */
+
+
 //    boolean setCollgeOrSpecialistRole(Role );
 }
 

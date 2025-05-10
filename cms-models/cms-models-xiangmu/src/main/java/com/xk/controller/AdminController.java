@@ -402,6 +402,7 @@ public class AdminController {
 
     /**
      * 项目进行解题操作(解题通过或者是撤回解题)
+     * 专家和管理员
      */
     @PutMapping("/updateProjectPass")
     @Log(title = "项目进行解题操作", businessType = BusinessType.UPDATE)
