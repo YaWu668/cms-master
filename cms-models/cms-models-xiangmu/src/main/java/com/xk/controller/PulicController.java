@@ -6,34 +6,26 @@ import com.cms.common.log.enums.BusinessType;
 import com.xk.client.SysFileClient;
 import com.xk.domain.dto.*;
 
+import com.xk.domain.query.PageQuery;
 import com.xk.domain.vo.SearchPersonListVo;
 import com.xk.domain.vo.detail.DetailProjectVo;
 import com.xk.domain.vo.group.CollegeGroupVo;
 import com.xk.domain.vo.group.SpecialistGroupVo;
+import com.xk.domain.vo.group.YearDataVo;
 import com.xk.domain.vo.group.YearGroupVo;
 import com.xk.domain.vo.project.ProjectListvo;
 import com.xk.domain.dto.ProjectAuditDto;
 import com.xk.domain.dto.collegeListDto;
 
 import com.xk.domain.dto.yearListDTO;
-import com.xk.domain.vo.detail.DetailProjectVo;
-import com.xk.entity.Role;
 import com.xk.service.*;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.validator.constraints.Range;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 
@@ -74,6 +66,8 @@ public class PulicController {
      * 用户服务
      */
     private final UserService userService;
+
+    private final PublicService publicService;
 
     private final SysFileClient  sysFileClient;
     /**
@@ -199,6 +193,27 @@ public class PulicController {
         // 调用服务层方法获取文件字节数组
         projectService.exportXmWord(projectIds,response);
     }
+
+    /**
+     * id 获取三个组的名称
+     * @param getGroupNameDto
+     * @return
+     */
+    @GetMapping("/getGroupName")
+    @Log(title = "查询组名称",businessType = BusinessType.EXPORT)
+    public Response<String> GetGroupName(GetGroupNameDto getGroupNameDto) {
+        return publicService.getGroupName(getGroupNameDto);
+
+    }
+
+    @GetMapping("/getGroupDataName")
+    @Log(title = "查询组名称",businessType = BusinessType.EXPORT)
+    public Response<String> GetGroupDataName(GetGroupNameDto getGroupNameDto) {
+        return publicService.getGroupDataName(getGroupNameDto);
+    }
+
+
+
 
 
 }
