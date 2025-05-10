@@ -5,6 +5,9 @@ import com.cms.common.core.web.domain.Response;
 import com.xk.domain.dto.AddYearDataDto;
 import com.xk.domain.dto.PageDTO;
 import com.xk.domain.dto.YearDetailedListDto;
+import com.xk.domain.query.PageQuery;
+import com.xk.domain.vo.group.CollegeDataVo;
+import com.xk.domain.vo.group.YearDataVo;
 import com.xk.domain.vo.group.YearDetailedLisVo;
 import com.xk.entity.YearData;
 
@@ -35,5 +38,14 @@ public interface YearDataService extends IService<YearData> {
      * @return
      */
     Response deleteYearData(Long id);
+
+    /**
+     * 获取年度数据
+     * @param pageQuery
+     * @return
+     */
+    Response<PageDTO<YearDataVo>> getYearData(PageQuery pageQuery);
+
+    Response<YearDataVo> getYearDataById(Long id);
 }
 

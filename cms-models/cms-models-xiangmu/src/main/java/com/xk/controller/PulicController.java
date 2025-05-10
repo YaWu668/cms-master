@@ -45,6 +45,8 @@ public class PulicController {
      * 年度组服务
      */
     private final YearGroupService yearGroupService;
+
+    private final YearDataService yearDataService;
     /**
      * 专家组服务
      */
@@ -206,11 +208,39 @@ public class PulicController {
 
     }
 
+    /**
+     * 获取所有年度组数据 分页
+     * @param getGroupNameDto
+     * @return
+     */
     @GetMapping("/getGroupDataName")
     @Log(title = "查询组名称",businessType = BusinessType.EXPORT)
     public Response<String> GetGroupDataName(GetGroupNameDto getGroupNameDto) {
         return publicService.getGroupDataName(getGroupNameDto);
     }
+
+
+    /**
+     * 获取所有年度数据分页方式
+     * @param pageQuery
+     * @return
+     */
+    @GetMapping("/getYearData")
+    @Log(title = "查询年度数据表",businessType = BusinessType.OTHER)
+    public Response<PageDTO<YearDataVo>> yearYearDatalist(PageQuery pageQuery){
+        return yearDataService.getYearData(pageQuery);
+    }
+
+    /**
+     * 获取所有年度数据（根据id）
+     */
+    @GetMapping("/getYearDataById")
+    @Log(title = "按Id查询年度数据",businessType = BusinessType.OTHER)
+    public Response<YearDataVo> getYearDataById(Long yearDataId) {
+        return yearDataService.getYearDataById(yearDataId);
+    }
+
+
 
 
 

@@ -1,7 +1,12 @@
 package com.xk.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.cms.common.core.web.domain.Response;
 import com.xk.domain.dto.AddCollegeUserDto;
+import com.xk.domain.dto.PageDTO;
+import com.xk.domain.query.PageQuery;
+import com.xk.domain.vo.group.CollegeDataVo;
+import com.xk.domain.vo.project.ProjectListvo;
 import com.xk.entity.CollegeData;
 
 import javax.validation.constraints.Min;
@@ -50,5 +55,7 @@ public interface CollegeDataService extends IService<CollegeData> {
      * @return
      */
     boolean deleteCollegeUser(Long id);
+
+    Response<PageDTO<CollegeDataVo>> getYearData(PageQuery pageQuery);
 }
 

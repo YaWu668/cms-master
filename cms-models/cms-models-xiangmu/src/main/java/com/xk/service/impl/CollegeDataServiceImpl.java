@@ -1,11 +1,17 @@
 package com.xk.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cms.common.core.exception.ServiceException;
+import com.cms.common.core.web.domain.Response;
 import com.cms.common.security.utils.SecurityUtils;
 import com.xk.constant.ProjectConstant;
 import com.xk.constant.RoleConstant;
 import com.xk.domain.dto.AddCollegeUserDto;
+import com.xk.domain.dto.PageDTO;
+import com.xk.domain.query.PageQuery;
+import com.xk.domain.vo.group.CollegeDataVo;
 import com.xk.entity.CollegeData;
 import com.xk.entity.CollegeGroup;
 import com.xk.entity.User;
@@ -20,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -180,6 +185,20 @@ public class CollegeDataServiceImpl extends ServiceImpl<CollegeDataMapper, Colle
             return true;
         }
         return false;
+    }
+
+
+
+    /**
+     * ID 获取年度数据
+     * @return
+     */
+    @Override
+    public Response<PageDTO<CollegeDataVo>> getYearData(PageQuery pageQuery) {
+        Page<CollegeData> page = pageQuery.toMpPageDefaultSortByCreateTimeDesc();
+        LambdaQueryWrapper<CollegeData> wrapper = new LambdaQueryWrapper<>();
+        this.page(page, wrapper);
+        return Response.success(PageDTO.of(page, CollegeDataVo.class));
     }
 
 

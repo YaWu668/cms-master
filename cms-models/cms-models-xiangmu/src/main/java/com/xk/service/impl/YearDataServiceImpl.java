@@ -5,27 +5,22 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cms.common.core.exception.ServiceException;
-import com.cms.common.core.utils.DateUtils;
 import com.cms.common.core.web.domain.Response;
 import com.xk.domain.dto.AddYearDataDto;
 import com.xk.domain.dto.PageDTO;
-import com.xk.domain.dto.YearDetailedListDto;
-import com.xk.domain.vo.group.YearDetailedLisVo;
+import com.xk.domain.query.PageQuery;
+import com.xk.domain.vo.group.CollegeDataVo;
+import com.xk.domain.vo.group.YearDataVo;
 import com.xk.entity.Project;
 import com.xk.entity.YearData;
 import com.xk.entity.YearGroup;
 import com.xk.mapper.YearDataMapper;
-import com.xk.service.ProjectService;
 import com.xk.service.YearDataService;
-import com.xk.service.YearGroupService;
 import com.xk.utils.BeanCopyUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.rmi.ServerError;
-import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,6 +103,32 @@ public class YearDataServiceImpl extends ServiceImpl<YearDataMapper, YearData> i
         boolean b = this.removeById(id);
         return b?Response.success():Response.error();
     }
+
+    /**
+     * @param pageQuery
+     * @return
+     */
+    @Override
+    public Response<PageDTO<YearDataVo>> getYearData(PageQuery pageQuery) {
+       Page<YearData> page = pageQuery.toMpPageDefaultSortByCreateTimeDesc();
+       LambdaQueryWrapper queryWrapper = new LambdaQueryWrapper<YearData>();
+       this.page(page,queryWrapper);
+
+       return Response.success(PageDTO.of(page,YearDataVo.class));
+    }
+
+    /**
+     * 安装id查询 年度数据
+     * @param id
+     * @return
+     */
+    @Override
+    public Response<YearDataVo> getYearDataById(Long id) {
+       LambdaQueryWrapper queryWrapper = new LambdaQueryWrapper<YearData>()
+               .eq(YearData::getYearDataId, id);
+       return Response.success(BeanCopyUtils.copyBean(getOne(queryWrapper),YearDataVo.class));
+    }
+
 
 }
 
