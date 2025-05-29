@@ -1023,7 +1023,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
      * 1.项目表里进行审核进度值抽象为指针,1代表该指针指向数组框起始位置,抽象值为a<br>
      * 2.每个不同类型的项目审核顺序和大小,抽象为一个组数空间,抽象值max<br>
      * 3.每审核一次抽象为给数组框添加一个数,抽象值为b<br>
-     * 1.条件:审核成功指针就会向前一点一次,如果审核失败话,指针就会从新回到数组的起始位置1,但是数组里面意见存储审核记录,不会消失,指针只会覆盖掉原来的记录,所以a>b时最大,大于1<br>
+     * 1.条件:审核成功指针就会向前一点一次,如果审核失败话,指针就会从新回到数组的起始位置1,
+     * 但是数组里面意见存储审核记录,不会消失,指针只会覆盖掉原来的记录,所以a>b时最大,大于1<br>
      * @param projectAuditDto
      * @return
      */
@@ -1161,16 +1162,20 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     public Response<DetailProjectVo> getProjectById(Long id,String type) {
         // 1. 判断项目是否存在
         Project project = this.getById(id);
-
         if (project == null ) { // 检查返回的 list 是否为空
             throw new ServiceException("该项目不存在！或已被删除", 404);
         }
-
         //1.权限校验
         if(!checkUserRole(id,type)){
             throw new ServiceException("当前用户没有权限查看该项目",403);
         }
         //2.把项目信息转成vo返回信息
+        DetailProjectVo projectVo = wrappersVo(project);
+        //2.7 封装
+        return Response.success(projectVo);
+    }
+
+    private DetailProjectVo wrappersVo(Project project) {
         DetailProjectVo projectVo = new DetailProjectVo();
         //2.1    基本情况(Elementary)
         Elementary elementary = convertElementaryInfo(project);
@@ -1183,14 +1188,13 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         //2.5    审核和项目进度(Audit)
         Audit audit= convertAuditInfo(project);
         //2.6    两个文件,申请文件和解题文件
-        convertProjectFiles(projectVo,project);
+        convertProjectFiles(projectVo, project);
         projectVo.setElementary(elementary)
                 .setPersonnels(personnels)
                 .setAccording(according)
                 .setExpenditure(expenditure)
                 .setAudit(audit);
-        //2.7 封装
-        return Response.success(projectVo);
+        return projectVo;
     }
 
     /**
@@ -1586,7 +1590,8 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         }else if(roles.contains(ProjectConstant.ROLE_SPECIALIST) && projectSelectDto.getRole().equals(ProjectConstant.ROLE_SPECIALIST)){
             //4.4专家组只能返回自己专家组的
             pageDTO = this.getProjectListBySpecialist(projectSelectDto);
-        }else if((roles.contains(ProjectConstant.ROLE_ADMIN) ||roles.contains(ProjectConstant.ADMIN) ) && projectSelectDto.getRole().equals(ProjectConstant.ROLE_ADMIN)){
+        }else if((roles.contains(ProjectConstant.ROLE_ADMIN) ||roles.contains(ProjectConstant.ADMIN) )
+                && projectSelectDto.getRole().equals(ProjectConstant.ROLE_ADMIN)){
             //4.5管理员可以查看所有
             pageDTO = this.getProjectListByAdmin(projectSelectDto);
         }else {
