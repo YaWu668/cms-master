@@ -2,24 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/cms-api/cms-api-system/cms-api-system.iml" filepath="$PROJECT_DIR$/cms-api/cms-api-system/cms-api-system.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cms-auth/cms-auth.iml" filepath="$PROJECT_DIR$/cms-auth/cms-auth.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cms-common/cms-common-config/cms-common-config.iml" filepath="$PROJECT_DIR$/cms-common/cms-common-config/cms-common-config.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cms-common/cms-common-core/cms-common-core.iml" filepath="$PROJECT_DIR$/cms-common/cms-common-core/cms-common-core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cms-common/cms-common-datascope/cms-common-datascope.iml" filepath="$PROJECT_DIR$/cms-common/cms-common-datascope/cms-common-datascope.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cms-common/cms-common-log/cms-common-log.iml" filepath="$PROJECT_DIR$/cms-common/cms-common-log/cms-common-log.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cms-common/cms-common-redis/cms-common-redis.iml" filepath="$PROJECT_DIR$/cms-common/cms-common-redis/cms-common-redis.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cms-common/cms-common-security/cms-common-security.iml" filepath="$PROJECT_DIR$/cms-common/cms-common-security/cms-common-security.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cms-common/cms-common-sensitive/cms-common-sensitive.iml" filepath="$PROJECT_DIR$/cms-common/cms-common-sensitive/cms-common-sensitive.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cms-common/cms-common-swagger/cms-common-swagger.iml" filepath="$PROJECT_DIR$/cms-common/cms-common-swagger/cms-common-swagger.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cms-gateway/cms-gateway.iml" filepath="$PROJECT_DIR$/cms-gateway/cms-gateway.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/cms-master.iml" filepath="$PROJECT_DIR$/.idea/cms-master.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cms-models/cms-models.iml" filepath="$PROJECT_DIR$/cms-models/cms-models.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cms-models/cms-models-bisai/cms-models-bisai.iml" filepath="$PROJECT_DIR$/cms-models/cms-models-bisai/cms-models-bisai.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cms-models/cms-models-file/cms-models-file.iml" filepath="$PROJECT_DIR$/cms-models/cms-models-file/cms-models-file.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cms-models/cms-models-system/cms-models-system.iml" filepath="$PROJECT_DIR$/cms-models/cms-models-system/cms-models-system.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cms-models/cms-models-xiangmu/cms-models-xiangmu.iml" filepath="$PROJECT_DIR$/cms-models/cms-models-xiangmu/cms-models-xiangmu.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cms-models/cms-models-zhengshu/cms-models-zhengshu.iml" filepath="$PROJECT_DIR$/cms-models/cms-models-zhengshu/cms-models-zhengshu.iml" />
     </modules>
   </component>
 </project>
