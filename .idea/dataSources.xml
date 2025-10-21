@@ -4,7 +4,7 @@
     <data-source source="LOCAL" name="xm-plus@172.20.0.3" uuid="4cb5d1ac-1716-4af8-85d0-ecbdea3a0748">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
-      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://172.20.0.3:3306/xm-plus</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.host.port" />
